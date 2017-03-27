@@ -54,10 +54,10 @@
     <Compile Include="ConnectionManagers\IConnectionManager.cs" />
     <Compile Include="EntityManagers\PropertyAsParameterAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StoredProcedureManagers\Class1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="PagginationManager\" />
-    <Folder Include="StoredProcedureManagers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
