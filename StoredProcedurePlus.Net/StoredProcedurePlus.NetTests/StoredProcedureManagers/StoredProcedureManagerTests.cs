@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoredProcedurePlus.Net.StoredProcedureManagers
+namespace StoredProcedurePlus.NetTests.StoredProcedureManagers
 {
-    class Class1
+    class StoredProcedureManagerTests
     {
     }
 }

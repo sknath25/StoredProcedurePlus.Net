@@ -52,9 +52,14 @@
     <Compile Include="Class1.cs" />
     <Compile Include="ConnectionManagers\SqlConnectionManager.cs" />
     <Compile Include="ConnectionManagers\IConnectionManager.cs" />
+    <Compile Include="EntityConfigurationManagers\Core\EntityAccessor.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\IntegerTypeConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\StringTypeConfiguration.cs" />
     <Compile Include="EntityManagers\PropertyAsParameterAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StoredProcedureManagers\Class1.cs" />
+    <Compile Include="EntityConfigurationManagers\Core\EntityConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\PremitiveTypeConfiguration.cs" />
+    <Compile Include="StoredProcedureManagers\StoredProcedureManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="PagginationManager\" />
