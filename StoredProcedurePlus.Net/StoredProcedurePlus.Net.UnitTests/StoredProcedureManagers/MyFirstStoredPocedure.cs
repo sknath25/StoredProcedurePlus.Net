@@ -10,12 +10,13 @@ namespace StoredProcedurePlus.Net.UnitTests.StoredProcedureManagers
 {
     public class MyFirstStoredProcedure:StoredProcedureManager<School>
     {
-        protected override void Setup()
+        protected override void Setup(ProcedureConfiguration<School> configuration)
         {
-            ProcedureName = "SomeSPName";
-           
-            InputConfiguration.Maps(v => v.SchoolId).Max(100).HasParameterName("Hamba");
-            InputConfiguration.Maps(v => v.SchoolName).Required();
+            configuration.ProcedureName = "SomeSPName";
+            configuration.Input.Maps(v => v.SchoolId).Max(200).HasParameterName("Hamba");
+            configuration.Input.Maps(v => v.SchoolName).Required();
+
+            //configuration.Output<School>.Maps(v => v.SchoolName).Required();
         }
     }
 }

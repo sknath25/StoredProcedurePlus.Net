@@ -15,16 +15,23 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
         }
 
-        internal override SqlDbType GetSqlDbType()
-        {
-            return SqlDbType.Int;
-        }
-
         protected override int Validate(int value)
         {
             if (AllowedMaxValue.HasValue && value > AllowedMaxValue) throw new Exception("bahut bara hay");
             if (AllowedMinValue.HasValue && value < AllowedMinValue) throw new Exception("bahut chota hay");
             return value;
+        }
+
+        public IntegerTypeConfiguration<S> Out()
+        {
+            this.IsOut = true;
+            return this;
+        }
+
+        public IntegerTypeConfiguration<S> HasParameterName(string name)
+        {
+            this.ParameterName = name;
+            return this;
         }
 
 

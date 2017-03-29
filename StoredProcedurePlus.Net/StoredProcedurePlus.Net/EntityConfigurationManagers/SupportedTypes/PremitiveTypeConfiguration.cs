@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public abstract class PrimitiveTypeConfiguration<S,T>
+    public abstract class PrimitiveTypeConfiguration<S,T>: PropertyConfiguration
     {
         readonly EntityAccessor<S, T> Accessor;
 
@@ -14,6 +14,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             Accessor = EntityAccessor<S>.Create(memberSelector);
             PropertyName = Accessor.PropertyName;
             ParameterName = PropertyName;
+            DataType = Accessor.DataType;
         }
 
         public T this[S instance]
@@ -30,30 +31,10 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 Accessor[instance] = Validate(value);
             }
         }
-
-        protected internal string PropertyName { get; protected set; }
-        
-               
-        internal bool IsOut { get; private set; }
-        public PrimitiveTypeConfiguration<S,T> Out()
-        {
-            this.IsOut = true;
-            return this;
-        }
-
-        internal string ParameterName { get; private set; }
-        public PrimitiveTypeConfiguration<S,T> HasParameterName(string name)
-        {
-            this.ParameterName = name;
-            return this;
-        }
-
+                      
         protected virtual T Validate(T value)
         {
             return value;
         }
-
-        internal abstract SqlDbType GetSqlDbType();
-
     }
 }

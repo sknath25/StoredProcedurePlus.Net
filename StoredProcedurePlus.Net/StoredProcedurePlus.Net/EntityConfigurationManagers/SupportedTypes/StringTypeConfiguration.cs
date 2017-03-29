@@ -16,11 +16,6 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         }        
 
-        internal override SqlDbType GetSqlDbType()
-        {
-            return SqlDbType.VarChar;
-        }
-
         protected override string Validate(string value)
         {
             if (IsRequired && string.IsNullOrEmpty(value)) throw new Exception("Nahi re babua");
@@ -28,6 +23,19 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return value;
         }
 
+        public StringTypeConfiguration<S> Out()
+        {
+            this.IsOut = true;
+            return this;
+        }
+
+        public StringTypeConfiguration<S> HasParameterName(string name)
+        {
+            this.ParameterName = name;
+            return this;
+        }
+
+ 
         internal bool IsRequired { get; private set; }
         public StringTypeConfiguration<S> Required()
         {
@@ -35,10 +43,10 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
-        internal int? AllowedLength = null;
+        internal int? AllowedMaxLength = null;
         public StringTypeConfiguration<S> MaxLength(int value)
         {
-            AllowedLength = value;
+            AllowedMaxLength = value;
             return this;
         }
 

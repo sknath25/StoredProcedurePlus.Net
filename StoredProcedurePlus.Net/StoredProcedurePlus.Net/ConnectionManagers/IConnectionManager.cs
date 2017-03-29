@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 
 namespace StoredProcedurePlus.Net.ConnectionManagers
 {
     public interface IConnectionManager
     {
+        void SetConnectionStringName(string name);
+
+        void SetConnectionString(string connectionString);
+
         IDbConnection GetConnection();
 
         void TrashConnection(IDbConnection connection);

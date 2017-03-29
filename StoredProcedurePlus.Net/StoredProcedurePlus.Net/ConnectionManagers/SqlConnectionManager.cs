@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.ConnectionManagers
 {
     public class SqlConnectionManager : IConnectionManager
     {
         private IDbConnection Connection = null;
-        private readonly string ConnectionStringName = null;
+
+        private string ConnectionStringName = null;
+
+        private string ConnectionString = null;
 
         public SqlConnectionManager()
         {
@@ -29,7 +26,13 @@ namespace StoredProcedurePlus.Net.ConnectionManagers
         {
             if (Connection == null)
             {
-                string ConnectionString = ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString;
+                if (ConnectionString == null && ConnectionStringName != null)
+                {
+                    ConnectionString = ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString;
+                }
+
+                if (ConnectionString == null) return null;
+
                 Connection = new SqlConnection(ConnectionString);
                 Connection.Open();
                 return Connection;
@@ -38,6 +41,16 @@ namespace StoredProcedurePlus.Net.ConnectionManagers
             {
                 return Connection;
             }
+        }
+
+        public void SetConnectionString(string connectionString)
+        {
+            this.ConnectionString = connectionString;
+        }
+
+        public void SetConnectionStringName(string name)
+        {
+            this.ConnectionStringName = name;
         }
 
         public void TrashConnection(IDbConnection connection)

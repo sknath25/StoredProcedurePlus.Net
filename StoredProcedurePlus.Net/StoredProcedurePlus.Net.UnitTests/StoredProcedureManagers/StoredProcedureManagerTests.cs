@@ -24,11 +24,11 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             MyFirstStoredProcedure p3 = new MyFirstStoredProcedure();
             MyFirstStoredProcedure p4 = new MyFirstStoredProcedure();
 
-            IDbConnection Connection = new SqlConnection();
+            School Entity = new School() { SchoolName = "Bhadrakali", SchoolId=30 };
+            School Entity1 = new School() { SchoolName = "l" };
 
-            School Entity = new School();
-
-            p1.Execute(Entity, Connection);
+            p1.Execute(Entity);
+            p1.Execute(Entity1);
 
             Assert.Fail();
         }

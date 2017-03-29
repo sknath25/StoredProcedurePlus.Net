@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 {
-    public class EntityAccessor<S>
-    {       
-        public static EntityAccessor<S, T> Create<T>(Expression<Func<S, T>> memberSelector)
+    internal class EntityAccessor<S>
+    {
+        internal static EntityAccessor<S, T> Create<T>(Expression<Func<S, T>> memberSelector)
         {
             return new GetterSetter<T>(memberSelector);
         }
@@ -24,9 +24,10 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
         }
     }
 
-    public class EntityAccessor<S, T> : EntityAccessor<S>
+    internal class EntityAccessor<S, T> : EntityAccessor<S>
     {
-        public string PropertyName { get; private set; }
+        internal Type DataType { get; private set; }
+        internal string PropertyName { get; private set; }
 
         readonly Func<S, T> Getter;
 
@@ -34,7 +35,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 
         public bool IsReadable { get; private set; }
         public bool IsWritable { get; private set; }
-        public T this[S instance]
+        internal T this[S instance]
         {
             get
             {
@@ -59,6 +60,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 
                 var prop = me.Member as PropertyInfo;
 
+                DataType = prop.PropertyType;
                 PropertyName = prop.Name;
                 IsReadable = prop.CanRead;
                 IsWritable = prop.CanWrite;

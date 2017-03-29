@@ -1,4 +1,5 @@
-﻿using StoredProcedurePlus.Net.StoredProcedureManagers.Core;
+﻿using StoredProcedurePlus.Net.ConnectionManagers;
+using StoredProcedurePlus.Net.StoredProcedureManagers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,30 +12,60 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
     public abstract class StoredProcedureManager<S>
     {
-        protected static string ProcedureName { get; set; }
-
-        protected static EntityConfiguration<S> InputConfiguration { get; set; }
-
-        static StoredProcedureManager()
-        {
-            InputConfiguration = new EntityConfiguration<S>();
-        }
+        readonly static ProcedureConfiguration<S> Configuration = new ProcedureConfiguration<S>();
 
         protected StoredProcedureManager()
         {
-            if(ProcedureName==null)
+            if(Configuration.ProcedureName == null)
             {
-                Setup();
+                Setup(Configuration);
+
+                if(Configuration.ConnectionString==null)
+                {
+                    Configuration.Connection.SetConnectionStringName(Configuration.ConnectionStringName);
+                }
+                else
+                {
+                    Configuration.Connection.SetConnectionString(Configuration.ConnectionString);
+                }
             }
         }
 
-        protected abstract void Setup(); 
+        protected abstract void Setup(ProcedureConfiguration<S> configuration); 
 
-        public void Execute(S input, IDbConnection connection)
+        public int Execute(S input)
         {
             IDbCommand Command = new SqlCommand();
 
-            SqlParameter[] Parameters = InputConfiguration.GetAllParameters(input);
+            SqlParameter[] Parameters = Configuration.Input.GetAllParameters(input);
+            for(int i=0;i<Parameters.Length;i++)
+            {
+                Command.Parameters.Add(Parameters[i]);
+            }
+
+            // executes 
+            IDbConnection Connection = Configuration.Connection.GetConnection();
+            Command.Connection = Connection;
+            int Result = -1;
+            try
+            {
+                if (Connection != null)
+                {
+                    Result = Command.ExecuteNonQuery();
+                }
+
+                Configuration.Input.SetOuts(Parameters, input);
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                Configuration.Connection.TrashConnection(Connection);
+            }
+
+            return Result;
         }
     }
 }
