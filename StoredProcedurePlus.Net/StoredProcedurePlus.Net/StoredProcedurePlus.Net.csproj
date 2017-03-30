@@ -53,13 +53,20 @@
     <Compile Include="ConnectionManagers\IConnectionManager.cs" />
     <Compile Include="EntityConfigurationManagers\Core\EntityAccessor.cs" />
     <Compile Include="EntityConfigurationManagers\ProcedureConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\DecimalTypeConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\DoubleTypeConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\IntegerTypeConfiguration.cs" />
-    <Compile Include="EntityConfigurationManagers\SupportedTypes\PropertyConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\Core\PropertyConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\StringTypeConfiguration.cs" />
     <Compile Include="EntityManagers\PropertyAsParameterAttribute.cs" />
+    <Compile Include="ErrorManagers\Decimal.cs" />
+    <Compile Include="ErrorManagers\Double.cs" />
+    <Compile Include="ErrorManagers\String.cs" />
+    <Compile Include="ErrorManagers\General.cs" />
+    <Compile Include="ErrorManagers\Integer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntityConfigurationManagers\EntityConfiguration.cs" />
-    <Compile Include="EntityConfigurationManagers\SupportedTypes\PremitiveTypeConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\Core\PremitiveTypeConfiguration.cs" />
     <Compile Include="StoredProcedureManagers\StoredProcedureManager.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,25 +1,32 @@
 ﻿using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
+using StoredProcedurePlus.Net.ErrorManagers;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public class StringTypeConfiguration<S> : PrimitiveTypeConfiguration<S,string>
+    public class StringTypeConfiguration<S> : PrimitiveTypeConfiguration<S,string> where S : class
     {
         public StringTypeConfiguration(Expression<Func<S, string>> memberSelector):base(memberSelector)
         {
 
-        }        
-
-        protected override string Validate(string value)
+        }
+        internal override SqlDbType GetSqlDbType()
         {
-            if (IsRequired && string.IsNullOrEmpty(value)) throw new Exception("Nahi re babua");
-            base.Validate(value);
+            return SqlDbType.VarChar;
+        }
+
+        protected override string ValidateToDb(string value)
+        {
+            if (IsRequired && value==null) Error.RequiredPropertyValidationError(PropertyName);
+            if (value != null)
+            {
+                int Length = value.Length;
+                if (AllowedMaxLength.HasValue && Length > AllowedMaxLength) Error.MaxLengthPropertyValidationError(PropertyName, Length, AllowedMaxLength.Value);
+                if (AllowedMinLength.HasValue && Length < AllowedMinLength) Error.MinLengthPropertyValidationError(PropertyName, Length, AllowedMinLength.Value);
+            }
+            base.ValidateToDb(value);
             return value;
         }
 
@@ -50,8 +57,10 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
+        internal int? AllowedMinLength = null;
         public StringTypeConfiguration<S> MinLength(int value)
         {
+            AllowedMinLength = value;
             return this;
         }
 

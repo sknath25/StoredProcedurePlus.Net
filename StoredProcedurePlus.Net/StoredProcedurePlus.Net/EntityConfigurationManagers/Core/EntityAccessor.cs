@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 {
-    internal class EntityAccessor<S>
+    internal class EntityAccessor<S> where S : class
     {
         internal static EntityAccessor<S, T> Create<T>(Expression<Func<S, T>> memberSelector)
         {
@@ -24,17 +20,15 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
         }
     }
 
-    internal class EntityAccessor<S, T> : EntityAccessor<S>
+    internal class EntityAccessor<S, T> : EntityAccessor<S> where S : class
     {
+        readonly Func<S, T> Getter;
+        readonly Action<S, T> Setter;
         internal Type DataType { get; private set; }
         internal string PropertyName { get; private set; }
-
-        readonly Func<S, T> Getter;
-
-        readonly Action<S, T> Setter;
-
         public bool IsReadable { get; private set; }
         public bool IsWritable { get; private set; }
+
         internal T this[S instance]
         {
             get
@@ -52,6 +46,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
                 Setter(instance, value);
             }
         }
+
         protected EntityAccessor(Expression<Func<S, T>> memberSelector) //SUMAN: This shouldn't be accessed by outsider.
         {
             if (memberSelector.Body is MemberExpression)
@@ -68,6 +63,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
                 AssignSetDelegate(IsWritable, ref Setter, prop.GetSetMethod());
             }
         }
+
         void AssignGetDelegate(bool assignable, ref Func<S, T> assignee, MethodInfo assignor)
         {
             if (assignable)
@@ -79,6 +75,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
                     .Compile();
             }
         }
+
         void AssignSetDelegate(bool assignable, ref Action<S, T> assignee, MethodInfo assignor)
         {
             if (assignable)

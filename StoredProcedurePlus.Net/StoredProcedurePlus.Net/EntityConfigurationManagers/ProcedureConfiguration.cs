@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public class ProcedureConfiguration<S>
+    public sealed class ProcedureConfiguration<S>: IDisposable where S : class
     {
         public string ConnectionStringName { get; set; }
 
         public string ConnectionString { get; set; }
 
         public string ProcedureName { get; set; }
-
+      
         internal readonly IConnectionManager Connection;
 
         public EntityConfiguration<S> Input;
@@ -28,6 +28,19 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         {
             Input = new EntityConfiguration<S>();
             Connection = new SqlConnectionManager();
+        }
+
+        internal void Initialize()
+        {
+            Input.Initialize();
+        }
+
+        public void Dispose()
+        {
+            if(Connection!=null)
+            {
+                Connection.Dispose();
+            }
         }
     }
 }

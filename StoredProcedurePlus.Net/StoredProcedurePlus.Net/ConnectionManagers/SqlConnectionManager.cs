@@ -1,10 +1,11 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace StoredProcedurePlus.Net.ConnectionManagers
 {
-    public class SqlConnectionManager : IConnectionManager
+    public sealed class SqlConnectionManager : IConnectionManager
     {
         private IDbConnection Connection = null;
 
@@ -22,30 +23,23 @@ namespace StoredProcedurePlus.Net.ConnectionManagers
             ConnectionStringName = connectionStringName;
         }
 
-        public IDbConnection GetConnection()
-        {
-            if (Connection == null)
-            {
-                if (ConnectionString == null && ConnectionStringName != null)
-                {
-                    ConnectionString = ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString;
-                }
-
-                if (ConnectionString == null) return null;
-
-                Connection = new SqlConnection(ConnectionString);
-                Connection.Open();
-                return Connection;
-            }
-            else
-            {
-                return Connection;
-            }
-        }
-
         public void SetConnectionString(string connectionString)
         {
             this.ConnectionString = connectionString;
+        }
+
+        public IDbConnection GetNewConnection()
+        {
+            if (ConnectionString == null && ConnectionStringName != null)
+            {
+                ConnectionString = ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString;
+            }
+
+            if (ConnectionString == null) return null;
+
+            Connection = new SqlConnection(ConnectionString);
+            Connection.Open();
+            return Connection;
         }
 
         public void SetConnectionStringName(string name)
@@ -53,11 +47,11 @@ namespace StoredProcedurePlus.Net.ConnectionManagers
             this.ConnectionStringName = name;
         }
 
-        public void TrashConnection(IDbConnection connection)
+        public void Dispose()
         {
-            if (connection != null)
+            if (Connection != null)
             {
-                connection.Close();
+                Connection.Dispose();
             }
         }
     }

@@ -10,17 +10,24 @@ using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public abstract class StoredProcedureManager<S>
+    public abstract class StoredProcedureManager<S> where S : class
     {
         readonly static ProcedureConfiguration<S> Configuration = new ProcedureConfiguration<S>();
 
         protected StoredProcedureManager()
         {
-            if(Configuration.ProcedureName == null)
+
+        }
+
+        private void Initialize()
+        {
+            if (Configuration.ProcedureName == null)
             {
                 Setup(Configuration);
 
-                if(Configuration.ConnectionString==null)
+                Configuration.Initialize();
+
+                if (Configuration.ConnectionString == null)
                 {
                     Configuration.Connection.SetConnectionStringName(Configuration.ConnectionStringName);
                 }
@@ -35,34 +42,34 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         public int Execute(S input)
         {
-            IDbCommand Command = new SqlCommand();
+            this.Initialize();
+
+            IDbCommand Command = new SqlCommand(Configuration.ProcedureName);
+            Command.CommandType = CommandType.StoredProcedure;
 
             SqlParameter[] Parameters = Configuration.Input.GetAllParameters(input);
+
             for(int i=0;i<Parameters.Length;i++)
             {
                 Command.Parameters.Add(Parameters[i]);
             }
 
-            // executes 
-            IDbConnection Connection = Configuration.Connection.GetConnection();
-            Command.Connection = Connection;
             int Result = -1;
-            try
-            {
-                if (Connection != null)
-                {
-                    Result = Command.ExecuteNonQuery();
-                }
 
-                Configuration.Input.SetOuts(Parameters, input);
-            }
-            catch
+            using (Command.Connection = Configuration.Connection.GetNewConnection())
             {
-                throw;
-            }
-            finally
-            {
-                Configuration.Connection.TrashConnection(Connection);
+                try
+                {
+                    if (Command.Connection != null)
+                    {
+                        Result = Command.ExecuteNonQuery();
+                        Configuration.Input.SetOuts(Parameters, input);
+                    }
+                }
+                catch
+                {
+                    throw;
+                }
             }
 
             return Result;

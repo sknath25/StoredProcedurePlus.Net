@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StoredProcedurePlus.Net.UnitTests.StoredProcedureManagers
+namespace StoredProcedurePlus.Net.UnitTests.StoredProcedures
 {
     public class MyFirstStoredProcedure:StoredProcedureManager<School>
     {

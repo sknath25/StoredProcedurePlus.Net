@@ -6,14 +6,121 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public class EntityConfiguration<S>
+    public class EntityConfiguration<S> where S : class
     {
         private readonly Dictionary<string, PropertyConfiguration> Configurations = new Dictionary<string, PropertyConfiguration>();
+
+        internal EntityConfiguration()
+        {
+            IncludeUnmappedProperties = true;
+        }
+
+        internal void Initialize()
+        {
+            if (!IncludeUnmappedProperties) return;
+
+            Type SourceType = typeof(S);
+
+            PropertyInfo[] Properties = SourceType.GetProperties();
+
+            for (int i = 0; i < Properties.Length; i++)
+            {
+                if (!Configurations.ContainsKey(Properties[i].Name))
+                {
+                    if (Properties[i].PropertyType == typeof(string))
+                    {
+                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                        Maps((Expression<Func<S, string>>)l);
+                    }
+                    if (Properties[i].PropertyType == typeof(int))
+                    {
+                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                        Maps((Expression<Func<S, int>>)l);
+                    }
+                    if (Properties[i].PropertyType == typeof(decimal))
+                    {
+                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                        Maps((Expression<Func<S, decimal>>)l);
+                    }
+                    if (Properties[i].PropertyType == typeof(double))
+                    {
+                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                        Maps((Expression<Func<S, double>>)l);
+                    }
+                }
+            }
+        }
+
+        private LambdaExpression BuildExpression(Type sourceType, PropertyInfo propertyInfo)
+        {
+            var parameter = Expression.Parameter(sourceType, propertyInfo.Name);
+            var property = Expression.Property(parameter, propertyInfo);
+            var funcType = typeof(Func<,>).MakeGenericType(sourceType, propertyInfo.PropertyType);
+            var lambda = Expression.Lambda(funcType, property, parameter);
+            return lambda;
+        }
+
+        private void AddMapping(PropertyConfiguration Configuration)
+        {
+            if (Configurations.ContainsKey(Configuration.PropertyName))
+            {
+                Configurations.Remove(Configuration.PropertyName);
+            }
+            Configurations.Add(Configuration.PropertyName, Configuration);
+        }
+
+        const string SQLPARAMETERPREFIX = "@";
+        private SqlParameter BuildParameter(PropertyConfiguration configuration, S instance)
+        {
+            SqlParameter parameter = new SqlParameter();
+            parameter.ParameterName = string.Concat(SQLPARAMETERPREFIX, configuration.ParameterName);
+            parameter.SqlDbType = configuration.GetSqlDbType();
+            parameter.Direction = configuration.IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
+
+            if (configuration.DataType == typeof(int))
+            {
+                IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
+                int value = Configuration[instance];
+                parameter.SqlValue = value;
+            }
+            else if (configuration.DataType == typeof(string))
+            {
+                StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
+                string value = Configuration[instance];
+                parameter.SqlValue = (object)value ?? DBNull.Value;
+                if (Configuration.AllowedMaxLength.HasValue)
+                {
+                    parameter.Size = Configuration.AllowedMaxLength.Value;
+                }
+            }
+            else if (configuration.DataType == typeof(decimal))
+            {
+                DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
+                decimal value = Configuration[instance];
+                parameter.SqlValue = value;
+                //if (Configuration.AllowedMaxLength.HasValue)
+                //{
+                //    parameter.Size = Configuration.AllowedMaxLength.Value;
+                //}
+            }
+            else if (configuration.DataType == typeof(double))
+            {
+                DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
+                double value = Configuration[instance];
+                parameter.SqlValue = value;
+                //if (Configuration.AllowedMaxLength.HasValue)
+                //{
+                //    parameter.Size = Configuration.AllowedMaxLength.Value;
+                //}
+            }
+            return parameter;
+        }
 
         internal SqlParameter GetParameter(S instance, string propertyName)
         {
@@ -40,7 +147,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 FoundParameter = null;
 
                 if (!configuration.IsOut) continue;
-                
+
                 for (int i = 0; i < parameters.Length; i++)
                 {
                     if (parameters[i].ParameterName == string.Concat(SQLPARAMETERPREFIX, configuration.ParameterName))
@@ -65,46 +172,33 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             }
         }
 
-
-        const string SQLPARAMETERPREFIX = "@";
-        private SqlParameter BuildParameter(PropertyConfiguration configuration, S instance)
-        {
-            SqlParameter parameter = new SqlParameter();
-            parameter.ParameterName = string.Concat(SQLPARAMETERPREFIX, configuration.ParameterName);
-            parameter.SqlDbType = configuration.GetSqlDbType();
-            parameter.Direction = configuration.IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
-
-            if (configuration.DataType == typeof(int))
-            {
-                IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
-                int value = Configuration[instance];
-                parameter.Value = value;
-            }
-            else if (configuration.DataType == typeof(string))
-            {
-                StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
-                string value = Configuration[instance];
-                parameter.Value = value;
-                if (Configuration.AllowedMaxLength.HasValue)
-                {
-                    parameter.Size = Configuration.AllowedMaxLength.Value;
-                }
-            }
-
-            return parameter;
-        }
+        public bool IncludeUnmappedProperties { get; set; }
 
         public IntegerTypeConfiguration<S> Maps(Expression<Func<S, int>> memberSelector)
         {
             IntegerTypeConfiguration<S> Configuration = new IntegerTypeConfiguration<S>(memberSelector);
-            Configurations.Add(Configuration.PropertyName, Configuration);
+            AddMapping(Configuration);
             return Configuration;
         }
 
         public StringTypeConfiguration<S> Maps(Expression<Func<S, string>> memberSelector)
         {
             StringTypeConfiguration<S> Configuration = new StringTypeConfiguration<S>(memberSelector);
-            Configurations.Add(Configuration.PropertyName, Configuration);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+
+        public DecimalTypeConfiguration<S> Maps(Expression<Func<S, decimal>> memberSelector)
+        {
+            DecimalTypeConfiguration<S> Configuration = new DecimalTypeConfiguration<S>(memberSelector);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+
+        public DoubleTypeConfiguration<S> Maps(Expression<Func<S, double>> memberSelector)
+        {
+            DoubleTypeConfiguration<S> Configuration = new DoubleTypeConfiguration<S>(memberSelector);
+            AddMapping(Configuration);
             return Configuration;
         }
     }

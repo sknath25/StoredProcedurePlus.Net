@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StoredProcedurePlus.Net.StoredProcedureManagers;
 using StoredProcedurePlus.Net.UnitTestEntities;
-using StoredProcedurePlus.Net.UnitTests.StoredProcedureManagers;
+using StoredProcedurePlus.Net.UnitTests.StoredProcedures;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,8 +29,49 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
 
             p1.Execute(Entity);
             p1.Execute(Entity1);
+        }
 
-            Assert.Fail();
+        [TestMethod()]
+        public void ResourceSummaryTest()
+        {
+            ResourceSummary Input = new ResourceSummary()
+            {
+                Employer = "debajyoti"
+                ,
+                EmailAddress = "skumar2@cdicorp.com"
+                ,
+                CTC = 1000.56M
+                ,
+                Pin = "712233"
+                ,
+                MobileNo = "9051778445"
+            };
+
+            SpResourceSummary Sp = new SpResourceSummary();
+
+            SpResourceSummary Sp2 = new SpResourceSummary();
+
+            Sp.Execute(Input);
+            Sp2.Execute(Input);
+            Console.Write(Input.PersonId);
+
+
+            Assert.IsTrue(Input.PersonId > 0);
+        }
+
+        [TestMethod()]
+        public void ResourceSummaryTest2()
+        {
+            Resource Input = new Resource()
+            {
+               id=90, name="Debajyoti" 
+            };
+
+            SpResourceSummary2 Sp = new SpResourceSummary2();
+
+            Sp.Execute(Input);
+
+            //Assert.IsTrue(Input.PersonId > 0);
         }
     }
 }

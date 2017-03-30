@@ -1,11 +1,9 @@
-﻿using System.Data;
-using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
-using System;
+﻿using System;
 using System.Linq.Expressions;
 
-namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
+namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 {
-    public abstract class PrimitiveTypeConfiguration<S,T>: PropertyConfiguration
+    public abstract class PrimitiveTypeConfiguration<S,T>: PropertyConfiguration where S : class
     {
         readonly EntityAccessor<S, T> Accessor;
 
@@ -23,16 +21,21 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             {
                 T Result = Accessor[instance];
                 //Do evaluation here
-                return Validate(Result);
+                return ValidateToDb(Result);
             }
             set
             {
                 //Do evaluation here 
-                Accessor[instance] = Validate(value);
+                Accessor[instance] = ValidateFromDb(value);
             }
         }
                       
-        protected virtual T Validate(T value)
+        protected virtual T ValidateToDb(T value)
+        {
+            return value;
+        }
+
+        protected virtual T ValidateFromDb(T value)
         {
             return value;
         }
