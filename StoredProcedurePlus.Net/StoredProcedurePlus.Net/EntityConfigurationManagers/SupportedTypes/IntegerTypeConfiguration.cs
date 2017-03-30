@@ -37,27 +37,31 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         }
 
 
-        int? AllowedMaxValue = null;
-        int? AllowedMinValue = null;
-
+        int? AllowedMaxValue = null;        
         public IntegerTypeConfiguration<S> Max(int value)
         {
             AllowedMaxValue = value;
             return this;
         }
+
+        int? AllowedMinValue = null;
         public IntegerTypeConfiguration<S> Min(int value)
         {
             AllowedMinValue = value;
             return this;
         }
 
+        int[] AllowedValuesOnly = null;
         public IntegerTypeConfiguration<S> AllowedOnly(int[] values)
         {
+            AllowedValuesOnly = values;
             return this;
         }
 
+        int[] AllowedValuesExcept = null;
         public IntegerTypeConfiguration<S> AllowedExcept(int[] values)
         {
+            AllowedValuesExcept = values;
             return this;
         }
     }

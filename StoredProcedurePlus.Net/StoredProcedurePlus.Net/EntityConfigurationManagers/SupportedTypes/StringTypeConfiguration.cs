@@ -42,7 +42,6 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
- 
         internal bool IsRequired { get; private set; }
         public StringTypeConfiguration<S> Required()
         {
@@ -50,27 +49,38 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
-        internal int? AllowedMaxLength = null;
-        public StringTypeConfiguration<S> MaxLength(int value)
+        internal uint? Size = null;
+        public StringTypeConfiguration<S> HasSize(uint value)
+        {
+            Size = value;
+            return this;
+        }
+
+        uint? AllowedMaxLength = null;
+        public StringTypeConfiguration<S> MaxLength(uint value)
         {
             AllowedMaxLength = value;
             return this;
         }
 
-        internal int? AllowedMinLength = null;
-        public StringTypeConfiguration<S> MinLength(int value)
+        uint? AllowedMinLength = null;
+        public StringTypeConfiguration<S> MinLength(uint value)
         {
             AllowedMinLength = value;
             return this;
         }
 
+        string[] AllowedValuesOnly = null;
         public StringTypeConfiguration<S> AllowedOnly(string[] values)
         {
+            AllowedValuesOnly = values;
             return this;
         }
 
+        string[] AllowedValuesExcept = null;
         public StringTypeConfiguration<S> AllowedExcept(string[] values)
         {
+            AllowedValuesExcept = values;
             return this;
         }
     }

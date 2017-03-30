@@ -16,6 +16,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
     [TestClass()]
     public class StoredProcedureManagerTests
     {
+        static string Hash = Guid.NewGuid().ToString();
+
         [TestMethod()]
         public void TakesTest()
         {
@@ -36,25 +38,36 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
         {
             ResourceSummary Input = new ResourceSummary()
             {
-                Employer = "debajyoti"
-                ,
-                EmailAddress = "skumar2@cdicorp.com"
-                ,
-                CTC = 1000.56M
-                ,
-                Pin = "712233"
-                ,
-                MobileNo = "9051778445"
+                PersonName="SQL++.NET LIB PERFORMANCE TEST",
+                Country="INDIA",
+                State="GUJRAT",
+                City="BARODA",
+                District="UNSPECIFIED",
+                Street="1 SHANTI NAGAR STREET",
+                HouseNo="C8",
+                Pin = Hash,
+                MobileNo = "9051778445",
+                HomePhoneNo = "9051778445",
+                EmailAddress = "cdiprod.visualstudio@cdicorp.com",
+                MothersName = "VISUAL STUDIO",
+                FathersName = "PERFORMANCE TEST",
+                Employer = "COP",
+                EmployerCountry="USA",
+                EmployerCity= "BALA CYNWYD",
+                EmployerState = "PENNSYLVANIA",
+                EmployerDistrict = "PHILADELPHIA",                
+                EmployerPin="19015",
+                EmployerStreet="1800 GREEN STREET",
+                EmployerHouseNo="F2",
+                CTC = 1000.56M,
+                NET=10000.65M,
+                Gross = 10000.11M,   
+                MobileNo2= Hash
             };
 
             SpResourceSummary Sp = new SpResourceSummary();
-
-            SpResourceSummary Sp2 = new SpResourceSummary();
-
             Sp.Execute(Input);
-            Sp2.Execute(Input);
             Console.Write(Input.PersonId);
-
 
             Assert.IsTrue(Input.PersonId > 0);
         }

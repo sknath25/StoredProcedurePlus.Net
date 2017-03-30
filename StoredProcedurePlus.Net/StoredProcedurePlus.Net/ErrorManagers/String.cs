@@ -13,14 +13,14 @@ namespace StoredProcedurePlus.Net.ErrorManagers
             throw new ArgumentException("Value cannot be null", propertyName);
         }    
 
-        internal static Exception MaxLengthPropertyValidationError(string propertyName, int actualLength, int allowedLength)
+        internal static Exception MaxLengthPropertyValidationError(string propertyName, int actualLength, uint allowedLength)
         {
             throw new ArgumentException(
                 string.Format("The value of {0} has length {1} but the maximum allowed length is {2}", 
                 propertyName, actualLength, allowedLength));
         }
 
-        internal static Exception MinLengthPropertyValidationError(string propertyName, int actualLength, int allowedLength)
+        internal static Exception MinLengthPropertyValidationError(string propertyName, int actualLength, uint allowedLength)
         {
             throw new ArgumentException(
                 string.Format("The value of {0} has length {1} but the minimum allowed length is {2}",

@@ -37,27 +37,41 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         }
 
 
-        double? AllowedMaxValue = null;
-        double? AllowedMinValue = null;
+        internal byte? ScaleSize = null;
+        internal byte? PrecisionSize = null;
+        public DoubleTypeConfiguration<S> HasSize(byte scale, byte precision)
+        {
+            ScaleSize = scale;
+            PrecisionSize = precision;
+            return this;
+        }
 
+
+        double? AllowedMaxValue = null;
         public DoubleTypeConfiguration<S> Max(double value)
         {
             AllowedMaxValue = value;
             return this;
         }
+
+        double? AllowedMinValue = null;
         public DoubleTypeConfiguration<S> Min(double value)
         {
             AllowedMinValue = value;
             return this;
         }
 
+        double[] AllowedValuesOnly = null;
         public DoubleTypeConfiguration<S> AllowedOnly(double[] values)
         {
+            AllowedValuesOnly = values;
             return this;
         }
 
+        double[] AllowedValuesExcept = null;
         public DoubleTypeConfiguration<S> AllowedExcept(double[] values)
         {
+            AllowedValuesExcept = values;
             return this;
         }
     }

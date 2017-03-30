@@ -1,14 +1,10 @@
 ﻿using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
 using StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
@@ -94,9 +90,9 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
                 string value = Configuration[instance];
                 parameter.SqlValue = (object)value ?? DBNull.Value;
-                if (Configuration.AllowedMaxLength.HasValue)
+                if (Configuration.Size.HasValue)
                 {
-                    parameter.Size = Configuration.AllowedMaxLength.Value;
+                    parameter.Size = (int)Configuration.Size.Value;
                 }
             }
             else if (configuration.DataType == typeof(decimal))
@@ -104,20 +100,28 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
                 decimal value = Configuration[instance];
                 parameter.SqlValue = value;
-                //if (Configuration.AllowedMaxLength.HasValue)
-                //{
-                //    parameter.Size = Configuration.AllowedMaxLength.Value;
-                //}
+                if (Configuration.ScaleSize.HasValue)
+                {
+                    parameter.Scale = Configuration.ScaleSize.Value;
+                }
+                if (Configuration.PrecisionSize.HasValue)
+                {
+                    parameter.Precision = Configuration.PrecisionSize.Value;
+                }
             }
             else if (configuration.DataType == typeof(double))
             {
                 DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
                 double value = Configuration[instance];
                 parameter.SqlValue = value;
-                //if (Configuration.AllowedMaxLength.HasValue)
-                //{
-                //    parameter.Size = Configuration.AllowedMaxLength.Value;
-                //}
+                if (Configuration.ScaleSize.HasValue)
+                {
+                    parameter.Scale = Configuration.ScaleSize.Value;
+                }
+                if (Configuration.PrecisionSize.HasValue)
+                {
+                    parameter.Precision = Configuration.PrecisionSize.Value;
+                }
             }
             return parameter;
         }

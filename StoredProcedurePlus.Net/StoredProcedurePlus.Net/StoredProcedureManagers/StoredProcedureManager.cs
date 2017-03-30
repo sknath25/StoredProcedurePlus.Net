@@ -1,17 +1,13 @@
-﻿using StoredProcedurePlus.Net.ConnectionManagers;
-using StoredProcedurePlus.Net.StoredProcedureManagers;
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
     public abstract class StoredProcedureManager<S> where S : class
     {
+        static object Locker = new object();
+
         readonly static ProcedureConfiguration<S> Configuration = new ProcedureConfiguration<S>();
 
         protected StoredProcedureManager()
@@ -21,30 +17,37 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         private void Initialize()
         {
-            if (Configuration.ProcedureName == null)
+            lock (Locker)
             {
-                Setup(Configuration);
-
-                Configuration.Initialize();
-
-                if (Configuration.ConnectionString == null)
+                if (Configuration.ProcedureName == null)
                 {
-                    Configuration.Connection.SetConnectionStringName(Configuration.ConnectionStringName);
-                }
-                else
-                {
-                    Configuration.Connection.SetConnectionString(Configuration.ConnectionString);
+                    Setup(Configuration);
+
+                    Configuration.Initialize();
+
+                    if (Configuration.ConnectionString == null)
+                    {
+                        Configuration.Connection.SetConnectionStringName(Configuration.ConnectionStringName);
+                    }
+                    else
+                    {
+                        Configuration.Connection.SetConnectionString(Configuration.ConnectionString);
+                    }
                 }
             }
         }
 
-        protected abstract void Setup(ProcedureConfiguration<S> configuration); 
+        protected abstract void Setup(ProcedureConfiguration<S> configuration);
 
+        [SuppressMessage("Microsoft.Security", "CA2100", Justification = "The command text is not user given")]
         public int Execute(S input)
         {
             this.Initialize();
 
+           
             IDbCommand Command = new SqlCommand(Configuration.ProcedureName);
+
+
             Command.CommandType = CommandType.StoredProcedure;
 
             SqlParameter[] Parameters = Configuration.Input.GetAllParameters(input);

@@ -36,28 +36,41 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
+        internal byte? ScaleSize = null;
+        internal byte? PrecisionSize = null;
+        public DecimalTypeConfiguration<S> HasSize(byte scale, byte precision)
+        {
+            ScaleSize = scale;
+            PrecisionSize = precision;
+            return this;
+        }
+
 
         decimal? AllowedMaxValue = null;
-        decimal? AllowedMinValue = null;
-
         public DecimalTypeConfiguration<S> Max(decimal value)
         {
             AllowedMaxValue = value;
             return this;
         }
+
+        decimal? AllowedMinValue = null;
         public DecimalTypeConfiguration<S> Min(decimal value)
         {
             AllowedMinValue = value;
             return this;
         }
 
+        decimal[] AllowedValuesOnly = null;
         public DecimalTypeConfiguration<S> AllowedOnly(decimal[] values)
         {
+            AllowedValuesOnly = values;
             return this;
         }
 
+        decimal[] AllowedValuesExcept = null;
         public DecimalTypeConfiguration<S> AllowedExcept(decimal[] values)
         {
+            AllowedValuesExcept = values;
             return this;
         }
     }
