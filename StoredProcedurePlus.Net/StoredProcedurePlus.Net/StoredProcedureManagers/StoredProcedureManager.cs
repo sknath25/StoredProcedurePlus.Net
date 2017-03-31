@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using StoredProcedurePlus.Net.ConnectionManagers;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
 
@@ -40,29 +41,46 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         protected abstract void Setup(ProcedureConfiguration<S> configuration);
 
         [SuppressMessage("Microsoft.Security", "CA2100", Justification = "The command text is not user given")]
-        public int Execute(S input)
+        public int Execute(S input, ConnectionScope scope)
         {
             this.Initialize();
 
-           
             IDbCommand Command = new SqlCommand(Configuration.ProcedureName);
-
 
             Command.CommandType = CommandType.StoredProcedure;
 
             SqlParameter[] Parameters = Configuration.Input.GetAllParameters(input);
 
-            for(int i=0;i<Parameters.Length;i++)
+            for (int i = 0; i < Parameters.Length; i++)
             {
                 Command.Parameters.Add(Parameters[i]);
             }
 
             int Result = -1;
 
-            using (Command.Connection = Configuration.Connection.GetNewConnection())
+            if (scope == null)
+            {
+                using (scope = new ConnectionScope())
+                {
+                    scope.SetConnectionProvider(Configuration.Connection);
+
+                    Command.Connection = scope.Create();
+
+                    if (Command.Connection != null)
+                    {
+                        Result = Command.ExecuteNonQuery();
+                        Configuration.Input.SetOuts(Parameters, input);
+                    }
+                }
+            }
+            else
             {
                 try
                 {
+                    scope.SetConnectionProvider(Configuration.Connection);
+
+                    Command.Connection = scope.Create();
+
                     if (Command.Connection != null)
                     {
                         Result = Command.ExecuteNonQuery();
@@ -73,9 +91,17 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 {
                     throw;
                 }
+                finally
+                {
+                    scope.End();
+                }
             }
-
             return Result;
+        }
+
+        public int Execute(S input)
+        {
+            return this.Execute(input, null);
         }
     }
 }

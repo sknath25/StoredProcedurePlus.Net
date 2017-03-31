@@ -3,7 +3,7 @@ using System;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public sealed class ProcedureConfiguration<S>: IDisposable where S : class
+    public sealed class ProcedureConfiguration<S> where S : class
     {
         public string ConnectionStringName { get; set; }
 
@@ -11,27 +11,19 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         public string ProcedureName { get; set; }
       
-        internal readonly IConnectionManager Connection;
+        internal readonly ConnectionFactory Connection;
 
         public EntityConfiguration<S> Input;
 
         public ProcedureConfiguration()
         {
             Input = new EntityConfiguration<S>();
-            Connection = new SqlConnectionManager();
+            Connection = new ConnectionFactory();
         }
 
         internal void Initialize()
         {
             Input.Initialize();
-        }
-
-        public void Dispose()
-        {
-            if(Connection!=null)
-            {
-                Connection.Dispose();
-            }
         }
     }
 }

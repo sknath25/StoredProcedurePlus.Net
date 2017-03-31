@@ -49,8 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionManagers\SqlConnectionManager.cs" />
-    <Compile Include="ConnectionManagers\IConnectionManager.cs" />
+    <Compile Include="ConnectionManagers\ConnectionScope.cs" />
+    <Compile Include="ConnectionManagers\ConnectionFactory.cs" />
     <Compile Include="EntityConfigurationManagers\Core\EntityAccessor.cs" />
     <Compile Include="EntityConfigurationManagers\ProcedureConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\DecimalTypeConfiguration.cs" />
