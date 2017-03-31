@@ -13,7 +13,7 @@ namespace StoredProcedurePlus.Net.UnitTests.StoredProcedures
         protected override void Setup(ProcedureConfiguration<Resource> configuration)
         {
             configuration.ProcedureName = "InsertResourceSummary2";
-            configuration.ConnectionString = "Data Source=PIS03CDIVDISS33;Initial Catalog=PerformanceTestDb;Integrated Security=True;";
+            //configuration.ConnectionString = "Data Source=PIS03CDIVDISS33;Initial Catalog=PerformanceTestDb;Integrated Security=True;";
         }
     }
 }

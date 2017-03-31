@@ -14,13 +14,12 @@ namespace StoredProcedurePlus.Net.ConnectionManagers
         private string ConnectionString = null;
 
         internal ConnectionFactory()
-        {
-            ConnectionStringName = "DbString";
+        {            
         }
 
         public void SetConnectionString(string connectionString)
         {
-            this.ConnectionString = connectionString;
+                this.ConnectionString = connectionString;
         }
 
         public void SetConnectionStringName(string name)

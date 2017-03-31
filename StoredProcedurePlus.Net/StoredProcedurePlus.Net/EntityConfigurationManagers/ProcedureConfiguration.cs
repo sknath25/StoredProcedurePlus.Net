@@ -17,6 +17,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         public ProcedureConfiguration()
         {
+            ConnectionStringName = "DbString"; // Default
             Input = new EntityConfiguration<S>();
             Connection = new ConnectionFactory();
         }
