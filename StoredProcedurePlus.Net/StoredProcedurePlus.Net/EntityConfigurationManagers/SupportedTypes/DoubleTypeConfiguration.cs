@@ -16,11 +16,11 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return SqlDbType.Decimal;
         }
 
-        protected override double ValidateToDb(double value)
+        protected override double ValidateAndGet(double value)
         {
             if (AllowedMaxValue.HasValue && value > AllowedMaxValue) Error.MaxValuePropertyValidationError(PropertyName, value, AllowedMaxValue.Value);
             if (AllowedMinValue.HasValue && value < AllowedMinValue) Error.MinValuePropertyValidationError(PropertyName, value, AllowedMinValue.Value);
-            base.ValidateToDb(value);
+            base.ValidateAndGet(value);
             return value;
         }
 

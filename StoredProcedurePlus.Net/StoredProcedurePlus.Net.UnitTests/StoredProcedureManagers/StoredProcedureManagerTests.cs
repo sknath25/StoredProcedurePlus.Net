@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -256,6 +257,37 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             Console.Write(Input.PersonId);
 
             Assert.IsTrue(Input.PersonId > 0);
+        }
+
+        [TestMethod()]
+        public void ScopeTestRetrival()
+        {
+            ResourceSummary Input = new ResourceSummary()
+            {
+                PersonName = "SQL++.NET LIB PERFORMANCE TEST",                
+            };
+
+            ICollection<ResourceSummary> Result=null;
+
+            using (ConnectionScope scope = new ConnectionScope())
+            {
+                SpResourceSummaryDetails Sp = new SpResourceSummaryDetails();
+
+                 Sp.Execute(Input, scope);
+
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
+                Result =
+                   Sp.GetResult<ResourceSummary>();
+
+                sw.Stop();
+
+                Console.Write( string.Format("Record Retrived : {0} in time : {1}", Result!=null?Result.Count:0,  sw.Elapsed.TotalMilliseconds));
+
+            }
+
+            //Assert.IsTrue(Result.Count > 0);
         }
     }
 }

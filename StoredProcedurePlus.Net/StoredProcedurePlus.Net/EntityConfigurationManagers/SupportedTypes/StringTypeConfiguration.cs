@@ -17,7 +17,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return SqlDbType.VarChar;
         }
 
-        protected override string ValidateToDb(string value)
+        protected override string ValidateAndGet(string value)
         {
             if (IsRequired && value==null) Error.RequiredPropertyValidationError(PropertyName);
             if (value != null)
@@ -26,7 +26,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 if (AllowedMaxLength.HasValue && Length > AllowedMaxLength) Error.MaxLengthPropertyValidationError(PropertyName, Length, AllowedMaxLength.Value);
                 if (AllowedMinLength.HasValue && Length < AllowedMinLength) Error.MinLengthPropertyValidationError(PropertyName, Length, AllowedMinLength.Value);
             }
-            base.ValidateToDb(value);
+            base.ValidateAndGet(value);
             return value;
         }
 

@@ -16,11 +16,11 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return SqlDbType.Int;
         }
 
-        protected override int ValidateToDb(int value)
+        protected override int ValidateAndGet(int value)
         {
             if (AllowedMaxValue.HasValue && value > AllowedMaxValue) Error.MaxValuePropertyValidationError(PropertyName, value, AllowedMaxValue.Value);
             if (AllowedMinValue.HasValue && value < AllowedMinValue) Error.MinValuePropertyValidationError(PropertyName, value, AllowedMinValue.Value);
-            base.ValidateToDb(value);
+            base.ValidateAndGet(value);
             return value;
         }
 
@@ -58,7 +58,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
-        int[] AllowedValuesExcept = null;
+        int[] AllowedValuesExcept = null;        
+
         public IntegerTypeConfiguration<S> AllowedExcept(int[] values)
         {
             AllowedValuesExcept = values;

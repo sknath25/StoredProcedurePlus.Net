@@ -1,33 +1,60 @@
-﻿using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
+﻿using StoredProcedurePlus.Net.EntityConfigurationManagers;
+using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
 using StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes;
+using StoredProcedurePlus.Net.EntityManagers;
+using StoredProcedurePlus.Net.ErrorManagers;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public class EntityConfiguration<S> where S : class
+    public class EntityConfiguration<S> : NonPrimitiveEntityConfiguration where S : class
     {
-        private readonly Dictionary<string, PropertyConfiguration> Configurations = new Dictionary<string, PropertyConfiguration>();
+        #region Private
 
-        internal EntityConfiguration()
+        private class OrdinalProxy : EntityOrdinalConfiguration
         {
-            IncludeUnmappedProperties = true;
+            internal OrdinalProxy(List<PropertyConfiguration> parameters, IDataEntityAdapter record) : base(parameters, record) { }
         }
 
-        internal void Initialize()
+        private class SqlParameterEntityAdapterProxy : SqlParameterEntityAdapter
         {
-            if (!IncludeUnmappedProperties) return;
+            internal SqlParameterEntityAdapterProxy(List<PropertyConfiguration> configurations) :base(configurations)
+            {
 
-            Type SourceType = typeof(S);
+            }
+        }
+
+        private readonly List<PropertyConfiguration> Configurations = new List<PropertyConfiguration>();
+
+        private LambdaExpression BuildExpression(Type sourceType, PropertyInfo propertyInfo)
+        {
+            var parameter = Expression.Parameter(sourceType, propertyInfo.Name);
+            var property = Expression.Property(parameter, propertyInfo);
+            var funcType = typeof(Func<,>).MakeGenericType(sourceType, propertyInfo.PropertyType);
+            var lambda = Expression.Lambda(funcType, property, parameter);
+            return lambda;
+        }
+
+        private void AddMapping(PropertyConfiguration configuration)
+        {
+            Configurations.Remove(configuration);//IT will only check agaist property name. 
+            Configurations.Add(configuration);
+        }
+
+        #endregion
+
+        protected override void InitializePropertyConfigurations()
+        {
+            SourceType = typeof(S);
 
             PropertyInfo[] Properties = SourceType.GetProperties();
 
             for (int i = 0; i < Properties.Length; i++)
             {
-                if (!Configurations.ContainsKey(Properties[i].Name))
+                if (!Configurations.Exists(v=>v.PropertyName == Properties[i].Name))
                 {
                     if (Properties[i].PropertyType == typeof(string))
                     {
@@ -53,130 +80,87 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             }
         }
 
-        private LambdaExpression BuildExpression(Type sourceType, PropertyInfo propertyInfo)
+        internal EntityConfiguration(){}
+
+        internal IDataEntityAdapter GetAsSqlParameters()
         {
-            var parameter = Expression.Parameter(sourceType, propertyInfo.Name);
-            var property = Expression.Property(parameter, propertyInfo);
-            var funcType = typeof(Func<,>).MakeGenericType(sourceType, propertyInfo.PropertyType);
-            var lambda = Expression.Lambda(funcType, property, parameter);
-            return lambda;
+            SqlParameterEntityAdapter manager = new SqlParameterEntityAdapterProxy(Configurations);
+            return manager;
         }
 
-        private void AddMapping(PropertyConfiguration Configuration)
+        internal void Prepare(IDataEntityAdapter record)
         {
-            if (Configurations.ContainsKey(Configuration.PropertyName))
-            {
-                Configurations.Remove(Configuration.PropertyName);
-            }
-            Configurations.Add(Configuration.PropertyName, Configuration);
+            OrdinalProvider = new OrdinalProxy(Configurations, record);
         }
 
-        const string SQLPARAMETERPREFIX = "@";
-        private SqlParameter BuildParameter(PropertyConfiguration configuration, S instance)
+        EntityOrdinalConfiguration OrdinalProvider = null;
+        internal void Fill(IDataEntityAdapter fromEntity, S toInstance)
         {
-            SqlParameter parameter = new SqlParameter();
-            parameter.ParameterName = string.Concat(SQLPARAMETERPREFIX, configuration.ParameterName);
-            parameter.SqlDbType = configuration.GetSqlDbType();
-            parameter.Direction = configuration.IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
+            if (OrdinalProvider == null) Error.PrepareDidnotCalled();
 
-            if (configuration.DataType == typeof(int))
+            for(int i = 0; i < Configurations.Count; i++) 
             {
-                IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
-                int value = Configuration[instance];
-                parameter.SqlValue = value;
-            }
-            else if (configuration.DataType == typeof(string))
-            {
-                StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
-                string value = Configuration[instance];
-                parameter.SqlValue = (object)value ?? DBNull.Value;
-                if (Configuration.Size.HasValue)
-                {
-                    parameter.Size = (int)Configuration.Size.Value;
-                }
-            }
-            else if (configuration.DataType == typeof(decimal))
-            {
-                DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
-                decimal value = Configuration[instance];
-                parameter.SqlValue = value;
-                if (Configuration.ScaleSize.HasValue)
-                {
-                    parameter.Scale = Configuration.ScaleSize.Value;
-                }
-                if (Configuration.PrecisionSize.HasValue)
-                {
-                    parameter.Precision = Configuration.PrecisionSize.Value;
-                }
-            }
-            else if (configuration.DataType == typeof(double))
-            {
-                DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
-                double value = Configuration[instance];
-                parameter.SqlValue = value;
-                if (Configuration.ScaleSize.HasValue)
-                {
-                    parameter.Scale = Configuration.ScaleSize.Value;
-                }
-                if (Configuration.PrecisionSize.HasValue)
-                {
-                    parameter.Precision = Configuration.PrecisionSize.Value;
-                }
-            }
-            return parameter;
-        }
+                PropertyConfiguration configuration = Configurations[i];
 
-        internal SqlParameter GetParameter(S instance, string propertyName)
-        {
-            PropertyConfiguration Item = Configurations[propertyName];
-            return BuildParameter(Item, instance);
-        }
-
-        internal SqlParameter[] GetAllParameters(S instance)
-        {
-            List<SqlParameter> SqlParameters = new List<SqlParameter>();
-            foreach (PropertyConfiguration Item in Configurations.Values)
-            {
-                SqlParameters.Add(BuildParameter(Item, instance));
-            }
-            return SqlParameters.ToArray();
-        }
-
-        internal void SetOuts(SqlParameter[] parameters, S instance)
-        {
-            SqlParameter FoundParameter;
-
-            foreach (PropertyConfiguration configuration in Configurations.Values)
-            {
-                FoundParameter = null;
-
-                if (!configuration.IsOut) continue;
-
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    if (parameters[i].ParameterName == string.Concat(SQLPARAMETERPREFIX, configuration.ParameterName))
-                    {
-                        FoundParameter = parameters[i];
-                        break;
-                    }
-                }
-
-                if (FoundParameter == null) continue;
+                int Ordinal = OrdinalProvider[configuration.PropertyName];
 
                 if (configuration.DataType == typeof(int))
                 {
                     IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
-                    Configuration[instance] = int.Parse(FoundParameter.SqlValue.ToString());
+                    Configuration[toInstance] = fromEntity.GetInt(Ordinal);
                 }
                 else if (configuration.DataType == typeof(string))
                 {
                     StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
-                    Configuration[instance] = FoundParameter.SqlValue.ToString();
+                    Configuration[toInstance] = fromEntity.GetString(Ordinal);
+                }
+                else if (configuration.DataType == typeof(double))
+                {
+                    DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
+                    Configuration[toInstance] = fromEntity.GetDouble(Ordinal);
+                }
+                else if (configuration.DataType == typeof(decimal))
+                {
+                    DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
+                    Configuration[toInstance] = fromEntity.GetDecimal(Ordinal);
                 }
             }
         }
 
-        public bool IncludeUnmappedProperties { get; set; }
+        internal void Fill(S fromInstance, IDataEntityAdapter toEntity)
+        {
+            if (OrdinalProvider == null) Error.PrepareDidnotCalled();
+
+            for (int i = 0; i < Configurations.Count; i++)
+            {
+                PropertyConfiguration configuration = Configurations[i];
+
+                int Ordinal = OrdinalProvider[configuration.PropertyName];
+
+                if (configuration.DataType == typeof(int))
+                {
+                    IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
+                    toEntity.SetInt(Ordinal, Configuration[fromInstance]);
+                }
+                else if (configuration.DataType == typeof(string))
+                {
+                    StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
+                    toEntity.SetString(Ordinal, Configuration[fromInstance]);
+                }
+                else if (configuration.DataType == typeof(double))
+                {
+                    DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
+                    toEntity.SetDouble(Ordinal, Configuration[fromInstance]);
+                }
+                else if (configuration.DataType == typeof(decimal))
+                {
+                    DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
+                    toEntity.SetDecimal(Ordinal, Configuration[fromInstance]);
+                }
+            }
+        }
+
+        #region Public
 
         public IntegerTypeConfiguration<S> Maps(Expression<Func<S, int>> memberSelector)
         {
@@ -205,5 +189,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             AddMapping(Configuration);
             return Configuration;
         }
+
+        #endregion
     }
 }

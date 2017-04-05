@@ -4,18 +4,11 @@ using System.Reflection;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 {
-    public abstract class PropertyConfiguration
+    public abstract class PropertyConfiguration: IEquatable<PropertyConfiguration>
     {
         public PropertyConfiguration()
         {
 
-        }
-
-        internal PropertyConfiguration(PropertyInfo propertyInfo)
-        {
-            this.PropertyName = propertyInfo.Name;
-            this.ParameterName = this.PropertyName;
-            this.DataType = propertyInfo.PropertyType;            
         }
 
         protected internal string PropertyName { get; protected set; }
@@ -25,6 +18,11 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
         protected internal string ParameterName { get; protected set; }     
 
         protected internal Type DataType { get; protected set; }
+
+        public bool Equals(PropertyConfiguration other)
+        {
+            if (other.PropertyName == this.PropertyName) return true; else return false;
+        }
 
         internal abstract SqlDbType GetSqlDbType();
     }
