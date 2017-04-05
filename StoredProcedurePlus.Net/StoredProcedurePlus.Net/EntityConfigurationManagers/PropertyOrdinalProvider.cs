@@ -2,6 +2,7 @@
 using StoredProcedurePlus.Net.EntityManagers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers
 {
@@ -19,14 +20,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers
 
             for (int i = 0; i < Parameters.Count; i++)
             {
-                for (int s = 0; s < record.FieldCount; s++)
-                {
-                    if(Parameters[i].PropertyName == record.GetName(s))
-                    {
-                        Index.Add(Parameters[i].PropertyName, new Tuple<int, PropertyConfiguration>(i, Parameters[i]));
-                        break;
-                    }
-                }                   
+                Index.Add(Parameters[i].PropertyName, new Tuple<int, PropertyConfiguration>(record.GetOrdinal(Parameters[i].ParameterName), Parameters[i]));
             }
         }
 

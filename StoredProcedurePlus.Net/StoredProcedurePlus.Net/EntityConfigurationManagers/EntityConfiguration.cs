@@ -5,14 +5,33 @@ using StoredProcedurePlus.Net.EntityManagers;
 using StoredProcedurePlus.Net.ErrorManagers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
     public class EntityConfiguration<S> : NonPrimitiveEntityConfiguration where S : class
     {
         #region Private
+
+        private ObjectActivator CreateCtor(Type type)
+        {
+            if (type == null)
+            {
+                throw new NullReferenceException("type");
+            }
+            ConstructorInfo emptyConstructor = type.GetConstructor(Type.EmptyTypes);
+            var dynamicMethod = new DynamicMethod("CreateInstance", type, Type.EmptyTypes, true);
+            ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
+            ilGenerator.Emit(OpCodes.Nop);
+            ilGenerator.Emit(OpCodes.Newobj, emptyConstructor);
+            ilGenerator.Emit(OpCodes.Ret);
+            return (ObjectActivator)dynamicMethod.CreateDelegate(typeof(ObjectActivator));
+        }
+
+        private delegate object ObjectActivator();
 
         private class OrdinalProxy : EntityOrdinalConfiguration
         {
@@ -22,6 +41,14 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         private class SqlParameterEntityAdapterProxy : SqlParameterEntityAdapter
         {
             internal SqlParameterEntityAdapterProxy(List<PropertyConfiguration> configurations) :base(configurations)
+            {
+
+            }
+        }
+
+        private class DbDataEntityAdapterProxy : DbDataEntityAdapter
+        {
+            internal DbDataEntityAdapterProxy(IDataReader record) : base(record)
             {
 
             }
@@ -80,23 +107,37 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             }
         }
 
-        internal EntityConfiguration(){}
+        #region Internal
 
         internal IDataEntityAdapter GetAsSqlParameters()
         {
-            SqlParameterEntityAdapter manager = new SqlParameterEntityAdapterProxy(Configurations);
-            return manager;
+            return new SqlParameterEntityAdapterProxy(Configurations);
         }
 
-        internal void Prepare(IDataEntityAdapter record)
+        internal EntityConfiguration(){}
+
+        override internal object GetNewEntity()
+        {
+            S Instance = (S)CreateCtor(typeof(S)).Invoke();
+            return Instance;
+        }
+
+        override internal void Prepare(IDataEntityAdapter record)
         {
             OrdinalProvider = new OrdinalProxy(Configurations, record);
         }
 
+        override internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record)
+        {
+            return new DbDataEntityAdapterProxy(record);
+        }
+
         EntityOrdinalConfiguration OrdinalProvider = null;
-        internal void Fill(IDataEntityAdapter fromEntity, S toInstance)
+        override internal void Set(IDataEntityAdapter fromEntity, object toInstance)
         {
             if (OrdinalProvider == null) Error.PrepareDidnotCalled();
+
+            S Instance = (S)toInstance;
 
             for(int i = 0; i < Configurations.Count; i++) 
             {
@@ -106,30 +147,60 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                 if (configuration.DataType == typeof(int))
                 {
-                    IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
-                    Configuration[toInstance] = fromEntity.GetInt(Ordinal);
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+
+                    }
+                    else
+                    {
+                        IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
+                        Configuration[Instance] = fromEntity.GetInt(Ordinal);
+                    }
                 }
                 else if (configuration.DataType == typeof(string))
                 {
-                    StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
-                    Configuration[toInstance] = fromEntity.GetString(Ordinal);
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+
+                    }
+                    else
+                    {
+                        StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
+                        Configuration[Instance] = fromEntity.GetString(Ordinal);
+                    }
                 }
                 else if (configuration.DataType == typeof(double))
                 {
-                    DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
-                    Configuration[toInstance] = fromEntity.GetDouble(Ordinal);
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+
+                    }
+                    else
+                    {
+                        DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
+                        Configuration[Instance] = fromEntity.GetDouble(Ordinal);
+                    }
                 }
                 else if (configuration.DataType == typeof(decimal))
                 {
-                    DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
-                    Configuration[toInstance] = fromEntity.GetDecimal(Ordinal);
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+
+                    }
+                    else
+                    {
+                        DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
+                        Configuration[Instance] = fromEntity.GetDecimal(Ordinal);
+                    }
                 }
             }
         }
 
-        internal void Fill(S fromInstance, IDataEntityAdapter toEntity)
+        override internal void Get(object fromInstance, IDataEntityAdapter toEntity)
         {
             if (OrdinalProvider == null) Error.PrepareDidnotCalled();
+
+            S Instance = (S)fromInstance;
 
             for (int i = 0; i < Configurations.Count; i++)
             {
@@ -140,25 +211,27 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 if (configuration.DataType == typeof(int))
                 {
                     IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
-                    toEntity.SetInt(Ordinal, Configuration[fromInstance]);
+                    toEntity.SetInt(Ordinal, Configuration[Instance]);
                 }
                 else if (configuration.DataType == typeof(string))
                 {
                     StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
-                    toEntity.SetString(Ordinal, Configuration[fromInstance]);
+                    toEntity.SetString(Ordinal, Configuration[Instance]);
                 }
                 else if (configuration.DataType == typeof(double))
                 {
                     DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
-                    toEntity.SetDouble(Ordinal, Configuration[fromInstance]);
+                    toEntity.SetDouble(Ordinal, Configuration[Instance]);
                 }
                 else if (configuration.DataType == typeof(decimal))
                 {
                     DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
-                    toEntity.SetDecimal(Ordinal, Configuration[fromInstance]);
+                    toEntity.SetDecimal(Ordinal, Configuration[Instance]);
                 }
             }
         }
+
+        #endregion
 
         #region Public
 

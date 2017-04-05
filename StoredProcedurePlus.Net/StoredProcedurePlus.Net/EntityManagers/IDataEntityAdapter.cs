@@ -10,7 +10,9 @@ namespace StoredProcedurePlus.Net.EntityManagers
     {
         int FieldCount { get; }
         string GetName(int ordinal);
+        int GetOrdinal(string name);
 
+        bool IsDBNull(int ordinal);
         string GetString(int ordinal);
         short GetShort(int ordinal);
         int GetInt(int ordinal);

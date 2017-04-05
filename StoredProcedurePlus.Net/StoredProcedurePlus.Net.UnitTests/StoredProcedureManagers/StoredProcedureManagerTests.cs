@@ -267,23 +267,23 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 PersonName = "SQL++.NET LIB PERFORMANCE TEST",                
             };
 
-            ICollection<ResourceSummary> Result=null;
+            IEnumerable<ResourceSummary> Result=null;
 
             using (ConnectionScope scope = new ConnectionScope())
             {
                 SpResourceSummaryDetails Sp = new SpResourceSummaryDetails();
 
-                 Sp.Execute(Input, scope);
-
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
+
+                Sp.Execute(Input, scope);
 
                 Result =
                    Sp.GetResult<ResourceSummary>();
 
                 sw.Stop();
 
-                Console.Write( string.Format("Record Retrived : {0} in time : {1}", Result!=null?Result.Count:0,  sw.Elapsed.TotalMilliseconds));
+                Console.Write( string.Format("Record Retrived : {0} in time : {1}", Result!=null?Result.Count():0,  sw.Elapsed.TotalMilliseconds));
 
             }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StoredProcedurePlus.Net.EntityManagers;
+using System;
+using System.Data;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
@@ -21,5 +23,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         }
 
         protected abstract void InitializePropertyConfigurations();
+
+        abstract internal object GetNewEntity();
+
+        abstract internal void Prepare(IDataEntityAdapter record);
+
+        abstract internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record);
+
+        abstract internal void Set(IDataEntityAdapter fromEntity, object toInstance);
+
+        abstract internal void Get(object fromInstance, IDataEntityAdapter toEntity);
     }
 }

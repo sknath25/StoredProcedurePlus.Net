@@ -10,14 +10,29 @@ namespace StoredProcedurePlus.Net.EntityManagers
 {
     internal class DbDataEntityAdapter : IDataEntityAdapter
     {
-        readonly IDataRecord Data;
+        readonly IDataReader Data;
 
-        protected DbDataEntityAdapter(IDataRecord data)
+        protected DbDataEntityAdapter(IDataReader data)
         {
             Data = data;
         }
 
         public int FieldCount => Data.FieldCount;
+
+        public string GetName(int ordinal)
+        {
+            return Data.GetName(ordinal);
+        }
+
+        public int GetOrdinal(string name)
+        {
+            return Data.GetOrdinal(name);
+        }
+        public bool IsDBNull(int ordinal)
+        {
+            return Data.IsDBNull(ordinal);
+        }
+
 
         public decimal GetDecimal(int ordinal)
         {
@@ -37,11 +52,6 @@ namespace StoredProcedurePlus.Net.EntityManagers
         public long GetLong(int ordinal)
         {
             return Data.GetInt64(ordinal);
-        }
-
-        public string GetName(int ordinal)
-        {
-            return Data.GetString(ordinal);
         }
 
         public short GetShort(int ordinal)

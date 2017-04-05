@@ -13,7 +13,9 @@ namespace StoredProcedurePlus.Net.UnitTests.StoredProcedures
         protected override void Setup(ProcedureConfiguration<ResourceSummary> configuration)
         {
             configuration.ProcedureName = "InsertResourceSummaryDetails";
-            configuration.CanReturn<ResourceSummary>();
+            var SpReturn = configuration.CanReturn<ResourceSummary>();
+            SpReturn.Maps(v=>v.EmployerDistrict).HasParameterName("EmployerDisctrict");
+            SpReturn.Maps(v => v.MobileNo).HasParameterName("ModileNo");
         }
     }
 }

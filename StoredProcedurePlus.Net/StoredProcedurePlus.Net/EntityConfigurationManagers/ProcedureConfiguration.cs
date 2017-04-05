@@ -14,11 +14,9 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
       
         internal readonly ConnectionFactory Connection;
 
-        public EntityConfiguration<S> Input;
-
         internal List<NonPrimitiveEntityConfiguration> OutputSets;
 
-        //internal List<Type> PrimitiveTypes;
+        public EntityConfiguration<S> Input;
         
         public EntityConfiguration<T> CanReturn<T>() where T : class
         {
@@ -48,9 +46,9 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         {
             Input.Initialize();
 
-            foreach(NonPrimitiveEntityConfiguration config in OutputSets)
+            for(int i = 0; i < OutputSets.Count; i++ )
             {
-                config.Initialize();
+                OutputSets[i].Initialize();
             }
         }
     }

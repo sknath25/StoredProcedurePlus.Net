@@ -46,7 +46,27 @@ namespace StoredProcedurePlus.Net.EntityManagers
             return Parameters[ordinal].Item1;
         }
 
+        public int GetOrdinal(string name)
+        {
+            for(int i = 0; i< Parameters.Count; i++)
+            {
+                if (Parameters[i].Item1 == name) return i;
+            }
 
+            throw new IndexOutOfRangeException();
+        }
+
+        public bool IsDBNull(int ordinal)
+        {
+            if(Parameters[ordinal].Item2.SqlValue == DBNull.Value)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
         public decimal GetDecimal(int ordinal)
