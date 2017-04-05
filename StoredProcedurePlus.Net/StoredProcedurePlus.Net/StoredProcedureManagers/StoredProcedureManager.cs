@@ -200,7 +200,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         Configuration.Input.Set(adapter, input);
                     }
                 }
-                catch(Exception ex)
+                catch
                 {
                     throw;
                 }
