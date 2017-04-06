@@ -17,5 +17,10 @@ namespace StoredProcedurePlus.Net.ErrorManagers
                 string.Format("The value of {0} has value {1} but the minimum allowed value is {2}",
                 propertyName, actualValue, allowedValue));
         }
+
+        internal static void CannotCreateInstanceOfTypeNull()
+        {
+            throw new NullReferenceException("Cannot create instace from null type");
+        }
     }
 }

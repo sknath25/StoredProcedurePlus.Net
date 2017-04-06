@@ -2,36 +2,19 @@
 using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
 using StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes;
 using StoredProcedurePlus.Net.EntityManagers;
+using StoredProcedurePlus.Net.EntityManagers.Factories;
 using StoredProcedurePlus.Net.ErrorManagers;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Reflection.Emit;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public class EntityConfiguration<S> : NonPrimitiveEntityConfiguration where S : class
+    public class EntityConfiguration<S> : NonPrimitiveEntityConfiguration where S : class, new()
     {
         #region Private
-
-        private ObjectActivator CreateCtor(Type type)
-        {
-            if (type == null)
-            {
-                throw new NullReferenceException("type");
-            }
-            ConstructorInfo emptyConstructor = type.GetConstructor(Type.EmptyTypes);
-            var dynamicMethod = new DynamicMethod("CreateInstance", type, Type.EmptyTypes, true);
-            ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
-            ilGenerator.Emit(OpCodes.Nop);
-            ilGenerator.Emit(OpCodes.Newobj, emptyConstructor);
-            ilGenerator.Emit(OpCodes.Ret);
-            return (ObjectActivator)dynamicMethod.CreateDelegate(typeof(ObjectActivator));
-        }
-
-        private delegate object ObjectActivator();
 
         private class OrdinalProxy : EntityOrdinalConfiguration
         {
@@ -51,6 +34,19 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             internal DbDataEntityAdapterProxy(IDataReader record) : base(record)
             {
 
+            }
+        }
+
+        private class InstanceFactoryProxy : EntityInstanceFactory
+        {
+            internal InstanceFactoryProxy() : base(typeof(S))
+            {
+
+            }
+
+            new internal S CreateNewDefaultInstance()
+            {
+                return (S)base.CreateNewDefaultInstance();
             }
         }
 
@@ -109,18 +105,17 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         #region Internal
 
+        internal override EntityInstanceFactory GetDefaultInstanceFactory()
+        {
+            return new InstanceFactoryProxy();
+        }
+
         internal IDataEntityAdapter GetAsSqlParameters()
         {
             return new SqlParameterEntityAdapterProxy(Configurations);
         }
 
         internal EntityConfiguration(){}
-
-        override internal object GetNewEntity()
-        {
-            S Instance = (S)CreateCtor(typeof(S)).Invoke();
-            return Instance;
-        }
 
         override internal void Prepare(IDataEntityAdapter record)
         {

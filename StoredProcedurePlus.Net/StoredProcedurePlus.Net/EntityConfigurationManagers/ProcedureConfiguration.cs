@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public sealed class ProcedureConfiguration<S> where S : class
+    public sealed class ProcedureConfiguration<S> where S : class, new ()
     {
         public string ConnectionStringName { get; set; }
 
@@ -18,7 +18,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         public EntityConfiguration<S> Input;
         
-        public EntityConfiguration<T> CanReturn<T>() where T : class
+        public EntityConfiguration<T> CanReturn<T>() where T : class, new ()
         {
             EntityConfiguration<T> ReturnEntity = new EntityConfiguration<T>();
             OutputSets.Add(ReturnEntity);

@@ -53,6 +53,7 @@
     <Compile Include="ConnectionManagers\ConnectionScope.cs" />
     <Compile Include="ConnectionManagers\ConnectionFactory.cs" />
     <Compile Include="EntityConfigurationManagers\Core\EntityAccessor.cs" />
+    <Compile Include="EntityManagers\Factories\EntityInstanceFactory.cs" />
     <Compile Include="EntityManagers\DbDataEntityAdapter.cs" />
     <Compile Include="EntityManagers\IDataEntityAdapter.cs" />
     <Compile Include="EntityConfigurationManagers\PropertyOrdinalProvider.cs" />

@@ -1,5 +1,6 @@
 ﻿using StoredProcedurePlus.Net.ConnectionManagers;
 using StoredProcedurePlus.Net.EntityManagers;
+using StoredProcedurePlus.Net.EntityManagers.Factories;
 using StoredProcedurePlus.Net.ErrorManagers;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using System.Reflection.Emit;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public abstract class StoredProcedureManager<S> where S : class
+    public abstract class StoredProcedureManager<S> where S : class, new()
     {
         static object Locker = new object();
 
@@ -92,6 +93,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                             {
                                 do
                                 {
+                                    EntityInstanceFactory InstanceFactory = Configuration.OutputSets[ResultSetIndex].GetDefaultInstanceFactory();
+
                                     ResultSet.Add(new List<object>());
 
                                     if (DataReader.Read())
@@ -102,7 +105,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                         c.Prepare(EntityAdapter);
 
-                                        object Entity = c.GetNewEntity();
+                                        object Entity = InstanceFactory.CreateNewDefaultInstance();
 
                                         c.Set(EntityAdapter, Entity);
 
@@ -110,7 +113,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                         while (DataReader.Read())
                                         {
-                                            Entity = c.GetNewEntity();
+                                            Entity = InstanceFactory.CreateNewDefaultInstance();
 
                                             c.Set(EntityAdapter, Entity);
 
@@ -161,6 +164,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                             {
                                 do
                                 {
+                                    EntityInstanceFactory InstanceFactory = Configuration.OutputSets[ResultSetIndex].GetDefaultInstanceFactory();
+
                                     ResultSet.Add(new List<object>());
 
                                     if (DataReader.Read())
@@ -171,7 +176,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                         c.Prepare(EntityAdapter);
 
-                                        object Entity = c.GetNewEntity();
+                                        object Entity = InstanceFactory.CreateNewDefaultInstance();
 
                                         c.Set(EntityAdapter, Entity);
 
@@ -179,7 +184,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                         while (DataReader.Read())
                                         {
-                                            Entity = c.GetNewEntity();
+                                            Entity = InstanceFactory.CreateNewDefaultInstance();
 
                                             c.Set(EntityAdapter, Entity);
 
