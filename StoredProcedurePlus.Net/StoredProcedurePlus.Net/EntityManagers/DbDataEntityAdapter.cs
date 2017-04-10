@@ -1,10 +1,5 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.EntityManagers
 {
@@ -64,6 +59,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
             return Data.GetString(ordinal);
         }
 
+        public DateTime GetDate(int ordinal)
+        {
+            return Data.GetDateTime(ordinal);
+        }
+
         public void SetDecimal(int ordinal, decimal value)
         {
             throw new NotImplementedException();
@@ -90,6 +90,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
         }
 
         public void SetString(int ordinal, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetDateTime(int ordinal, DateTime dateTime)
         {
             throw new NotImplementedException();
         }

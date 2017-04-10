@@ -20,19 +20,12 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
             get
             {
                 T Result = Accessor[instance];
-                //Do evaluation here
-                return ValidateAndGet(Result);
+                return Result;
             }
             set
             {
-                //Do evaluation here 
                 Accessor[instance] = ValidateAndSet(value);
             }
-        }
-                      
-        protected virtual T ValidateAndGet(T value)
-        {
-            return value;
         }
 
         protected virtual T ValidateAndSet(T value)

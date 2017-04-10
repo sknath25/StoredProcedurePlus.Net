@@ -1,16 +1,9 @@
-﻿using StoredProcedurePlus.Net.ConnectionManagers;
-using StoredProcedurePlus.Net.EntityManagers;
-using StoredProcedurePlus.Net.EntityManagers.Factories;
-using StoredProcedurePlus.Net.ErrorManagers;
-using System;
+﻿using StoredProcedurePlus.Net.EntityManagers;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
@@ -74,7 +67,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                     if (Command.Connection != null)
                     {
-                        SqlParameterEntityAdapter adapter = (SqlParameterEntityAdapter)Configuration.Input.GetAsSqlParameters();
+                        DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.Input.GetAsDbParameters();
 
                         for (int i = 0; i < adapter.FieldCount; i++)
                         {
@@ -93,8 +86,6 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                             {
                                 do
                                 {
-                                    EntityInstanceFactory InstanceFactory = Configuration.OutputSets[ResultSetIndex].GetDefaultInstanceFactory();
-
                                     ResultSet.Add(new List<object>());
 
                                     if (DataReader.Read())
@@ -105,7 +96,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                         c.Prepare(EntityAdapter);
 
-                                        object Entity = InstanceFactory.CreateNewDefaultInstance();
+                                        object Entity = Configuration.OutputSets[ResultSetIndex].CreateNewDefaultInstance();
 
                                         c.Set(EntityAdapter, Entity);
 
@@ -113,7 +104,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                         while (DataReader.Read())
                                         {
-                                            Entity = InstanceFactory.CreateNewDefaultInstance();
+                                            Entity = Configuration.OutputSets[ResultSetIndex].CreateNewDefaultInstance();
 
                                             c.Set(EntityAdapter, Entity);
 
@@ -145,7 +136,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                     if (Command.Connection != null)
                     {
-                        SqlParameterEntityAdapter adapter = (SqlParameterEntityAdapter)Configuration.Input.GetAsSqlParameters();
+                        DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.Input.GetAsDbParameters();
 
                         for (int i = 0; i < adapter.FieldCount; i++)
                         {
@@ -164,8 +155,6 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                             {
                                 do
                                 {
-                                    EntityInstanceFactory InstanceFactory = Configuration.OutputSets[ResultSetIndex].GetDefaultInstanceFactory();
-
                                     ResultSet.Add(new List<object>());
 
                                     if (DataReader.Read())
@@ -176,7 +165,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                         c.Prepare(EntityAdapter);
 
-                                        object Entity = InstanceFactory.CreateNewDefaultInstance();
+                                        object Entity = Configuration.OutputSets[ResultSetIndex].CreateNewDefaultInstance();
 
                                         c.Set(EntityAdapter, Entity);
 
@@ -184,7 +173,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                         while (DataReader.Read())
                                         {
-                                            Entity = InstanceFactory.CreateNewDefaultInstance();
+                                            Entity = Configuration.OutputSets[ResultSetIndex].CreateNewDefaultInstance();
 
                                             c.Set(EntityAdapter, Entity);
 

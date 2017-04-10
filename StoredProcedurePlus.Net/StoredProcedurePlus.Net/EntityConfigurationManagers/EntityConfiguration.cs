@@ -2,7 +2,6 @@
 using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
 using StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes;
 using StoredProcedurePlus.Net.EntityManagers;
-using StoredProcedurePlus.Net.EntityManagers.Factories;
 using StoredProcedurePlus.Net.ErrorManagers;
 using System;
 using System.Collections.Generic;
@@ -21,9 +20,9 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             internal OrdinalProxy(List<PropertyConfiguration> parameters, IDataEntityAdapter record) : base(parameters, record) { }
         }
 
-        private class SqlParameterEntityAdapterProxy : SqlParameterEntityAdapter
+        private class DbParameterEntityAdapterProxy : DbParameterEntityAdapter
         {
-            internal SqlParameterEntityAdapterProxy(List<PropertyConfiguration> configurations) :base(configurations)
+            internal DbParameterEntityAdapterProxy(List<PropertyConfiguration> configurations) :base(configurations)
             {
 
             }
@@ -34,19 +33,6 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             internal DbDataEntityAdapterProxy(IDataReader record) : base(record)
             {
 
-            }
-        }
-
-        private class InstanceFactoryProxy : EntityInstanceFactory
-        {
-            internal InstanceFactoryProxy() : base(typeof(S))
-            {
-
-            }
-
-            new internal S CreateNewDefaultInstance()
-            {
-                return (S)base.CreateNewDefaultInstance();
             }
         }
 
@@ -99,20 +85,25 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         LambdaExpression l = BuildExpression(SourceType, Properties[i]);
                         Maps((Expression<Func<S, double>>)l);
                     }
+                    if (Properties[i].PropertyType == typeof(DateTime))
+                    {
+                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                        Maps((Expression<Func<S, double>>)l);
+                    }
                 }
             }
         }
 
         #region Internal
 
-        internal override EntityInstanceFactory GetDefaultInstanceFactory()
+        internal override object CreateNewDefaultInstance()
         {
-            return new InstanceFactoryProxy();
+            return new S();
         }
 
-        internal IDataEntityAdapter GetAsSqlParameters()
+        internal IDataEntityAdapter GetAsDbParameters()
         {
-            return new SqlParameterEntityAdapterProxy(Configurations);
+            return new DbParameterEntityAdapterProxy(Configurations);
         }
 
         internal EntityConfiguration(){}
@@ -144,7 +135,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-
+                        Error.CannotSetNullToNotNullableIntProperty(configuration.PropertyName);
                     }
                     else
                     {
@@ -156,7 +147,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-
+                        StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
+                        Configuration[Instance] = null;
                     }
                     else
                     {
@@ -168,7 +160,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-
+                        Error.CannotSetNullToNotNullableDoubleProperty(configuration.PropertyName);
                     }
                     else
                     {
@@ -180,12 +172,24 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-
+                        Error.CannotSetNullToNotNullableDecimalProperty(configuration.PropertyName);
                     }
                     else
                     {
                         DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
                         Configuration[Instance] = fromEntity.GetDecimal(Ordinal);
+                    }
+                }
+                else if (configuration.DataType == typeof(DateTime))
+                {
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+                        Error.CannotSetNullToNotNullableDateTimeProperty(configuration.PropertyName);
+                    }
+                    else
+                    {
+                        DateTimeTypeConfiguration<S> Configuration = configuration as DateTimeTypeConfiguration<S>;
+                        Configuration[Instance] = fromEntity.GetDate(Ordinal);
                     }
                 }
             }
@@ -223,6 +227,11 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
                     toEntity.SetDecimal(Ordinal, Configuration[Instance]);
                 }
+                else if (configuration.DataType == typeof(DateTime))
+                {
+                    DateTimeTypeConfiguration<S> Configuration = configuration as DateTimeTypeConfiguration<S>;
+                    toEntity.SetDateTime(Ordinal, Configuration[Instance]);
+                }
             }
         }
 
@@ -258,6 +267,14 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             return Configuration;
         }
 
+        public DateTimeTypeConfiguration<S> Maps(Expression<Func<S, DateTime>> memberSelector)
+        {
+            DateTimeTypeConfiguration<S> Configuration = new DateTimeTypeConfiguration<S>(memberSelector);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+
+        
         #endregion
     }
 }

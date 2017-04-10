@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Reflection;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 {
@@ -24,6 +23,6 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
             if (other.PropertyName == this.PropertyName) return true; else return false;
         }
 
-        internal abstract SqlDbType GetSqlDbType();
+        internal abstract DbType GetDbType { get; }
     }
 }

@@ -11,28 +11,20 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         public string ConnectionString { get; set; }
 
         public string ProcedureName { get; set; }
-      
+        public bool Mock { get; set; }
+
         internal readonly ConnectionFactory Connection;
 
         internal List<NonPrimitiveEntityConfiguration> OutputSets;
 
         public EntityConfiguration<S> Input;
         
-        public EntityConfiguration<T> CanReturn<T>() where T : class, new ()
+        public EntityConfiguration<T> CanReturnCollectionOf<T>() where T : class, new ()
         {
             EntityConfiguration<T> ReturnEntity = new EntityConfiguration<T>();
             OutputSets.Add(ReturnEntity);
             return ReturnEntity;
         }
-
-        //public void CanReturn<int>()
-        //{
-        //    //EntityConfiguration<T> ReturnEntity = new EntityConfiguration<T>();
-        //    //OutputSets.Add(ReturnEntity);
-        //    //return ReturnEntity;
-
-
-        //}
 
         public ProcedureConfiguration()
         {

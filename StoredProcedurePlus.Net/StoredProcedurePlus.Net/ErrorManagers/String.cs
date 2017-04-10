@@ -26,5 +26,10 @@ namespace StoredProcedurePlus.Net.ErrorManagers
                 string.Format("The value of {0} has length {1} but the minimum allowed length is {2}",
                 propertyName, actualLength, allowedLength));
         }
+
+        internal static void ValueNotAllowedError(string propertyName, string value, string[] allowedValuesOnly)
+        {
+            throw new InvalidOperationException("Cannot set given value " + value + " into property : " + propertyName + " where allowed values are only " + string.Join(", ", allowedValuesOnly));
+        }
     }
 }

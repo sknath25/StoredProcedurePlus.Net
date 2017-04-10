@@ -79,7 +79,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
         void AssignSetDelegate(bool assignable, ref Action<S, T> assignee, MethodInfo assignor)
         {
             if (assignable)
-            {
+            {               
                 var target = Expression.Parameter(typeof(S));
                 var value = Expression.Parameter(typeof(T));
                 var body = Expression.Call(target, assignor,
@@ -87,6 +87,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 
                 assignee = Expression.Lambda<Action<S, T>>(body, target, value)
                     .Compile();
+
+                //assignee = (Action<S, T>)assignor.CreateDelegate(typeof(Action<S, T>), target);
             }
         }
     }

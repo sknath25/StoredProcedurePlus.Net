@@ -12,21 +12,40 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
 
         }
-        internal override SqlDbType GetSqlDbType()
+
+        internal override DbType GetDbType
         {
-            return SqlDbType.VarChar;
+            get
+            {
+                return DbType.String;
+            }
         }
 
-        protected override string ValidateAndGet(string value)
+        protected override string ValidateAndSet(string value)
         {
             if (IsRequired && value==null) Error.RequiredPropertyValidationError(PropertyName);
+
             if (value != null)
             {
                 int Length = value.Length;
+
                 if (AllowedMaxLength.HasValue && Length > AllowedMaxLength) Error.MaxLengthPropertyValidationError(PropertyName, Length, AllowedMaxLength.Value);
                 if (AllowedMinLength.HasValue && Length < AllowedMinLength) Error.MinLengthPropertyValidationError(PropertyName, Length, AllowedMinLength.Value);
+
+                if (AllowedValuesOnly != null && AllowedValuesOnly.Length > 0)
+                {
+                    if (!Array.Exists<string>(AllowedValuesOnly, v => v.Equals(value)))
+                        Error.ValueNotAllowedError(PropertyName, value, AllowedValuesOnly);
+                }
+
+                if (AllowedValuesExcept != null && AllowedValuesExcept.Length > 0)
+                {
+                    if (Array.Exists<string>(AllowedValuesExcept, v => v.Equals(value)))
+                        Error.ValueNotAllowedError(PropertyName, value, AllowedValuesExcept);
+                }
             }
-            base.ValidateAndGet(value);
+
+            base.ValidateAndSet(value);
             return value;
         }
 
@@ -46,13 +65,6 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         public StringTypeConfiguration<S> Required()
         {
             this.IsRequired = true;
-            return this;
-        }
-
-        internal uint? Size = null;
-        public StringTypeConfiguration<S> HasSize(uint value)
-        {
-            Size = value;
             return this;
         }
 

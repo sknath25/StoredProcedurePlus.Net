@@ -11,16 +11,32 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         public DoubleTypeConfiguration(Expression<Func<S, double>> memberSelector):base(memberSelector)
         {
         }
-        internal override SqlDbType GetSqlDbType()
+        internal override DbType GetDbType
         {
-            return SqlDbType.Decimal;
+            get
+            {
+                return DbType.Decimal;
+            }
         }
 
-        protected override double ValidateAndGet(double value)
+        protected override double ValidateAndSet(double value)
         {
             if (AllowedMaxValue.HasValue && value > AllowedMaxValue) Error.MaxValuePropertyValidationError(PropertyName, value, AllowedMaxValue.Value);
             if (AllowedMinValue.HasValue && value < AllowedMinValue) Error.MinValuePropertyValidationError(PropertyName, value, AllowedMinValue.Value);
-            base.ValidateAndGet(value);
+
+            if (AllowedValuesOnly != null && AllowedValuesOnly.Length > 0)
+            {
+                if (!Array.Exists<double>(AllowedValuesOnly, v => v.Equals(value)))
+                    Error.ValueNotAllowedError(PropertyName, value, AllowedValuesOnly);
+            }
+
+            if (AllowedValuesExcept != null && AllowedValuesExcept.Length > 0)
+            {
+                if (Array.Exists<double>(AllowedValuesExcept, v => v.Equals(value)))
+                    Error.ValueNotAllowedError(PropertyName, value, AllowedValuesExcept);
+            }
+
+            base.ValidateAndSet(value);
             return value;
         }
 

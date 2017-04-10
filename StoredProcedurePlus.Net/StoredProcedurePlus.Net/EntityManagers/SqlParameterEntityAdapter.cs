@@ -1,43 +1,41 @@
 ﻿using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace StoredProcedurePlus.Net.EntityManagers
 {
-    internal class SqlParameterEntityAdapter : IDataEntityAdapter
+    internal class DbParameterEntityAdapter : IDataEntityAdapter
     {
-        const string SQLPARAMETERPREFIX = "@";
+        const string PARAMETERPREFIX = "@";
 
-        readonly Dictionary<int, Tuple<string, SqlParameter>> Parameters;
+        readonly Dictionary<int, Tuple<string, DbParameter>> Parameters;
 
-        protected SqlParameterEntityAdapter(List<PropertyConfiguration> values)
+        protected DbParameterEntityAdapter(List<PropertyConfiguration> values)
         {
             if (values != null)
             {
-                Parameters = new Dictionary<int, Tuple<string, SqlParameter>>();
+                Parameters = new Dictionary<int, Tuple<string, DbParameter>>();
 
                 for (int i = 0; i < values.Count; i++)
                 {
                     SqlParameter parameter = new SqlParameter();
-                    parameter.ParameterName = string.Concat(SQLPARAMETERPREFIX, values[i].ParameterName);
-                    parameter.SqlDbType = values[i].GetSqlDbType();
+                    parameter.ParameterName = string.Concat(PARAMETERPREFIX, values[i].ParameterName);
+                    parameter.DbType = values[i].GetDbType;
                     parameter.Direction = values[i].IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
-                    Parameters.Add(i, new Tuple<string, SqlParameter>(values[i].PropertyName, parameter));
+                    Parameters.Add(i, new Tuple<string, DbParameter>(values[i].PropertyName, parameter));
                 }
             }
         }
 
-        internal SqlParameter this[int ordinal]
+        internal DbParameter this[int ordinal]
         {
             get
             {
                 return Parameters[ordinal].Item2;
             }
         }
-
-
-
 
         public int FieldCount => Parameters.Count;
 
@@ -58,7 +56,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         public bool IsDBNull(int ordinal)
         {
-            if(Parameters[ordinal].Item2.SqlValue == DBNull.Value)
+            if(Parameters[ordinal].Item2.Value == DBNull.Value)
             {
                 return true;
             }
@@ -71,69 +69,72 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         public decimal GetDecimal(int ordinal)
         {
-            return decimal.Parse(Parameters[ordinal].Item2.SqlValue.ToString());
+            return decimal.Parse(Parameters[ordinal].Item2.Value.ToString());
         }
 
         public double GetDouble(int ordinal)
         {
-            return double.Parse(Parameters[ordinal].Item2.SqlValue.ToString());
+            return double.Parse(Parameters[ordinal].Item2.Value.ToString());
         }
 
         public int GetInt(int ordinal)
         {
-            return int.Parse(Parameters[ordinal].Item2.SqlValue.ToString());
+            return int.Parse(Parameters[ordinal].Item2.Value.ToString());
         }
 
         public long GetLong(int ordinal)
         {
-            return long.Parse(Parameters[ordinal].Item2.SqlValue.ToString());
+            return long.Parse(Parameters[ordinal].Item2.Value.ToString());
         }
 
         public short GetShort(int ordinal)
         {
-            return short.Parse(Parameters[ordinal].Item2.SqlValue.ToString());
+            return short.Parse(Parameters[ordinal].Item2.Value.ToString());
         }
 
         public string GetString(int ordinal)
         {
-            return Parameters[ordinal].Item2.SqlValue.ToString();
+            return Parameters[ordinal].Item2.Value.ToString();
+        }
+
+        public DateTime GetDate(int ordinal)
+        {
+            return DateTime.Parse(Parameters[ordinal].Item2.Value.ToString());
         }
 
         public void SetDecimal(int ordinal, decimal value)
         {
-            Parameters[ordinal].Item2.SqlValue = value;
+            Parameters[ordinal].Item2.Value = value;
         }
 
         public void SetDouble(int ordinal, double value)
         {
-            Parameters[ordinal].Item2.SqlValue = value;
+            Parameters[ordinal].Item2.Value = value;
         }
 
         public void SetInt(int ordinal, int value)
         {
-            Parameters[ordinal].Item2.SqlValue = value;
+            Parameters[ordinal].Item2.Value = value;
         }
 
         public void SetLong(int ordinal, long value)
         {
-            Parameters[ordinal].Item2.SqlValue = value;
+            Parameters[ordinal].Item2.Value = value;
         }
 
         public void SetShort(int ordinal, short value)
         {
-            Parameters[ordinal].Item2.SqlValue = value;
+            Parameters[ordinal].Item2.Value = value;
         }
 
         public void SetString(int ordinal, string value)
         {
-            if (value == null)
-            {
-                Parameters[ordinal].Item2.SqlValue = DBNull.Value;
-            }
-            else
-            {
-                Parameters[ordinal].Item2.SqlValue = value;
-            }
+            Parameters[ordinal].Item2.Value = value ?? (object)DBNull.Value;
+        }
+
+        public void SetDateTime(int ordinal, DateTime value)
+        {
+            Parameters[ordinal].Item2.Value = value;
         }
     }
 }

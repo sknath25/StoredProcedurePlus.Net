@@ -1,5 +1,4 @@
 ﻿using StoredProcedurePlus.Net.EntityManagers;
-using StoredProcedurePlus.Net.EntityManagers.Factories;
 using System;
 using System.Data;
 
@@ -25,7 +24,9 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         protected abstract void InitializePropertyConfigurations();
 
-        abstract internal EntityInstanceFactory GetDefaultInstanceFactory();
+        //abstract internal InstanceFactoryProxy GetDefaultInstanceFactory();
+
+        abstract internal object CreateNewDefaultInstance();
 
         abstract internal void Prepare(IDataEntityAdapter record);
 

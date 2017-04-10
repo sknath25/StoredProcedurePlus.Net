@@ -1,16 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StoredProcedurePlus.Net.StoredProcedureManagers;
 using StoredProcedurePlus.Net.UnitTestEntities;
-using StoredProcedurePlus.Net.UnitTests.StoredProcedures;
+using StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
 {
@@ -67,6 +62,57 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             SpResourceSummary Sp = new SpResourceSummary();
             Sp.Execute(Input);
             Console.Write(Input.PersonId);
+
+            Assert.IsTrue(Input.PersonId > 0);
+        }
+
+        [TestMethod()]
+        public void MultipleInstanceTest()
+        {
+            ResourceSummary Input = new ResourceSummary()
+            {
+                PersonName = "SQL++.NET LIB PERFORMANCE TEST",
+                Country = "INDIA",
+                State = "GUJRAT",
+                City = "BARODA",
+                District = "UNSPECIFIED",
+                Street = "1 SHANTI NAGAR STREET",
+                HouseNo = "C8",
+                Pin = Hash,
+                MobileNo = "9051778445",
+                HomePhoneNo = "9051778445",
+                EmailAddress = "cdiprod.visualstudio@cdicorp.com",
+                MothersName = "VISUAL STUDIO",
+                FathersName = "PERFORMANCE TEST",
+                Employer = "COP",
+                EmployerCountry = "USA",
+                EmployerCity = "BALA CYNWYD",
+                EmployerState = "PENNSYLVANIA",
+                EmployerDistrict = "PHILADELPHIA",
+                EmployerPin = "19015",
+                EmployerStreet = "1800 GREEN STREET",
+                EmployerHouseNo = "F2",
+                CTC = 100.56M,
+                NET = 10000.65M,
+                Gross = 10000.11M,
+                MobileNo2 = Hash
+            };
+
+            SpResourceSummary[] Multiple = new SpResourceSummary[10];
+            for (int i = 0; i < Multiple.Length; i++)
+            {
+                Multiple[i] = new SpResourceSummary();
+            }
+
+            StringBuilder Log = new StringBuilder();
+            for (int i = 0; i < Multiple.Length; i++)
+            {
+                Input.CTC = Input.CTC + 1;
+                Multiple[i].Execute(Input);
+                Log.AppendLine(string.Format("Person ID : {0}", Input.PersonId));
+            }
+
+            Console.Write(Log);
 
             Assert.IsTrue(Input.PersonId > 0);
         }

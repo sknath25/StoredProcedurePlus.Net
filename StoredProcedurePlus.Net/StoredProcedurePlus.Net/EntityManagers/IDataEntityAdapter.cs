@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.EntityManagers
 {
@@ -19,6 +15,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
         long GetLong(int ordinal);
         decimal GetDecimal(int ordinal);
         double GetDouble(int ordinal);
+        DateTime GetDate(int ordinal);
 
 
         void SetString(int ordinal, string value);
@@ -27,6 +24,6 @@ namespace StoredProcedurePlus.Net.EntityManagers
         void SetLong(int ordinal, long value);
         void SetDecimal(int ordinal, decimal value);
         void SetDouble(int ordinal, double value);
-
+        void SetDateTime(int ordinal, DateTime dateTime);
     }
 }

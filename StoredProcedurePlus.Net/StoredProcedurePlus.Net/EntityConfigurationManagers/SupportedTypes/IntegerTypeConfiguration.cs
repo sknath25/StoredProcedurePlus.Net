@@ -11,16 +11,32 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         public IntegerTypeConfiguration(Expression<Func<S, int>> memberSelector):base(memberSelector)
         {
         }
-        internal override SqlDbType GetSqlDbType()
+        internal override DbType GetDbType
         {
-            return SqlDbType.Int;
+            get
+            {
+                return DbType.Int32;
+            }
         }
 
-        protected override int ValidateAndGet(int value)
+        protected override int ValidateAndSet(int value)
         {
             if (AllowedMaxValue.HasValue && value > AllowedMaxValue) Error.MaxValuePropertyValidationError(PropertyName, value, AllowedMaxValue.Value);
             if (AllowedMinValue.HasValue && value < AllowedMinValue) Error.MinValuePropertyValidationError(PropertyName, value, AllowedMinValue.Value);
-            base.ValidateAndGet(value);
+
+            if (AllowedValuesOnly != null && AllowedValuesOnly.Length > 0)
+            {
+                if (!Array.Exists<int>(AllowedValuesOnly, v => v.Equals(value)))
+                    Error.ValueNotAllowedError(PropertyName, value, AllowedValuesOnly);
+            }
+
+            if (AllowedValuesExcept != null && AllowedValuesExcept.Length > 0)
+            {
+                if (Array.Exists<int>(AllowedValuesExcept, v => v.Equals(value)))
+                    Error.ValueNotAllowedError(PropertyName, value, AllowedValuesExcept);
+            }
+
+            base.ValidateAndSet(value);
             return value;
         }
 
