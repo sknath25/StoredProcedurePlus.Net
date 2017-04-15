@@ -98,5 +98,10 @@ namespace StoredProcedurePlus.Net.EntityManagers
         {
             throw new NotImplementedException();
         }
+
+        public void SetInt(int ordinal, int? value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

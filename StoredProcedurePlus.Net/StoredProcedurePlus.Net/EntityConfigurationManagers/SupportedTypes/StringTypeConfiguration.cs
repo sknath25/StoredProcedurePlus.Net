@@ -3,6 +3,7 @@ using StoredProcedurePlus.Net.ErrorManagers;
 using System;
 using System.Data;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
@@ -95,5 +96,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             AllowedValuesExcept = values;
             return this;
         }
+
+        internal bool IsPattern = false;
+        public StringTypePatternConfiguration<S> HasPattern()
+        {
+            IsPattern = true;   
+            return (StringTypePatternConfiguration<S>)this;
+        }
+
     }
 }

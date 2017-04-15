@@ -87,8 +87,6 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 
                 assignee = Expression.Lambda<Action<S, T>>(body, target, value)
                     .Compile();
-
-                //assignee = (Action<S, T>)assignor.CreateDelegate(typeof(Action<S, T>), target);
             }
         }
     }

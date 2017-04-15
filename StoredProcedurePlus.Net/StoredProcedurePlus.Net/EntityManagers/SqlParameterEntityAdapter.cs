@@ -116,6 +116,17 @@ namespace StoredProcedurePlus.Net.EntityManagers
         {
             Parameters[ordinal].Item2.Value = value;
         }
+        public void SetInt(int ordinal, int? value)
+        {
+            if (value.HasValue)
+            {
+                Parameters[ordinal].Item2.Value = value.Value;
+            }
+            else
+            {
+                Parameters[ordinal].Item2.Value = DBNull.Value;
+            }
+        }
 
         public void SetLong(int ordinal, long value)
         {

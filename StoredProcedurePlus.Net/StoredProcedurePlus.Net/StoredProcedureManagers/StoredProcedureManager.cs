@@ -9,6 +9,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
     public abstract class StoredProcedureManager<S> where S : class, new()
     {
+        #region Restricted 
+
         static object Locker = new object();
 
         readonly static ProcedureConfiguration<S> Configuration = new ProcedureConfiguration<S>();
@@ -43,6 +45,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         protected abstract void Setup(ProcedureConfiguration<S> configuration);
 
         List<List<object>> ResultSet = new List<List<object>>();
+
+        #endregion
+
+        #region Public Methods
 
         [SuppressMessage("Microsoft.Security", "CA2100", Justification = "The command text is not user given")]
         public int Execute(S input, ConnectionScope scope)
@@ -220,5 +226,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         {
             return this.GetResult<T>(0);
         }
+
+        #endregion
     }
 }

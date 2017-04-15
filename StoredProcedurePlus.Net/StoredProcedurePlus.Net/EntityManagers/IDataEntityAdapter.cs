@@ -21,6 +21,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
         void SetString(int ordinal, string value);
         void SetShort(int ordinal, short value);
         void SetInt(int ordinal, int value);
+        void SetInt(int ordinal, int? value);
         void SetLong(int ordinal, long value);
         void SetDecimal(int ordinal, decimal value);
         void SetDouble(int ordinal, double value);

@@ -54,6 +54,8 @@
     <Compile Include="ConnectionManagers\ConnectionFactory.cs" />
     <Compile Include="EntityConfigurationManagers\Core\EntityAccessor.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\DateTimeTypeConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\IntegerTypeNullableConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\StringTypePatternConfiguration.cs" />
     <Compile Include="EntityManagers\DbDataEntityAdapter.cs" />
     <Compile Include="EntityManagers\IDataEntityAdapter.cs" />
     <Compile Include="EntityConfigurationManagers\PropertyOrdinalProvider.cs" />
