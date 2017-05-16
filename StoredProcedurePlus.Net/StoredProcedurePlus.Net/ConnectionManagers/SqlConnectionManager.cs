@@ -18,6 +18,7 @@ namespace StoredProcedurePlus.Net.ConnectionManagers
         public SqlConnectionManager()
         {
             ConnectionStringName = "DbString";
+            //Test commit..
         }
 
         public SqlConnectionManager(string connectionStringName)
