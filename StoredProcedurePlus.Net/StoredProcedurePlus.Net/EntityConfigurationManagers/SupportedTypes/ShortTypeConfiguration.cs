@@ -6,33 +6,33 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class DecimalTypeConfiguration<S> : PrimitiveTypeConfiguration<S, decimal> where S : class
+    public sealed class ShortTypeConfiguration<S> : PrimitiveTypeConfiguration<S, short> where S : class
     {
-        public DecimalTypeConfiguration(Expression<Func<S, decimal>> memberSelector):base(memberSelector)
+        public ShortTypeConfiguration(Expression<Func<S, short>> memberSelector):base(memberSelector)
         {
         }
         internal override DbType GetDbType
         {
             get
             {
-                return DbType.Decimal;
+                return DbType.Int16;
             }
         }
 
-        protected override decimal Validate(decimal value)
+        protected override short Validate(short value)
         {
             if (AllowedMaxValue.HasValue && value > AllowedMaxValue) Error.MaxValuePropertyValidationError(PropertyName, value, AllowedMaxValue.Value);
             if (AllowedMinValue.HasValue && value < AllowedMinValue) Error.MinValuePropertyValidationError(PropertyName, value, AllowedMinValue.Value);
 
             if (AllowedValuesOnly != null && AllowedValuesOnly.Length > 0)
             {
-                if (!Array.Exists<decimal>(AllowedValuesOnly, v => v.Equals(value)))
+                if (!Array.Exists<short>(AllowedValuesOnly, v => v.Equals(value)))
                     Error.ValueNotAllowedError(PropertyName, value, AllowedValuesOnly);
             }
 
             if (AllowedValuesExcept != null && AllowedValuesExcept.Length > 0)
             {
-                if (Array.Exists<decimal>(AllowedValuesExcept, v => v.Equals(value)))
+                if (Array.Exists<short>(AllowedValuesExcept, v => v.Equals(value)))
                     Error.ValueNotAllowedError(PropertyName, value, AllowedValuesExcept);
             }
 
@@ -40,51 +40,42 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return value;
         }
 
-        public DecimalTypeConfiguration<S> Out()
+        public ShortTypeConfiguration<S> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public DecimalTypeConfiguration<S> HasParameterName(string name)
+        public ShortTypeConfiguration<S> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
-        internal byte? ScaleSize = null;
-        internal byte? PrecisionSize = null;
-        public DecimalTypeConfiguration<S> HasSize(byte scale, byte precision)
-        {
-            ScaleSize = scale;
-            PrecisionSize = precision;
-            return this;
-        }
 
-
-        decimal? AllowedMaxValue = null;
-        public DecimalTypeConfiguration<S> Max(decimal value)
+        short? AllowedMaxValue = null;        
+        public ShortTypeConfiguration<S> Max(short value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
-        decimal? AllowedMinValue = null;
-        public DecimalTypeConfiguration<S> Min(decimal value)
+        short? AllowedMinValue = null;
+        public ShortTypeConfiguration<S> Min(short value)
         {
             AllowedMinValue = value;
             return this;
         }
 
-        decimal[] AllowedValuesOnly = null;
-        public DecimalTypeConfiguration<S> AllowedOnly(decimal[] values)
+        short[] AllowedValuesOnly = null;
+        public ShortTypeConfiguration<S> AllowedOnly(short[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
-        decimal[] AllowedValuesExcept = null;
-        public DecimalTypeConfiguration<S> AllowedExcept(decimal[] values)
+        short[] AllowedValuesExcept = null;        
+        public ShortTypeConfiguration<S> AllowedExcept(short[] values)
         {
             AllowedValuesExcept = values;
             return this;

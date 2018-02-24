@@ -1,15 +1,14 @@
 ﻿using StoredProcedurePlus.Net.ConnectionManagers;
-using System;
 using System.Collections.Generic;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
+
+
     public sealed class ProcedureConfiguration<S> where S : class, new ()
     {
         public string ConnectionStringName { get; set; }
-
         public string ConnectionString { get; set; }
-
         public string ProcedureName { get; set; }
         public bool Mock { get; set; }
 

@@ -19,7 +19,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        protected override long ValidateAndSet(long value)
+        protected override long Validate(long value)
         {
             if (AllowedMaxValue.HasValue && value > AllowedMaxValue) Error.MaxValuePropertyValidationError(PropertyName, value, AllowedMaxValue.Value);
             if (AllowedMinValue.HasValue && value < AllowedMinValue) Error.MinValuePropertyValidationError(PropertyName, value, AllowedMinValue.Value);
@@ -36,7 +36,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                     Error.ValueNotAllowedError(PropertyName, value, AllowedValuesExcept);
             }
 
-            base.ValidateAndSet(value);
+            base.Validate(value);
             return value;
         }
 

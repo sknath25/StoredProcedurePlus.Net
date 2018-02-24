@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StoredProcedurePlus.Net.ErrorManagers
 {
@@ -59,6 +55,16 @@ namespace StoredProcedurePlus.Net.ErrorManagers
                 + ex.Message
                 + ", against the pattern : "
                 + stringPattern);
+        }
+
+        internal static void PatternMatchingError(string propertyName, string value, string patternName)
+        {
+            throw new InvalidOperationException(
+                "Cannot set given value " + value
+                + " into property : "
+                + propertyName
+                + ", against the pattern : "
+                + patternName);
         }
     }
 }

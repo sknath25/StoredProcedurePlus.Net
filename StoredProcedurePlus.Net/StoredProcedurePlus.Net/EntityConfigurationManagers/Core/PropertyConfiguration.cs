@@ -16,7 +16,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 
         protected internal string ParameterName { get; protected set; }     
 
-        protected internal Type DataType { get; protected set; }
+        protected internal Type DataType { get; protected set; }        
 
         public bool Equals(PropertyConfiguration other)
         {
@@ -24,5 +24,9 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
         }
 
         internal abstract DbType GetDbType { get; }
+
+        protected internal uint Size1 { get; protected set; }
+
+        protected internal uint Size2 { get; protected set; }
     }
 }

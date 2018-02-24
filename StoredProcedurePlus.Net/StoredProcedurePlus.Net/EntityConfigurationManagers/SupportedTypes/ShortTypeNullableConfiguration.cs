@@ -6,20 +6,20 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class DoubleTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, double?> where S : class
+    public sealed class ShortTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, short?> where S : class
     {
-        public DoubleTypeNullableConfiguration(Expression<Func<S, double?>> memberSelector):base(memberSelector)
+        public ShortTypeNullableConfiguration(Expression<Func<S, short?>> memberSelector):base(memberSelector)
         {
         }
         internal override DbType GetDbType
         {
             get
             {
-                return DbType.Double;
+                return DbType.Int16;
             }
         }
 
-        protected override double? Validate(double? value)
+        protected override short? Validate(short? value)
         {
             if (IsRequired && !value.HasValue) Error.RequiredPropertyValidationError(PropertyName);
 
@@ -30,13 +30,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
                 if (AllowedValuesOnly != null && AllowedValuesOnly.Length > 0)
                 {
-                    if (!Array.Exists<double>(AllowedValuesOnly, v => v.Equals(value)))
+                    if (!Array.Exists<short>(AllowedValuesOnly, v => v.Equals(value.Value)))
                         Error.ValueNotAllowedError(PropertyName, value.Value, AllowedValuesOnly);
                 }
 
                 if (AllowedValuesExcept != null && AllowedValuesExcept.Length > 0)
                 {
-                    if (Array.Exists<double>(AllowedValuesExcept, v => v.Equals(value)))
+                    if (Array.Exists<short>(AllowedValuesExcept, v => v.Equals(value.Value)))
                         Error.ValueNotAllowedError(PropertyName, value.Value, AllowedValuesExcept);
                 }
             }
@@ -45,58 +45,49 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return value;
         }
 
-        internal bool IsRequired { get; private set; }
-        public DoubleTypeNullableConfiguration<S> Required()
-        {
-            this.IsRequired = true;
-            return this;
-        }
-
-        public DoubleTypeNullableConfiguration<S> Out()
+        public ShortTypeNullableConfiguration<S> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public DoubleTypeNullableConfiguration<S> HasParameterName(string name)
+        public ShortTypeNullableConfiguration<S> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
-        internal byte? ScaleSize = null;
-        internal byte? PrecisionSize = null;
-        public DoubleTypeNullableConfiguration<S> HasSize(byte scale, byte precision)
+        internal bool IsRequired { get; private set; }
+        public ShortTypeNullableConfiguration<S> Required()
         {
-            ScaleSize = scale;
-            PrecisionSize = precision;
+            this.IsRequired = true;
             return this;
         }
 
 
-        double? AllowedMaxValue = null;
-        public DoubleTypeNullableConfiguration<S> Max(double value)
+        short? AllowedMaxValue = null;        
+        public ShortTypeNullableConfiguration<S> Max(short value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
-        double? AllowedMinValue = null;
-        public DoubleTypeNullableConfiguration<S> Min(double value)
+        short? AllowedMinValue = null;
+        public ShortTypeNullableConfiguration<S> Min(short value)
         {
             AllowedMinValue = value;
             return this;
         }
 
-        double[] AllowedValuesOnly = null;
-        public DoubleTypeNullableConfiguration<S> AllowedOnly(double[] values)
+        short[] AllowedValuesOnly = null;
+        public ShortTypeNullableConfiguration<S> AllowedOnly(short[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
-        double[] AllowedValuesExcept = null;
-        public DoubleTypeNullableConfiguration<S> AllowedExcept(double[] values)
+        short[] AllowedValuesExcept = null;        
+        public ShortTypeNullableConfiguration<S> AllowedExcept(short[] values)
         {
             AllowedValuesExcept = values;
             return this;
