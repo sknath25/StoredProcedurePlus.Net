@@ -9,7 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://github.com/sknath25/StoredProcedurePlus.Net/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/sknath25/StoredProcedurePlus.Net/projects/2</projectUrl>
-    <description>High performance ADO.Net wrapper specifically develop to help life easy working with Microsoft SQL Server stored procedures for .Net projects/Applications. 
+    <description>High performance ADO.Net wrapper specifically develop to help make life easy working with Microsoft SQL Server stored procedures for .Net projects/Applications. 
 For more detials vitis Git Wiki page:
 https://github.com/sknath25/StoredProcedurePlus.Net/wiki</description>
     <summary>High performance ADO.Net wrapper  for Microsoft SQL Stored procedures.</summary>
