@@ -19,7 +19,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        protected override decimal? ValidateAndSet(decimal? value)
+        protected override decimal? Validate(decimal? value)
         {
             if (IsRequired && !value.HasValue) Error.RequiredPropertyValidationError(PropertyName);
 
@@ -41,7 +41,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            base.ValidateAndSet(value);
+            base.Validate(value);
             return value;
         }
 

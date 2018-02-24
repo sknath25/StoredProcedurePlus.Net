@@ -19,14 +19,14 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        protected override bool ValidateAndSet(bool value)
+        protected override bool Validate(bool value)
         {
             if (AllowedValuesOnly != value)
             {
                 Error.ValueNotAllowedError(PropertyName, value, AllowedValuesOnly);
             }
 
-            base.ValidateAndSet(value);
+            base.Validate(value);
             return value;
         }
 

@@ -20,7 +20,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        protected override DateTime? ValidateAndSet(DateTime? value)
+        protected override DateTime? Validate(DateTime? value)
         {
             if (IsRequired && !value.HasValue) Error.RequiredPropertyValidationError(PropertyName);
 
@@ -42,7 +42,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            base.ValidateAndSet(value);
+            base.Validate(value);
             return value;
         }
 

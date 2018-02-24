@@ -19,7 +19,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        protected override double? ValidateAndSet(double? value)
+        protected override double? Validate(double? value)
         {
             if (IsRequired && !value.HasValue) Error.RequiredPropertyValidationError(PropertyName);
 
@@ -41,7 +41,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            base.ValidateAndSet(value);
+            base.Validate(value);
             return value;
         }
 

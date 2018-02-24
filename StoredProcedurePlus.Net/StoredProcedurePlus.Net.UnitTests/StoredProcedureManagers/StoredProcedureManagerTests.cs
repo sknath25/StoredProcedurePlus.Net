@@ -27,6 +27,20 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             p1.Execute(Entity1);
         }
 
+        [TestMethod]
+        public void MinimalisticConfigurationTest()
+        {
+            SpHelloWorldParams param = new SpHelloWorldParams()
+            {
+                MyName = "SUMAN"
+            };
+            SpHelloWorld sp = new SpHelloWorld();
+            sp.Execute(param);
+            string msg = param.MyMessage; // The out parameters will be set in the mapped property and can be used from here.
+            Assert.AreEqual<string>("Hello world SUMAN", msg);
+        }
+
+
         [TestMethod()]
         public void BasicTest()
         {

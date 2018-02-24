@@ -22,12 +22,45 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        protected override string ValidateAndSet(string value)
+        protected override string Validate(string value)
         {
             if (IsRequired && value==null) Error.RequiredPropertyValidationError(PropertyName);
 
             if (value != null)
             {
+                if (StringPattern != null && StringPattern.Length > 0)
+                {
+                    try
+                    {
+                        bool IsMatch = Regex.IsMatch(
+                            value,
+                            StringPattern,
+                            Pattern_Option,
+                            TimeSpan.FromMilliseconds(PaternTimeOut)
+                        );
+
+                        if (!IsMatch)
+                        {
+                            Error.PatternMathcingFailed(PropertyName, value, StringPattern);
+                        }
+                    }
+                    catch (RegexMatchTimeoutException)
+                    {
+                        Error.PatternMathcingTimeOut(PropertyName, value, StringPattern, PaternTimeOut);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (DefinedPattern == PreDefinedPatterns.None)
+                        {
+                            Error.PatternMatchingError(PropertyName, value, StringPattern, ex);
+                        }
+                        else
+                        {
+                            Error.PatternMatchingError(PropertyName, value, DefinedPattern.ToString());
+                        }
+                    }
+                }
+
                 int Length = value.Length;
 
                 if (AllowedMaxLength.HasValue && Length > AllowedMaxLength) Error.MaxLengthPropertyValidationError(PropertyName, Length, AllowedMaxLength.Value);
@@ -63,7 +96,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            base.ValidateAndSet(value);
+            base.Validate(value);
             return value;
         }
 
@@ -90,6 +123,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         public StringTypeConfiguration<S> MaxLength(uint value)
         {
             AllowedMaxLength = value;
+            base.Size1 = value;
             return this;
         }
 
@@ -114,13 +148,6 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
-        internal bool IsPattern = false;
-        public StringTypePatternConfiguration<S> HasPattern()
-        {
-            IsPattern = true;   
-            return (StringTypePatternConfiguration<S>)this;
-        }
-
         internal bool IsTrim = false;
         public StringTypeConfiguration<S> Trim()
         {
@@ -141,5 +168,61 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             IsRTrim = true;
             return this;
         }
+
+        #region Pattern validation
+
+        string StringPattern = null;
+        public StringTypeConfiguration<S> Pattern(string regX)
+        {
+            StringPattern = regX;
+            return this;
+        }
+
+        double PaternTimeOut = 200; //Default
+        public StringTypeConfiguration<S> PatternMatchingTimeout(double timeout)
+        {
+            PaternTimeOut = timeout;
+            return this;
+        }
+
+        RegexOptions Pattern_Option = RegexOptions.IgnoreCase; //Default
+        public StringTypeConfiguration<S> PatternOption(RegexOptions option)
+        {
+            Pattern_Option = option;
+            return this;
+        }
+
+        enum PreDefinedPatterns
+        {
+            None,
+            Email,
+            Ftp,
+            Website
+        }
+
+        PreDefinedPatterns DefinedPattern = PreDefinedPatterns.None;
+
+        public StringTypeConfiguration<S> Email()
+        {
+            DefinedPattern = PreDefinedPatterns.Email;
+            StringPattern = @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                              @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
+            return this;
+        }
+
+        public StringTypeConfiguration<S> WebSite()
+        {
+            DefinedPattern = PreDefinedPatterns.Website;
+            StringPattern = @"(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?";
+            return this;
+        }
+
+        public StringTypeConfiguration<S> FtpSite()
+        {
+            DefinedPattern = PreDefinedPatterns.Ftp;
+            StringPattern = @"(ftp):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?";
+            return this;
+        }
+        #endregion
     }
 }

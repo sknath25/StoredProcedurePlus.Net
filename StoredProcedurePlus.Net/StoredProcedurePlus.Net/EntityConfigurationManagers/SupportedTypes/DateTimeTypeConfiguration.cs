@@ -20,7 +20,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        protected override DateTime ValidateAndSet(DateTime value)
+        protected override DateTime Validate(DateTime value)
         {
             if (AllowedMaxDate.HasValue && value > AllowedMaxDate) Error.MaxDatePropertyValidationError(PropertyName, value, AllowedMaxDate.Value);
             if (AllowedMinDate.HasValue && value < AllowedMinDate) Error.MinDatePropertyValidationError(PropertyName, value, AllowedMinDate.Value);
@@ -37,7 +37,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                     Error.DateNotAllowedError(PropertyName, value, AllowedDatesExcept);
             }
 
-            base.ValidateAndSet(value);
+            base.Validate(value);
             return value;
         }
 
