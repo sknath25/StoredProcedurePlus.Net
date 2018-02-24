@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>StoredProcedurePlus.Net</id>
+    <version>1.0.3</version>
+    <title>StoredProcedurePlus.Net</title>
+    <authors>Suman Kumar Nath</authors>
+    <owners>sknath25@gmail.com</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/sknath25/StoredProcedurePlus.Net/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/sknath25/StoredProcedurePlus.Net/projects/2</projectUrl>
+    <description>High performance ADO.Net wrapper specifically develop to help life easy working with Microsoft SQL Server stored procedures for .Net projects/Applications. 
+For more detials vitis Git Wiki page:
+https://github.com/sknath25/StoredProcedurePlus.Net/wiki</description>
+    <summary>High performance ADO.Net wrapper  for Microsoft SQL Stored procedures.</summary>
+    <releaseNotes>For detailed release  details read README.md file:
+https://github.com/sknath25/StoredProcedurePlus.Net/blob/master/README.md</releaseNotes>
+    <copyright>sknath25@gmail.com</copyright>
+    <language>en-IN</language>
+    <tags>Stored procedure, ADO.NET, SQL, .NET</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.2">
+        <dependency id="System.Data.SqlClient" version="4.4.2" />
+        <dependency id="Microsoft.CSharp" version="4.4.1" />
+        <dependency id="System.Data.Common" version="4.3.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="lib\net462\StoredProcedurePlus.Net.dll" target="lib\net462\StoredProcedurePlus.Net.dll" />
+  </files>
+</package>
