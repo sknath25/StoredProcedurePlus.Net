@@ -23,7 +23,8 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
     {
         protected override void Setup(ProcedureConfiguration<SpHelloWorldParams> configuration)
         {
-            configuration.ConnectionString = "Data Source=.;Initial Catalog=SQLML;Integrated Security=True;";
+            //configuration.ConnectionStringName = "Ami_Kana_Suji";
+            //configuration.ConnectionString = "Data Source=.;Initial Catalog=SQLML;Integrated Security=True;";
             configuration.Input.Maps(v => v.MyMessage).Out();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using StoredProcedurePlus.Net.ErrorManagers;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -32,10 +33,31 @@ namespace StoredProcedurePlus.Net.ConnectionManagers
             {
                 if (ConnectionString == null && ConnectionStringName != null)
                 {
-                    ConnectionString = ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString;
+
+                    if(string.IsNullOrEmpty(ConnectionStringName))
+                    {
+                        Error.NoConnectionNameError();
+                    }
+
+                    if (ConfigurationManager.ConnectionStrings.Count <= 0)
+                    {
+                        Error.ConnectionNameMissingError(ConnectionStringName);
+                    }
+
+                    try
+                    {
+                        ConnectionString = ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString;
+                    }
+                    catch(ConfigurationErrorsException ex)
+                    {
+                        Error.ConnectionNameMissingError(ConnectionStringName, ex);
+                    }
                 }
 
-                if (ConnectionString == null) return null;
+                if (ConnectionString == null)
+                {
+                    Error.NoConnectionStringError();
+                }
 
                 IDbConnection Connection = new SqlConnection(ConnectionString);
 
