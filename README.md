@@ -13,6 +13,13 @@ So, I have started working on StoredPrecurePlus.Net. Its uses ADO.NET inside and
 The concept is every class will be representing the stored procedures in the database and just create an object of it and fire to actually trigger the stored procedures in database. It will manages the rest if configured properly. 
 
 
+### Release notes:
+---
+#### Versions
+##### 1.0.4
+The library made compatible with .NET 4.5 
+
+
 -------------------------------------------------------------------------------------------------------------------------
 The README is not fully ready yet and we are working on it. Please read the GIT WIKI as we have put some content into it. 
 Also, contact at sknath25@gmail.com for any further help or explanations. 
