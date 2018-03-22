@@ -29,5 +29,6 @@
         public string MobileNo { get; set; }
         public string MobileNo2 { get; set; }
         public string HomePhoneNo { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -67,6 +67,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ConcurrencyTests\UnitTest1.cs" />
     <Compile Include="DapperTests\Class1.cs" />
     <Compile Include="EFCodeFirstSPAccess\UnitTest1.cs" />
     <Compile Include="MockTests\UnitTest1.cs" />

@@ -9,6 +9,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
             configuration.ProcedureName = "SomeSPName";
             configuration.Input.Maps(v => v.SchoolId).Max(2).HasParameterName("Hamba");
             configuration.Input.Maps(v => v.SchoolName).Required();
+            configuration.Input.Maps(v => v.StudentTYpe).AllowedOnly(new short[] { 1, 5, 11, 13 });
 
             //configuration.Output<School>.Maps(v => v.SchoolName).Required();
         }

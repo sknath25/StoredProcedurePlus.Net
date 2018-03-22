@@ -14,6 +14,8 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
             configuration.Input.Maps(v => v.EmailAddress).Required().MaxLength(50);
             configuration.Input.Maps(v => v.MobileNo).Required().MaxLength(50);
             configuration.Input.Maps(v => v.Country).MaxLength(50);
+
+            configuration.Input.Maps(v => v.IsActive).AllowedOnly(true);
         }
     }
 }
