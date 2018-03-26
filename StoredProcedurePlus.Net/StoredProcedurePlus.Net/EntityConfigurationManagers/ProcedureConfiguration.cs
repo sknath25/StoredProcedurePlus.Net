@@ -1,9 +1,11 @@
 ﻿using StoredProcedurePlus.Net.ConnectionManagers;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public sealed class ProcedureConfiguration<S> where S : class, new ()
+    public sealed class ProcedureConfiguration<S> where S : class
     {
         public string ConnectionStringName { get; set; }
         public string ConnectionString { get; set; }
@@ -14,21 +16,32 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         internal List<NonPrimitiveEntityConfiguration> OutputSets;
 
-        public EntityConfiguration<S> Input;
-        
-        public EntityConfiguration<T> CanReturnCollectionOf<T>() where T : class, new ()
+        public ParameterInputEntityConfiguration<S> Input;
+
+        internal List<TableTypeConfiguration<S>> TablesInputs;
+
+        public OutputEntityConfiguration<T> CanReturnCollectionOf<T>() where T : class, new ()
         {
-            EntityConfiguration<T> ReturnEntity = new EntityConfiguration<T>();
+            OutputEntityConfiguration<T> ReturnEntity = new OutputEntityConfiguration<T>();
             OutputSets.Add(ReturnEntity);
             return ReturnEntity;
+        }
+
+        public ParameterInputEntityConfiguration<T> InputTable<T>(Expression<Func<S, IList<T>>> memberSelector) where T : class
+        {
+            TableTypeConfiguration<S> c = new TableTypeConfiguration<S>();
+            var x = c.SetEntityConfiguration(memberSelector);
+            TablesInputs.Add(c);
+            return x;
         }
 
         public ProcedureConfiguration()
         {
             ConnectionStringName = "DbString"; // Default
-            Input = new EntityConfiguration<S>();
+            Input = new ParameterInputEntityConfiguration<S>();
             OutputSets = new List<NonPrimitiveEntityConfiguration>();
             Connection = new ConnectionFactory();
+            TablesInputs = new List<TableTypeConfiguration<S>>();
         }
 
         internal void Initialize()

@@ -11,7 +11,41 @@ using System.Reflection;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public class EntityConfiguration<S> : NonPrimitiveEntityConfiguration where S : class, new()
+    public class TableTypeConfiguration<S> where S : class
+    {
+        object Config;
+        Type t;
+
+        public ParameterInputEntityConfiguration<T> SetEntityConfiguration<T>(
+            Expression<Func<S, IList<T>>> memberSelector) where T : class
+        {
+            ParameterInputEntityConfiguration<T> c = new ParameterInputEntityConfiguration<T>();
+            Config = c;
+            t = typeof(T);
+            return c;
+        }
+    }
+
+    public class ParameterInputEntityConfiguration<S> : EntityConfiguration<S> where S : class
+    {
+
+    }
+
+    internal interface IHasDefaultConstructor
+    {
+        object CreateNewDefaultInstance();
+    }
+
+    public class OutputEntityConfiguration<S> : EntityConfiguration<S>, IHasDefaultConstructor where S : class, new()
+    {
+        object IHasDefaultConstructor.CreateNewDefaultInstance()
+        {
+            return new S();
+        }
+    }
+
+
+    public class EntityConfiguration<S> : NonPrimitiveEntityConfiguration where S : class
     {
         #region Private
 
@@ -136,11 +170,6 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         #region Internal
 
-        internal override object CreateNewDefaultInstance()
-        {
-            return new S();
-        }
-
         internal IDataEntityAdapter GetAsDbParameters()
         {
             return new DbParameterEntityAdapterProxy(Configurations);
@@ -159,6 +188,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         }
 
         EntityOrdinalConfiguration OrdinalProvider = null;
+
         override internal void Set(IDataEntityAdapter fromEntity, object toInstance)
         {
             if (OrdinalProvider == null) Error.PrepareDidnotCalled();

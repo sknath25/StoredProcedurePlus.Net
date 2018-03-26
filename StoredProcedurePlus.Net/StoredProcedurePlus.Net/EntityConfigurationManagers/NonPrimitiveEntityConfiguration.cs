@@ -24,9 +24,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         protected abstract void InitializePropertyConfigurations();
 
-        //abstract internal InstanceFactoryProxy GetDefaultInstanceFactory();
-
-        abstract internal object CreateNewDefaultInstance();
+        //abstract internal object CreateNewDefaultInstance();
 
         abstract internal void Prepare(IDataEntityAdapter record);
 

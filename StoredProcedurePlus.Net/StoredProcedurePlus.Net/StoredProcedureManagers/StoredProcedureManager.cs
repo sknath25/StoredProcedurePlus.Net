@@ -143,7 +143,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                                 c.Prepare(EntityAdapter);
 
-                                                object Entity = Configuration.OutputSets[ResultSetIndex].CreateNewDefaultInstance();
+                                                object Entity = ((IHasDefaultConstructor)Configuration.OutputSets[ResultSetIndex]).CreateNewDefaultInstance();
 
                                                 c.Set(EntityAdapter, Entity);
 
@@ -151,7 +151,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                                 while (DataReader.Read())
                                                 {
-                                                    Entity = Configuration.OutputSets[ResultSetIndex].CreateNewDefaultInstance();
+                                                    Entity = ((IHasDefaultConstructor)Configuration.OutputSets[ResultSetIndex]).CreateNewDefaultInstance();
 
                                                     c.Set(EntityAdapter, Entity);
 
@@ -244,7 +244,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                                 c.Prepare(EntityAdapter);
 
-                                                object Entity = Configuration.OutputSets[ResultSetIndex].CreateNewDefaultInstance();
+                                                object Entity = ((IHasDefaultConstructor)Configuration.OutputSets[ResultSetIndex]).CreateNewDefaultInstance();
 
                                                 c.Set(EntityAdapter, Entity);
 
@@ -252,7 +252,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                                 while (DataReader.Read())
                                                 {
-                                                    Entity = Configuration.OutputSets[ResultSetIndex].CreateNewDefaultInstance();
+                                                    Entity = ((IHasDefaultConstructor)Configuration.OutputSets[ResultSetIndex]).CreateNewDefaultInstance();
 
                                                     c.Set(EntityAdapter, Entity);
 
