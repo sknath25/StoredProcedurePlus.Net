@@ -24,8 +24,6 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         protected abstract void InitializePropertyConfigurations();
 
-        //abstract internal object CreateNewDefaultInstance();
-
         abstract internal void Prepare(IDataEntityAdapter record);
 
         abstract internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record);

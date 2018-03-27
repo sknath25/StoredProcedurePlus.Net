@@ -1,4 +1,5 @@
 ﻿using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
+using StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -22,40 +23,50 @@ namespace StoredProcedurePlus.Net.EntityManagers
                 {
                     SqlParameter parameter = new SqlParameter();
                     parameter.ParameterName = string.Concat(PARAMETERPREFIX, values[i].ParameterName);
-                    parameter.DbType = values[i].GetDbType;
-                    parameter.Direction = values[i].IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
-
-                    if (values[i].Size1 > 0)
+                    if (values[i].GetDbType == System.Data.DbType.Object)
                     {
-                        if (values[i].GetDbType == System.Data.DbType.Decimal)
-                        {
-                            parameter.Scale = (byte)values[i].Size1;
-                        }
-                        else
-                        {
-                            parameter.Size = (int)values[i].Size1;
-                        }
+                        IDataEntityAdapter pc = ((IObjectTypeConfiguration)values[i]).PropertiesConfigurations;
+
+                        pc.FieldCount
+                        
                     }
-
-                    if (values[i].Size2 > 0)
+                    else
                     {
-                        if (values[i].GetDbType == System.Data.DbType.Decimal)
-                        {
-                            parameter.Precision = (byte)values[i].Size2;
-                        }
-                    }
+                        parameter.DbType = values[i].GetDbType;
+                        parameter.Direction = values[i].IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
 
-                    if (values[i].IsOut && values[i].GetDbType == System.Data.DbType.String)
-                    {
                         if (values[i].Size1 > 0)
                         {
-                            parameter.Size = (int)values[i].Size1;
+                            if (values[i].GetDbType == System.Data.DbType.Decimal)
+                            {
+                                parameter.Scale = (byte)values[i].Size1;
+                            }
+                            else
+                            {
+                                parameter.Size = (int)values[i].Size1;
+                            }
                         }
-                        else
+
+                        if (values[i].Size2 > 0)
                         {
-                            parameter.Size = 250; // Default.
+                            if (values[i].GetDbType == System.Data.DbType.Decimal)
+                            {
+                                parameter.Precision = (byte)values[i].Size2;
+                            }
                         }
-                    }  
+
+                        if (values[i].IsOut && values[i].GetDbType == System.Data.DbType.String)
+                        {
+                            if (values[i].Size1 > 0)
+                            {
+                                parameter.Size = (int)values[i].Size1;
+                            }
+                            else
+                            {
+                                parameter.Size = 250; // Default.
+                            }
+                        }
+                    }
                     
                     Parameters.Add(i, new Tuple<string, DbParameter>(values[i].PropertyName, parameter));
                 }

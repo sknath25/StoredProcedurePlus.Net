@@ -18,21 +18,11 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         public ParameterInputEntityConfiguration<S> Input;
 
-        internal List<TableTypeConfiguration<S>> TablesInputs;
-
         public OutputEntityConfiguration<T> CanReturnCollectionOf<T>() where T : class, new ()
         {
             OutputEntityConfiguration<T> ReturnEntity = new OutputEntityConfiguration<T>();
             OutputSets.Add(ReturnEntity);
             return ReturnEntity;
-        }
-
-        public ParameterInputEntityConfiguration<T> InputTable<T>(Expression<Func<S, IList<T>>> memberSelector) where T : class
-        {
-            TableTypeConfiguration<S> c = new TableTypeConfiguration<S>();
-            var x = c.SetEntityConfiguration(memberSelector);
-            TablesInputs.Add(c);
-            return x;
         }
 
         public ProcedureConfiguration()
@@ -41,7 +31,6 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             Input = new ParameterInputEntityConfiguration<S>();
             OutputSets = new List<NonPrimitiveEntityConfiguration>();
             Connection = new ConnectionFactory();
-            TablesInputs = new List<TableTypeConfiguration<S>>();
         }
 
         internal void Initialize()

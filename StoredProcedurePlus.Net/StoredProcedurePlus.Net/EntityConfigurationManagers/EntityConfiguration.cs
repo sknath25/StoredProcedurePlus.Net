@@ -11,18 +11,36 @@ using System.Reflection;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public class TableTypeConfiguration<S> where S : class
+    public class EnumerableParameterInputEntityConfiguration<S> where S : class
     {
-        object Config;
-        Type t;
+        NonPrimitiveEntityConfiguration Config;
 
         public ParameterInputEntityConfiguration<T> SetEntityConfiguration<T>(
             Expression<Func<S, IList<T>>> memberSelector) where T : class
         {
             ParameterInputEntityConfiguration<T> c = new ParameterInputEntityConfiguration<T>();
             Config = c;
-            t = typeof(T);
             return c;
+        }
+
+        protected void InitializePropertyConfigurations()
+        {
+            Config.Initialize();
+        }
+
+        internal void Get(object fromInstance, IDataEntityAdapter toEntity)
+        {
+            Config.Get(fromInstance, toEntity);
+        }
+
+        internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record)
+        {
+            return Config.GetNewDataAdapter(record);
+        }
+
+        internal void Prepare(IDataEntityAdapter record)
+        {
+            Config.Prepare(record);
         }
     }
 
@@ -571,6 +589,12 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         public StringTypeConfiguration<S> Maps(Expression<Func<S, string>> memberSelector)
         {
             StringTypeConfiguration<S> Configuration = new StringTypeConfiguration<S>(memberSelector);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+        public ObjectTypeConfiguration<S,T> Maps<T>(Expression<Func<S, IList<T>>> memberSelector) where T : class
+        {
+            ObjectTypeConfiguration<S,T> Configuration = new ObjectTypeConfiguration<S,T>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }

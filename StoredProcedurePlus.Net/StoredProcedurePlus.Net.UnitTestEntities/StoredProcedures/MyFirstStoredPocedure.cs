@@ -11,7 +11,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
             configuration.Input.Maps(v => v.SchoolName).Required();
             configuration.Input.Maps(v => v.StudentTYpe).AllowedOnly(new short[] { 1, 5, 11, 13 });
 
-            configuration.InputTable(v => v.Students).Maps(v => v.SchoolId);
+            configuration.Input.Maps(v => v.Students).Properties.Maps(v=>v.SchoolId);
 
             //configuration.Output<School>.Maps(v => v.SchoolName).Required();
         }
