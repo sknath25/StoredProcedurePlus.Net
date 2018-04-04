@@ -8,15 +8,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class ShortTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, short?> where S : class
     {
-        public ShortTypeNullableConfiguration(Expression<Func<S, short?>> memberSelector):base(memberSelector)
+        public ShortTypeNullableConfiguration(Expression<Func<S, short?>> memberSelector):base(memberSelector, DbType.Int16)
         {
-        }
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.Int16;
-            }
         }
 
         protected override short? Validate(short? value)

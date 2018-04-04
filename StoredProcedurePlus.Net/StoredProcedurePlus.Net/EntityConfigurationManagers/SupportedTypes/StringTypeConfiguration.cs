@@ -9,17 +9,9 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public class StringTypeConfiguration<S> : PrimitiveTypeConfiguration<S,string> where S : class
     {
-        public StringTypeConfiguration(Expression<Func<S, string>> memberSelector):base(memberSelector)
+        public StringTypeConfiguration(Expression<Func<S, string>> memberSelector):base(memberSelector, DbType.String)
         {
 
-        }
-
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.String;
-            }
         }
 
         protected override string Validate(string value)

@@ -25,9 +25,9 @@ namespace StoredProcedurePlus.Net.EntityManagers
                     parameter.ParameterName = string.Concat(PARAMETERPREFIX, values[i].ParameterName);
                     if (values[i].GetDbType == System.Data.DbType.Object)
                     {
-                        IDataEntityAdapter pc = ((IObjectTypeConfiguration)values[i]).PropertiesConfigurations;
+                        IDataEntityAdapter pc = ((IListOfObjectTypeConfiguration)values[i]).PropertiesConfigurations;
 
-                        pc.FieldCount
+                        //var x = pc[0]
                         
                     }
                     else

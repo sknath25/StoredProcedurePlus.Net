@@ -3,6 +3,8 @@ using StoredProcedurePlus.Net.UnitTestEntities;
 using StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -39,7 +41,6 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             string msg = param.MyMessage; // The out parameters will be set in the mapped property and can be used from here.
             Assert.AreEqual<string>("Hello world SUMAN", msg);
         }
-
 
         [TestMethod()]
         public void BasicTest()
@@ -349,6 +350,56 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             }
 
             //Assert.IsTrue(Result.Count > 0);
+        }
+
+        [TestMethod()]
+        public void TableTypeInputTest()
+        {
+            DataTable dataTable = new DataTable("SampleDataType");
+            //we create column names as per the type in DB 
+            dataTable.Columns.Add("StudentType", typeof(string));
+            dataTable.Columns.Add("StudentName", typeof(string));
+            dataTable.Columns.Add("StudentAddress", typeof(string));
+            //and fill in some values 
+            dataTable.Rows.Add("1", "SUMAN1", "Some adress 1");
+            dataTable.Rows.Add("1", "SUMAN2", "Some adress 2");
+            dataTable.Rows.Add("1", "SUMAN3", "Some adress 3");
+
+            SqlParameter P_Student = new SqlParameter();
+            //The parameter for the SP must be of SqlDbType.Structured 
+            P_Student.ParameterName = "@Student";
+            P_Student.SqlDbType = System.Data.SqlDbType.Structured;
+            P_Student.Value = dataTable;
+
+            SqlParameter P_SchoolType = new SqlParameter("@SchoolType", 1);
+            SqlParameter P_SchoolId = new SqlParameter("@SchoolId",null);
+            P_SchoolId.Direction = ParameterDirection.Output;
+            SqlParameter P_SchoolName = new SqlParameter("@SchoolName", "School 1");
+            SqlParameter P_SchoolDescription = new SqlParameter("@SchoolDescription", "My school 1");
+            SqlParameter P_SchoolAddress = new SqlParameter("@SchoolAddress", "My school address 1");
+
+            int school_id = 0;
+
+            using (SqlConnection conn = new SqlConnection("Data Source=.;Initial Catalog=information;Integrated Security=True;"))
+            {
+                conn.Open();
+
+                using (SqlCommand command = new SqlCommand("SP_INSERT_SCHOOL", conn))
+                {
+                    command.Parameters.Add(P_SchoolType);
+                    command.Parameters.Add(P_SchoolId);
+                    command.Parameters.Add(P_SchoolName);
+                    command.Parameters.Add(P_SchoolDescription);
+                    command.Parameters.Add(P_SchoolAddress);
+                    command.Parameters.Add(P_Student);
+
+                    command.ExecuteNonQuery();
+
+                    school_id = (int)P_SchoolId.Value;
+                }
+            }
+
+            Assert.IsTrue(school_id > 1);
         }
     }
 }

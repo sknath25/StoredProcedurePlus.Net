@@ -10,24 +10,16 @@ using System.Text.RegularExpressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    internal interface IObjectTypeConfiguration
+    internal interface IListOfObjectTypeConfiguration
     {
         IDataEntityAdapter PropertiesConfigurations { get; }
     }
 
-    public class ObjectTypeConfiguration<S, T> : PrimitiveTypeConfiguration<S, IList<T>>, IObjectTypeConfiguration where S : class where T : class
+    public class ListOfObjectTypeConfiguration<S, T> : PrimitiveTypeConfiguration<S, IList<T>>, IListOfObjectTypeConfiguration where S : class where T : class
     {
-        public ObjectTypeConfiguration(Expression<Func<S, IList<T>>> memberSelector) : base(memberSelector)
+        public ListOfObjectTypeConfiguration(Expression<Func<S, IList<T>>> memberSelector) : base(memberSelector, true)
         {
             Properties = new ParameterInputEntityConfiguration<T>();
-        }
-
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.Object;
-            }
         }
 
         protected override IList<T> Validate(IList<T> value)
@@ -43,7 +35,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return value;
         }
 
-        public ObjectTypeConfiguration<S, T> HasParameterName(string name)
+        public ListOfObjectTypeConfiguration<S, T> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -53,16 +45,16 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         internal bool IsRequired { get; private set; }
 
-        IDataEntityAdapter IObjectTypeConfiguration.PropertiesConfigurations => Properties.GetAsDbParameters();
+        IDataEntityAdapter IListOfObjectTypeConfiguration.PropertiesConfigurations => Properties.GetAsDbParameters();
 
-        public ObjectTypeConfiguration<S,T> Required()
+        public ListOfObjectTypeConfiguration<S,T> Required()
         {
             this.IsRequired = true;
             return this;
         }
 
         uint? AllowedMaxLength = null;
-        public ObjectTypeConfiguration<S,T> MaxLength(uint value)
+        public ListOfObjectTypeConfiguration<S,T> MaxLength(uint value)
         {
             AllowedMaxLength = value;
             base.Size1 = value;
@@ -70,7 +62,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         }
 
         uint? AllowedMinLength = null;
-        public ObjectTypeConfiguration<S,T> MinLength(uint value)
+        public ListOfObjectTypeConfiguration<S,T> MinLength(uint value)
         {
             AllowedMinLength = value;
             return this;

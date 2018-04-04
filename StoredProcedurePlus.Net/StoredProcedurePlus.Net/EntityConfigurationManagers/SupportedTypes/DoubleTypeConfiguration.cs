@@ -8,15 +8,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DoubleTypeConfiguration<S> : PrimitiveTypeConfiguration<S, double> where S : class
     {
-        public DoubleTypeConfiguration(Expression<Func<S, double>> memberSelector):base(memberSelector)
+        public DoubleTypeConfiguration(Expression<Func<S, double>> memberSelector):base(memberSelector, DbType.Decimal)
         {
-        }
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.Decimal;
-            }
         }
 
         protected override double Validate(double value)

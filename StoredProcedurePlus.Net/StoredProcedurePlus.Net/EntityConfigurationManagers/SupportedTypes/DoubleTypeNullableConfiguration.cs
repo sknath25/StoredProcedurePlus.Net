@@ -8,15 +8,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DoubleTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, double?> where S : class
     {
-        public DoubleTypeNullableConfiguration(Expression<Func<S, double?>> memberSelector):base(memberSelector)
+        public DoubleTypeNullableConfiguration(Expression<Func<S, double?>> memberSelector):base(memberSelector, DbType.Double)
         {
-        }
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.Double;
-            }
         }
 
         protected override double? Validate(double? value)

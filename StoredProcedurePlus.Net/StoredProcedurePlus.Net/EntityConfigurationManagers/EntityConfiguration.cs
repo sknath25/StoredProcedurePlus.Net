@@ -592,9 +592,9 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             AddMapping(Configuration);
             return Configuration;
         }
-        public ObjectTypeConfiguration<S,T> Maps<T>(Expression<Func<S, IList<T>>> memberSelector) where T : class
+        public ListOfObjectTypeConfiguration<S,T> Maps<T>(Expression<Func<S, IList<T>>> memberSelector) where T : class
         {
-            ObjectTypeConfiguration<S,T> Configuration = new ObjectTypeConfiguration<S,T>(memberSelector);
+            ListOfObjectTypeConfiguration<S,T> Configuration = new ListOfObjectTypeConfiguration<S,T>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }

@@ -8,16 +8,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DateTimeTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, DateTime?> where S : class
     {
-        public DateTimeTypeNullableConfiguration(Expression<Func<S, DateTime?>> memberSelector):base(memberSelector)
+        public DateTimeTypeNullableConfiguration(Expression<Func<S, DateTime?>> memberSelector):base(memberSelector, DbType.DateTime2)
         {
-        }
-
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.DateTime2;
-            }
         }
 
         protected override DateTime? Validate(DateTime? value)

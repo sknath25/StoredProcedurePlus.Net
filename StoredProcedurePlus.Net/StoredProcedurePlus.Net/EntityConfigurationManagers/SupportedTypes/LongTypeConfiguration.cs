@@ -8,15 +8,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class LongTypeConfiguration<S> : PrimitiveTypeConfiguration<S, long> where S : class
     {
-        public LongTypeConfiguration(Expression<Func<S, long>> memberSelector):base(memberSelector)
+        public LongTypeConfiguration(Expression<Func<S, long>> memberSelector):base(memberSelector, DbType.Int64)
         {
-        }
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.Int64;
-            }
         }
 
         protected override long Validate(long value)

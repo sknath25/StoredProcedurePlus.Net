@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
@@ -7,7 +8,15 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
     {
         readonly EntityAccessor<S, T> Accessor;
 
-        protected PrimitiveTypeConfiguration(Expression<Func<S, T>> memberSelector)
+        protected PrimitiveTypeConfiguration(Expression<Func<S, T>> memberSelector, bool CanEnumerate):base(CanEnumerate)
+        {
+            Accessor = EntityAccessor<S>.Create(memberSelector);
+            PropertyName = Accessor.PropertyName;
+            ParameterName = PropertyName;
+            DataType = Accessor.DataType;
+        }
+
+        protected PrimitiveTypeConfiguration(Expression<Func<S, T>> memberSelector, DbType t):base(t)
         {
             Accessor = EntityAccessor<S>.Create(memberSelector);
             PropertyName = Accessor.PropertyName;

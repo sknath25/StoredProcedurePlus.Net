@@ -8,15 +8,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DecimalTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, decimal?> where S : class
     {
-        public DecimalTypeNullableConfiguration(Expression<Func<S, decimal?>> memberSelector):base(memberSelector)
+        public DecimalTypeNullableConfiguration(Expression<Func<S, decimal?>> memberSelector):base(memberSelector, DbType.Decimal)
         {
-        }
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.Decimal;
-            }
         }
 
         protected override decimal? Validate(decimal? value)

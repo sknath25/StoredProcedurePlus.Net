@@ -8,15 +8,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class IntegerTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, int?> where S : class
     {
-        public IntegerTypeNullableConfiguration(Expression<Func<S, int?>> memberSelector):base(memberSelector)
+        public IntegerTypeNullableConfiguration(Expression<Func<S, int?>> memberSelector):base(memberSelector, DbType.Int32)
         {
-        }
-        internal override DbType GetDbType
-        {
-            get
-            {
-                return DbType.Int32;
-            }
         }
 
         protected override int? Validate(int? value)
