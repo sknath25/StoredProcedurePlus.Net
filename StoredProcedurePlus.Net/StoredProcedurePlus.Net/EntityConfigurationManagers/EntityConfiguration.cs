@@ -4,6 +4,7 @@ using StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes;
 using StoredProcedurePlus.Net.EntityManagers;
 using StoredProcedurePlus.Net.ErrorManagers;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
@@ -11,38 +12,38 @@ using System.Reflection;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public class EnumerableParameterInputEntityConfiguration<S> where S : class
-    {
-        NonPrimitiveEntityConfiguration Config;
+    //public class EnumerableParameterInputEntityConfiguration<S> where S : class
+    //{
+    //    NonPrimitiveEntityConfiguration Config;
 
-        public ParameterInputEntityConfiguration<T> SetEntityConfiguration<T>(
-            Expression<Func<S, IList<T>>> memberSelector) where T : class
-        {
-            ParameterInputEntityConfiguration<T> c = new ParameterInputEntityConfiguration<T>();
-            Config = c;
-            return c;
-        }
+    //    public ParameterInputEntityConfiguration<T> SetEntityConfiguration<T>(
+    //        Expression<Func<S, IList<T>>> memberSelector) where T : class
+    //    {
+    //        ParameterInputEntityConfiguration<T> c = new ParameterInputEntityConfiguration<T>();
+    //        Config = c;
+    //        return c;
+    //    }
 
-        protected void InitializePropertyConfigurations()
-        {
-            Config.Initialize();
-        }
+    //    protected void InitializePropertyConfigurations()
+    //    {
+    //        Config.Initialize();
+    //    }
 
-        internal void Get(object fromInstance, IDataEntityAdapter toEntity)
-        {
-            Config.Get(fromInstance, toEntity);
-        }
+    //    internal void Get(object fromInstance, IDataEntityAdapter toEntity)
+    //    {
+    //        Config.Get(fromInstance, toEntity);
+    //    }
 
-        internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record)
-        {
-            return Config.GetNewDataAdapter(record);
-        }
+    //    internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record)
+    //    {
+    //        return Config.GetNewDataAdapter(record);
+    //    }
 
-        internal void Prepare(IDataEntityAdapter record)
-        {
-            Config.Prepare(record);
-        }
-    }
+    //    internal void Prepare(IDataEntityAdapter record)
+    //    {
+    //        Config.Prepare(record);
+    //    }
+    //}
 
     public class ParameterInputEntityConfiguration<S> : EntityConfiguration<S> where S : class
     {
@@ -61,7 +62,6 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             return new S();
         }
     }
-
 
     public class EntityConfiguration<S> : NonPrimitiveEntityConfiguration where S : class
     {
@@ -188,7 +188,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         #region Internal
 
-        internal IDataEntityAdapter GetAsDbParameters()
+        internal override IDataEntityAdapter GetAsDbParameters()
         {
             return new DbParameterEntityAdapterProxy(Configurations);
         }
@@ -496,6 +496,34 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
                     toEntity.SetString(Ordinal, Configuration[Instance]);
                 }
+                else if (configuration.IsEnumerable)
+                {
+                    ObjectTypeConfiguration<S> Configuration = configuration as ObjectTypeConfiguration<S>;
+
+                    IList o = (IList)Configuration[Instance];
+
+                    DataTable dt = new DataTable();
+                    DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.GetAsDbParameters();
+
+                    //ida.FieldCount
+
+                    for(int pc=0; pc< adapter.FieldCount; pc++)
+                    {
+                        DataColumn col = new DataColumn(adapter[pc].ParameterName);
+                        dt.Columns.Add(col);
+                    }
+
+                    for (int pc = 0; pc < o.Count; pc++)
+                    {
+                        object item = o[pc];
+
+
+                    }
+
+                    foreach (var x in o.Count)
+
+                    toEntity.SetTable(Ordinal, dt);
+                }
             }
         }
 
@@ -592,11 +620,12 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             AddMapping(Configuration);
             return Configuration;
         }
-        public ListOfObjectTypeConfiguration<S,T> Maps<T>(Expression<Func<S, IList<T>>> memberSelector) where T : class
+        public ParameterInputEntityConfiguration<T> Maps<T>(Expression<Func<S, List<T>>> memberSelector) where T :class
         {
-            ListOfObjectTypeConfiguration<S,T> Configuration = new ListOfObjectTypeConfiguration<S,T>(memberSelector);
+            ObjectTypeConfiguration<S> Configuration = new ObjectTypeConfiguration<S>();
             AddMapping(Configuration);
-            return Configuration;
+            ParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector);
+            return c;
         }
         #endregion
     }

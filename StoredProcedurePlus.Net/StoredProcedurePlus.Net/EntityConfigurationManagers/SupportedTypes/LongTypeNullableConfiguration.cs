@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class LongTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, long?> where S : class
     {
-        public LongTypeNullableConfiguration(Expression<Func<S, long?>> memberSelector):base(memberSelector, DbType.Int64)
+        public LongTypeNullableConfiguration(Expression<Func<S, long?>> memberSelector):base(memberSelector, SqlDbType.BigInt)
         {
         }
 

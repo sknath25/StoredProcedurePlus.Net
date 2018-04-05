@@ -1,7 +1,9 @@
 ﻿using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
 using StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 
@@ -23,51 +25,51 @@ namespace StoredProcedurePlus.Net.EntityManagers
                 {
                     SqlParameter parameter = new SqlParameter();
                     parameter.ParameterName = string.Concat(PARAMETERPREFIX, values[i].ParameterName);
-                    if (values[i].GetDbType == System.Data.DbType.Object)
-                    {
-                        IDataEntityAdapter pc = ((IListOfObjectTypeConfiguration)values[i]).PropertiesConfigurations;
+                    parameter.SqlDbType = values[i].GetDbType;
+                    parameter.Direction = values[i].IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
 
-                        //var x = pc[0]
-                        
+                    if (values[i].Size1 > 0)
+                    {
+                        if (values[i].GetDbType == System.Data.SqlDbType.Decimal)
+                        {
+                            parameter.Scale = (byte)values[i].Size1;
+                        }
+                        else
+                        {
+                            parameter.Size = (int)values[i].Size1;
+                        }
                     }
-                    else
-                    {
-                        parameter.DbType = values[i].GetDbType;
-                        parameter.Direction = values[i].IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
 
+                    if (values[i].Size2 > 0)
+                    {
+                        if (values[i].GetDbType == System.Data.SqlDbType.Decimal)
+                        {
+                            parameter.Precision = (byte)values[i].Size2;
+                        }
+                    }
+
+                    if (values[i].IsOut && values[i].GetDbType == System.Data.SqlDbType.VarChar)
+                    {
                         if (values[i].Size1 > 0)
                         {
-                            if (values[i].GetDbType == System.Data.DbType.Decimal)
-                            {
-                                parameter.Scale = (byte)values[i].Size1;
-                            }
-                            else
-                            {
-                                parameter.Size = (int)values[i].Size1;
-                            }
+                            parameter.Size = (int)values[i].Size1;
                         }
-
-                        if (values[i].Size2 > 0)
+                        else
                         {
-                            if (values[i].GetDbType == System.Data.DbType.Decimal)
-                            {
-                                parameter.Precision = (byte)values[i].Size2;
-                            }
-                        }
-
-                        if (values[i].IsOut && values[i].GetDbType == System.Data.DbType.String)
-                        {
-                            if (values[i].Size1 > 0)
-                            {
-                                parameter.Size = (int)values[i].Size1;
-                            }
-                            else
-                            {
-                                parameter.Size = 250; // Default.
-                            }
+                            parameter.Size = 250; // Default.
                         }
                     }
-                    
+
+                    //if (values[i].GetDbType == System.Data.DbType.Object)
+                    //{
+                    //    //IDataEntityAdapter pc = ((IListOfObjectTypeConfiguration)values[i]).PropertiesConfigurations;
+                    //    //var x = pc[0]
+                    //}
+                    //else
+                    //{
+
+                    //}
+
                     Parameters.Add(i, new Tuple<string, DbParameter>(values[i].PropertyName, parameter));
                 }
             }
@@ -150,6 +152,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
         public string GetString(int ordinal)
         {
             return Parameters[ordinal].Item2.Value.ToString();
+        }
+
+        public DataTable GetTable(int ordinal)
+        {
+            return (DataTable)Parameters[ordinal].Item2.Value;
         }
 
         #endregion
@@ -278,6 +285,19 @@ namespace StoredProcedurePlus.Net.EntityManagers
         public void SetString(int ordinal, string value)
         {
             Parameters[ordinal].Item2.Value = value ?? (object)DBNull.Value;
+        }
+
+        public void SetTable(int ordinal, DataTable value)
+        {
+            if (value == null)
+            {
+                Parameters[ordinal].Item2.Value = DBNull.Value;
+            }
+            else
+            {
+                //DataTable dt = new DataTable();
+                Parameters[ordinal].Item2.Value = value;
+            }
         }
 
         #endregion

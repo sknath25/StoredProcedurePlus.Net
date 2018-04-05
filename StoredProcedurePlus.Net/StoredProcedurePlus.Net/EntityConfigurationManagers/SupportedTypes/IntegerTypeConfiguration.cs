@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class IntegerTypeConfiguration<S> : PrimitiveTypeConfiguration<S, int> where S : class
     {
-        public IntegerTypeConfiguration(Expression<Func<S, int>> memberSelector):base(memberSelector, DbType.Int32)
+        public IntegerTypeConfiguration(Expression<Func<S, int>> memberSelector):base(memberSelector, SqlDbType.Int)
         {
         }
 

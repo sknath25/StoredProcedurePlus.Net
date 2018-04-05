@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class ShortTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, short?> where S : class
     {
-        public ShortTypeNullableConfiguration(Expression<Func<S, short?>> memberSelector):base(memberSelector, DbType.Int16)
+        public ShortTypeNullableConfiguration(Expression<Func<S, short?>> memberSelector):base(memberSelector, SqlDbType.Int)
         {
         }
 

@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DoubleTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, double?> where S : class
     {
-        public DoubleTypeNullableConfiguration(Expression<Func<S, double?>> memberSelector):base(memberSelector, DbType.Double)
+        public DoubleTypeNullableConfiguration(Expression<Func<S, double?>> memberSelector):base(memberSelector, SqlDbType.Decimal)
         {
         }
 

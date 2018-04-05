@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Data;
 
 namespace StoredProcedurePlus.Net.EntityManagers
@@ -69,6 +70,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
         public string GetString(int ordinal)
         {
             return Data.GetString(ordinal);
+        }
+
+        public DataTable GetTable(int ordinal)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -145,6 +151,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
         }
 
         public void SetString(int ordinal, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetTable(int ordinal, DataTable value)
         {
             throw new NotImplementedException();
         }

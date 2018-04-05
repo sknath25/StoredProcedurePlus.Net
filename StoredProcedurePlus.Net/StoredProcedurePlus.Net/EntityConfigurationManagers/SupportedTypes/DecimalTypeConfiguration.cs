@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DecimalTypeConfiguration<S> : PrimitiveTypeConfiguration<S, decimal> where S : class
     {
-        public DecimalTypeConfiguration(Expression<Func<S, decimal>> memberSelector):base(memberSelector, DbType.Decimal)
+        public DecimalTypeConfiguration(Expression<Func<S, decimal>> memberSelector):base(memberSelector, SqlDbType.Decimal)
         {
         }
 

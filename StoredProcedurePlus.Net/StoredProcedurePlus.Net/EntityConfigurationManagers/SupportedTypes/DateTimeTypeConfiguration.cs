@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DateTimeTypeConfiguration<S> : PrimitiveTypeConfiguration<S, DateTime> where S : class
     {
-        public DateTimeTypeConfiguration(Expression<Func<S, DateTime>> memberSelector):base(memberSelector, DbType.DateTime2)
+        public DateTimeTypeConfiguration(Expression<Func<S, DateTime>> memberSelector):base(memberSelector, SqlDbType.DateTime)
         {
         }
 

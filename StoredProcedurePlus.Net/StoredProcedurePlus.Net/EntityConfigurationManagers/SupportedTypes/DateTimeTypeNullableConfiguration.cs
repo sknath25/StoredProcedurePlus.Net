@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DateTimeTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, DateTime?> where S : class
     {
-        public DateTimeTypeNullableConfiguration(Expression<Func<S, DateTime?>> memberSelector):base(memberSelector, DbType.DateTime2)
+        public DateTimeTypeNullableConfiguration(Expression<Func<S, DateTime?>> memberSelector):base(memberSelector, SqlDbType.DateTime)
         {
         }
 

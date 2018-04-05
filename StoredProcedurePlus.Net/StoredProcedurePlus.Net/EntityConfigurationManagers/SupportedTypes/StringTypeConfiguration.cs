@@ -9,7 +9,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public class StringTypeConfiguration<S> : PrimitiveTypeConfiguration<S,string> where S : class
     {
-        public StringTypeConfiguration(Expression<Func<S, string>> memberSelector):base(memberSelector, DbType.String)
+        public StringTypeConfiguration(Expression<Func<S, string>> memberSelector):base(memberSelector, SqlDbType.VarChar)
         {
 
         }

@@ -28,6 +28,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         abstract internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record);
 
+        abstract internal IDataEntityAdapter GetAsDbParameters();
+
         abstract internal void Set(IDataEntityAdapter fromEntity, object toInstance);
 
         abstract internal void Get(object fromInstance, IDataEntityAdapter toEntity);

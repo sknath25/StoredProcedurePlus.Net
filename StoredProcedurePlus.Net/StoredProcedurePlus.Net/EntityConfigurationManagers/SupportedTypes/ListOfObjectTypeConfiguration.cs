@@ -3,70 +3,66 @@ using StoredProcedurePlus.Net.EntityManagers;
 using StoredProcedurePlus.Net.ErrorManagers;
 using StoredProcedurePlus.Net.StoredProcedureManagers;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    internal interface IListOfObjectTypeConfiguration
-    {
-        IDataEntityAdapter PropertiesConfigurations { get; }
-    }
 
-    public class ListOfObjectTypeConfiguration<S, T> : PrimitiveTypeConfiguration<S, IList<T>>, IListOfObjectTypeConfiguration where S : class where T : class
+    public class ObjectTypeConfiguration<S> : PropertyConfiguration where S : class
     {
-        public ListOfObjectTypeConfiguration(Expression<Func<S, IList<T>>> memberSelector) : base(memberSelector, true)
+        public ObjectTypeConfiguration() : base(SqlDbType.Structured, true)
         {
-            Properties = new ParameterInputEntityConfiguration<T>();
         }
 
-        protected override IList<T> Validate(IList<T> value)
+
+        NonPrimitiveEntityConfiguration npc = null;
+        MethodInfo mi = null;
+
+        public ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
         {
-            if (IsRequired && value == null) Error.RequiredPropertyValidationError(PropertyName);
-
-            if (value != null)
+            if (memberSelector.Body is MemberExpression)
             {
-
+                MemberExpression me = (MemberExpression)memberSelector.Body;
+                var prop = me.Member as PropertyInfo;
+                DataType = prop.PropertyType;
+                PropertyName = prop.Name;
+                ParameterName = prop.Name;
+                if (prop.CanRead)
+                {
+                    mi = prop.GetGetMethod();
+                }
             }
 
-            //base.Validate(value);
-            return value;
+            ParameterInputEntityConfiguration<T> pc = new ParameterInputEntityConfiguration<T>();
+            npc = pc;
+            return pc;
         }
 
-        public ListOfObjectTypeConfiguration<S, T> HasParameterName(string name)
+        public ObjectTypeConfiguration<S> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
-        public ParameterInputEntityConfiguration<T> Properties {get; private set;}
-
-        internal bool IsRequired { get; private set; }
-
-        IDataEntityAdapter IListOfObjectTypeConfiguration.PropertiesConfigurations => Properties.GetAsDbParameters();
-
-        public ListOfObjectTypeConfiguration<S,T> Required()
+        public IDataEntityAdapter GetAsDbParameters()
         {
-            this.IsRequired = true;
-            return this;
+            return npc.GetAsDbParameters();
         }
 
-        uint? AllowedMaxLength = null;
-        public ListOfObjectTypeConfiguration<S,T> MaxLength(uint value)
+        public object this[object instance]
         {
-            AllowedMaxLength = value;
-            base.Size1 = value;
-            return this;
-        }
+            get
+            {
+                //npc.GetNewDataAdapter(null);
 
-        uint? AllowedMinLength = null;
-        public ListOfObjectTypeConfiguration<S,T> MinLength(uint value)
-        {
-            AllowedMinLength = value;
-            return this;
+                object Result = mi.Invoke(instance, null);
+                return Result;
+            }
         }
-
     }
 }

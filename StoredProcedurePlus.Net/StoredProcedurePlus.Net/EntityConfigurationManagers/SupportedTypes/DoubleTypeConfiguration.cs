@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DoubleTypeConfiguration<S> : PrimitiveTypeConfiguration<S, double> where S : class
     {
-        public DoubleTypeConfiguration(Expression<Func<S, double>> memberSelector):base(memberSelector, DbType.Decimal)
+        public DoubleTypeConfiguration(Expression<Func<S, double>> memberSelector):base(memberSelector, SqlDbType.Decimal)
         {
         }
 

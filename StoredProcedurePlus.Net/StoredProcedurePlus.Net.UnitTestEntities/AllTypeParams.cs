@@ -11,5 +11,13 @@ namespace StoredProcedurePlus.Net.UnitTestEntities
         public long Id { get; set; } 
         public bool IsEnabled { get; set; }
         public int? RowChanged { get; set; }
+        public List<AllTypeChildParams> Childs { get; set; }
+    }
+
+    public class AllTypeChildParams
+    {
+        public long Id { get; set; }
+        public bool IsEnabled { get; set; }
+        public int? RowChanged { get; set; }
     }
 }

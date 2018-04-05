@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Data;
 
 namespace StoredProcedurePlus.Net.EntityManagers
 {
@@ -17,6 +19,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
         double GetDouble(int ordinal);
         DateTime GetDate(int ordinal);
         string GetString(int ordinal);
+        DataTable GetTable(int ordinal);
 
         void SetBool(int ordinal, bool value);
         void SetBool(int ordinal, bool? value);       
@@ -33,5 +36,6 @@ namespace StoredProcedurePlus.Net.EntityManagers
         void SetDateTime(int ordinal, DateTime value);
         void SetDateTime(int ordinal, DateTime? value);
         void SetString(int ordinal, string value);
+        void SetTable(int ordinal, DataTable value);
     }
 }

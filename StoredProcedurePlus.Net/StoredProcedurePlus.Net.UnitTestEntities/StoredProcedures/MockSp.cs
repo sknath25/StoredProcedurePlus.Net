@@ -9,6 +9,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
         {
             configuration.Mock = true;
             configuration.Input.Maps(v => v.Id).Min(1);
+            configuration.Input.Maps(v => v.Childs).Maps(v => v.Id).Min(10);
             configuration.Input.Maps(v => v.RowChanged).Out();
         }
     }

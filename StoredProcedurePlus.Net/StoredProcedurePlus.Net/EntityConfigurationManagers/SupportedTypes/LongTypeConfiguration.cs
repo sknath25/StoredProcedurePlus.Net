@@ -8,7 +8,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class LongTypeConfiguration<S> : PrimitiveTypeConfiguration<S, long> where S : class
     {
-        public LongTypeConfiguration(Expression<Func<S, long>> memberSelector):base(memberSelector, DbType.Int64)
+        public LongTypeConfiguration(Expression<Func<S, long>> memberSelector):base(memberSelector, SqlDbType.BigInt)
         {
         }
 
