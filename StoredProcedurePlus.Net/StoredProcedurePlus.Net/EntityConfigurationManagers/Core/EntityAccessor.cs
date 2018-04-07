@@ -49,10 +49,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 
         protected EntityAccessor(Expression<Func<S, T>> memberSelector) //SUMAN: This shouldn't be accessed by outsider.
         {
-            if (memberSelector.Body is MemberExpression)
+            if (memberSelector.Body is MemberExpression me)
             {
-                MemberExpression me = (MemberExpression)memberSelector.Body;
-
                 var prop = me.Member as PropertyInfo;
 
                 DataType = prop.PropertyType;

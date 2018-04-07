@@ -22,8 +22,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             MyFirstStoredProcedure p1 = new MyFirstStoredProcedure();
             MyFirstStoredProcedure p2 = new MyFirstStoredProcedure();
 
-            School Entity = new School() { SchoolName = "Bhadrakali", SchoolId=30 };
-            School Entity1 = new School() { SchoolName = "l" };
+            SchoolType Entity = new SchoolType() { SchoolName = "Bhadrakali", SchoolId=30 };
+            SchoolType Entity1 = new SchoolType() { SchoolName = "l" };
 
             p1.Execute(Entity);
             p1.Execute(Entity1);
@@ -419,16 +419,16 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
         }
 
 
-        List<School> CreateSchools()
+        List<SchoolType> CreateSchools()
         {
-            List<School> schools = new List<School>();
+            List<SchoolType> schools = new List<SchoolType>();
 
             for (int i = 0; i <= 100; i++)
             {
-                School school = new School()
+                SchoolType school = new SchoolType()
                 {
                     SchoolName = "SCHOOL : " + i.ToString(),
-                    SchoolType = (short)new Random(4).Next(6),
+                    SType = (short)new Random(4).Next(6),
                     Students = CreateStudents()
                 };
 

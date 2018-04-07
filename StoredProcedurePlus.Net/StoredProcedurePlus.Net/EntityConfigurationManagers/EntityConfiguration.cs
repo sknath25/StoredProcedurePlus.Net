@@ -530,20 +530,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                             for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
                             {
-                                r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;
-
-                                //var tp = adapter[fieldcounter].Value.GetType();
-
-                                //if (tp == typeof(DataTable))
-                                //{
-                                //    throw Error.NestedTypeAsDatTableError(
-                                //        adapter[fieldcounter].ParameterName, 
-                                //        ((DataTable)adapter[fieldcounter].Value).TableName);
-                                //}
-                                //else
-                                //{
-
-                                //}                                
+                                r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;                              
                             }
 
                             ListAsDataTable.Rows.Add(r);

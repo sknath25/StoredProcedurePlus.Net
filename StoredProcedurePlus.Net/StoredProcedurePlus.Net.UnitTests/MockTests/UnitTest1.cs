@@ -52,16 +52,16 @@ namespace StoredProcedurePlus.Net.UnitTests.MockTests
             sp.Execute(pu);
         }
 
-        List<School> CreateSchools()
+        List<SchoolType> CreateSchools()
         {
-            List<School> schools = new List<School>();
+            List<SchoolType> schools = new List<SchoolType>();
 
             for (int i = 0; i <= 100; i++)
             {
-                School school = new School()
+                SchoolType school = new SchoolType()
                 {
                     SchoolName = "SCHOOL : " + i.ToString(),
-                    SchoolType = (short)new Random(4).Next(6),
+                    SType = (short)new Random(4).Next(6),
                     Students = CreateStudents()
                 };
 

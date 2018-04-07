@@ -15,19 +15,20 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
     public class ListObjectTypeConfiguration<S> : PropertyConfiguration where S : class
     {
+        MethodInfo mi = null;
+
+        internal NonPrimitiveEntityConfiguration ChildEntityConfiguration { get; private set; }
+
+        internal string TableTypeName = null;
+
         public ListObjectTypeConfiguration() : base(SqlDbType.Structured, true)
         {
         }
 
-        internal NonPrimitiveEntityConfiguration ChildEntityConfiguration { get; private set; }
-
-        MethodInfo mi = null;
-
         public ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
         {
-            if (memberSelector.Body is MemberExpression)
+            if (memberSelector.Body is MemberExpression me)
             {
-                MemberExpression me = (MemberExpression)memberSelector.Body;
                 var prop = me.Member as PropertyInfo;
                 DataType = prop.PropertyType;
                 PropertyName = prop.Name;
@@ -37,6 +38,10 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 if (prop.CanRead)
                 {
                     mi = prop.GetGetMethod();
+                }
+                else
+                {
+                    throw new ArgumentException(string.Format("{0} Property get method not found.", PropertyName));
                 }
             }
 
@@ -58,15 +63,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             TableTypeName = typename;
             ParameterName = parametername;
             return x;
-        }
-
-        public ListObjectTypeConfiguration<S> HasParameterName(string name)
-        {
-            this.ParameterName = name;
-            return this;
-        }
-
-        internal string TableTypeName = null;        
+        }     
 
         public object this[object instance]
         {

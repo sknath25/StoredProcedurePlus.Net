@@ -3,7 +3,7 @@ using StoredProcedurePlus.Net.StoredProcedureManagers;
 
 namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
 {
-    public class MockSp : StoredProcedureManager<AllTypeParams>
+    public class MockSp : StoredProcedureManager<MockSp, AllTypeParams>
     {
         protected override void Setup(ProcedureConfiguration<AllTypeParams> configuration)
         {
@@ -14,7 +14,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
         }
     }
 
-    public class UniversityMockSp : StoredProcedureManager<University>
+    public class UniversityMockSp : StoredProcedureManager<UniversityMockSp, University>
     {
         protected override void Setup(ProcedureConfiguration<University> configuration)
         {
@@ -24,7 +24,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
             configuration.Input.Maps(v => v.UniversityType).AllowedOnly(new int[] { 1, 2, 3 });
             var schoolmappar = configuration.Input.MapAsTable(v => v.Schools, "SchoolType");
             schoolmappar.Maps(v => v.SchoolName).Required();
-            schoolmappar.Maps(v => v.SchoolType).AllowedOnly(new short[] { 4, 5, 6 });
+            schoolmappar.Maps(v => v.SType).AllowedOnly(new short[] { 4, 5, 6 });
 
             //var studentmappar = schoolmappar.MapAsTable(v => v.Students, "StudentType");
             //studentmappar.Maps(v => v.StudentName).Required();
