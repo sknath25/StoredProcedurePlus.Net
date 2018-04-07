@@ -13,20 +13,22 @@ namespace StoredProcedurePlus.Net.EntityManagers
     {
         const string PARAMETERPREFIX = "@";
 
-        readonly Dictionary<int, Tuple<string, DbParameter>> Parameters;
+        readonly Dictionary<int, Tuple<string, SqlParameter>> Parameters;
 
         protected DbParameterEntityAdapter(List<PropertyConfiguration> values)
         {
             if (values != null)
             {
-                Parameters = new Dictionary<int, Tuple<string, DbParameter>>();
+                Parameters = new Dictionary<int, Tuple<string, SqlParameter>>();
 
                 for (int i = 0; i < values.Count; i++)
                 {
-                    SqlParameter parameter = new SqlParameter();
-                    parameter.ParameterName = string.Concat(PARAMETERPREFIX, values[i].ParameterName);
-                    parameter.SqlDbType = values[i].GetDbType;
-                    parameter.Direction = values[i].IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input;
+                    SqlParameter parameter = new SqlParameter
+                    {
+                        ParameterName = string.Concat(PARAMETERPREFIX, values[i].ParameterName),
+                        SqlDbType = values[i].GetDbType,
+                        Direction = values[i].IsOut ? System.Data.ParameterDirection.Output : System.Data.ParameterDirection.Input
+                    };
 
                     if (values[i].Size1 > 0)
                     {
@@ -60,22 +62,12 @@ namespace StoredProcedurePlus.Net.EntityManagers
                         }
                     }
 
-                    //if (values[i].GetDbType == System.Data.DbType.Object)
-                    //{
-                    //    //IDataEntityAdapter pc = ((IListOfObjectTypeConfiguration)values[i]).PropertiesConfigurations;
-                    //    //var x = pc[0]
-                    //}
-                    //else
-                    //{
-
-                    //}
-
-                    Parameters.Add(i, new Tuple<string, DbParameter>(values[i].PropertyName, parameter));
+                    Parameters.Add(i, new Tuple<string, SqlParameter>(values[i].PropertyName, parameter));
                 }
             }
         }
 
-        internal DbParameter this[int ordinal]
+        internal SqlParameter this[int ordinal]
         {
             get
             {
@@ -157,6 +149,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
         public DataTable GetTable(int ordinal)
         {
             return (DataTable)Parameters[ordinal].Item2.Value;
+        }
+
+        public byte[] GetBinary(int ordinal)
+        {
+            return (byte[])Parameters[ordinal].Item2.Value;
         }
 
         #endregion
@@ -287,7 +284,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
             Parameters[ordinal].Item2.Value = value ?? (object)DBNull.Value;
         }
 
-        public void SetTable(int ordinal, DataTable value)
+        public void SetTable(int ordinal, DataTable value, string typename)
         {
             if (value == null)
             {
@@ -295,7 +292,19 @@ namespace StoredProcedurePlus.Net.EntityManagers
             }
             else
             {
-                //DataTable dt = new DataTable();
+                Parameters[ordinal].Item2.Value = value;
+                Parameters[ordinal].Item2.TypeName = typename;
+            }
+        }
+
+        public void SetBinary(int ordinal, byte[] value)
+        {
+            if (value == null)
+            {
+                Parameters[ordinal].Item2.Value = DBNull.Value;
+            }
+            else
+            {
                 Parameters[ordinal].Item2.Value = value;
             }
         }

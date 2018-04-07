@@ -9,8 +9,26 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
         {
             configuration.Mock = true;
             configuration.Input.Maps(v => v.Id).Min(1);
-            configuration.Input.Maps(v => v.Childs).Maps(v => v.Id).Min(10);
+            configuration.Input.MapAsTable(v => v.Childs, "ChildType").Maps(v => v.Id).Min(10);
             configuration.Input.Maps(v => v.RowChanged).Out();
+        }
+    }
+
+    public class UniversityMockSp : StoredProcedureManager<University>
+    {
+        protected override void Setup(ProcedureConfiguration<University> configuration)
+        {
+            configuration.Mock = true;
+            configuration.Input.Maps(v => v.UniversityName).Out();
+            configuration.Input.Maps(v => v.UniversityName).Required();
+            configuration.Input.Maps(v => v.UniversityType).AllowedOnly(new int[] { 1, 2, 3 });
+            var schoolmappar = configuration.Input.MapAsTable(v => v.Schools, "SchoolType");
+            schoolmappar.Maps(v => v.SchoolName).Required();
+            schoolmappar.Maps(v => v.SchoolType).AllowedOnly(new short[] { 4, 5, 6 });
+
+            //var studentmappar = schoolmappar.MapAsTable(v => v.Students, "StudentType");
+            //studentmappar.Maps(v => v.StudentName).Required();
+            //studentmappar.Maps(v => v.StudentType).AllowedOnly(new short[] { 7, 8, 9 });
         }
     }
 

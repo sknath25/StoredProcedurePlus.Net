@@ -10,5 +10,12 @@ namespace StoredProcedurePlus.Net.ErrorManagers
                 string.Format("Entity configuration expected for type {0} but actual was {1}",
                 expectedType.Name, actualType.Name));
         }
+
+        internal static Exception NestedTypeAsDatTableError(string parametername, string childtableaspropertyname)
+        {
+            throw new ArgumentException(
+                string.Format("Parameter : {0}, which is already marked as table type input cannot contain another table type : {1} in it.",
+                parametername, childtableaspropertyname));
+        }
     }
 }

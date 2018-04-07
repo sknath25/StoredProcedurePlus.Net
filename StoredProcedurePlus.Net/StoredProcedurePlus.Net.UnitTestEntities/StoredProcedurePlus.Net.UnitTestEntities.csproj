@@ -44,9 +44,7 @@
     <Compile Include="AllTypeParams.cs" />
     <Compile Include="ResourceSummary.cs" />
     <Compile Include="Resource.cs" />
-    <Compile Include="School.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Steven_Singer_ADJUSTMENTS.cs" />
     <Compile Include="StoredProcedures\MockSp.cs" />
     <Compile Include="StoredProcedures\MyFirstStoredPocedure.cs" />
     <Compile Include="StoredProcedures\SpResourceSummary.cs" />

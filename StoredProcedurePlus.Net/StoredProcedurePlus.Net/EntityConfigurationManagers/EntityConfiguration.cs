@@ -12,39 +12,6 @@ using System.Reflection;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    //public class EnumerableParameterInputEntityConfiguration<S> where S : class
-    //{
-    //    NonPrimitiveEntityConfiguration Config;
-
-    //    public ParameterInputEntityConfiguration<T> SetEntityConfiguration<T>(
-    //        Expression<Func<S, IList<T>>> memberSelector) where T : class
-    //    {
-    //        ParameterInputEntityConfiguration<T> c = new ParameterInputEntityConfiguration<T>();
-    //        Config = c;
-    //        return c;
-    //    }
-
-    //    protected void InitializePropertyConfigurations()
-    //    {
-    //        Config.Initialize();
-    //    }
-
-    //    internal void Get(object fromInstance, IDataEntityAdapter toEntity)
-    //    {
-    //        Config.Get(fromInstance, toEntity);
-    //    }
-
-    //    internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record)
-    //    {
-    //        return Config.GetNewDataAdapter(record);
-    //    }
-
-    //    internal void Prepare(IDataEntityAdapter record)
-    //    {
-    //        Config.Prepare(record);
-    //    }
-    //}
-
     public class ParameterInputEntityConfiguration<S> : EntityConfiguration<S> where S : class
     {
 
@@ -181,6 +148,11 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     {
                         LambdaExpression l = BuildExpression(SourceType, Properties[i]);
                         Maps((Expression<Func<S, string>>)l);
+                    }
+                    if (Properties[i].PropertyType == typeof(byte[]))
+                    {
+                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                        Maps((Expression<Func<S, byte[]>>)l);
                     }
                 }
             }
@@ -407,6 +379,19 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         Configuration[Instance] = fromEntity.GetString(Ordinal);
                     }               
                 }
+                else if (configuration.DataType == typeof(byte[]))
+                {
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+                        VarBinaryTypeConfiguration<S> Configuration = configuration as VarBinaryTypeConfiguration<S>;
+                        Configuration[Instance] = null;
+                    }
+                    else
+                    {
+                        VarBinaryTypeConfiguration<S> Configuration = configuration as VarBinaryTypeConfiguration<S>;
+                        Configuration[Instance] = fromEntity.GetBinary(Ordinal);
+                    }
+                }
             }
         }
 
@@ -496,33 +481,76 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
                     toEntity.SetString(Ordinal, Configuration[Instance]);
                 }
+                else if (configuration.DataType == typeof(byte[]))
+                {
+                    VarBinaryTypeConfiguration<S> Configuration = configuration as VarBinaryTypeConfiguration<S>;
+                    toEntity.SetBinary(Ordinal, Configuration[Instance]);
+                }                
                 else if (configuration.IsEnumerable)
                 {
-                    ObjectTypeConfiguration<S> Configuration = configuration as ObjectTypeConfiguration<S>;
+                    ListObjectTypeConfiguration<S> Configuration = configuration as ListObjectTypeConfiguration<S>;
+                    IList ListObbject = (IList)Configuration[Instance];                   
+                    DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.ChildEntityConfiguration.GetAsDbParameters();
+                    DataTable ListAsDataTable = new DataTable(Configuration.PropertyName);
 
-                    IList o = (IList)Configuration[Instance];
-
-                    DataTable dt = new DataTable();
-                    DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.GetAsDbParameters();
-
-                    //ida.FieldCount
-
-                    for(int pc=0; pc< adapter.FieldCount; pc++)
+                    for (int listcounter = 0; listcounter < ListObbject.Count; listcounter++)
                     {
-                        DataColumn col = new DataColumn(adapter[pc].ParameterName);
-                        dt.Columns.Add(col);
+                        if (adapter.FieldCount > 0)
+                        {                           
+                            if (listcounter == 0)
+                            {
+                                Configuration.ChildEntityConfiguration.Prepare(adapter);
+                                Configuration.ChildEntityConfiguration.Get(ListObbject[listcounter], adapter);
+
+                                for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
+                                {
+                                    var dtype = adapter[fieldcounter].Value.GetType();
+
+                                    if (dtype == typeof(DataTable))
+                                    {
+                                        throw Error.NestedTypeAsDatTableError(
+                                            adapter[fieldcounter].ParameterName,
+                                            ((DataTable)adapter[fieldcounter].Value).TableName);
+                                    }
+
+                                    DataColumn col = new DataColumn(
+                                        adapter[fieldcounter].ParameterName, 
+                                       dtype
+                                    );
+
+                                    ListAsDataTable.Columns.Add(col);
+                                }
+                            }
+                            else
+                            {
+                                Configuration.ChildEntityConfiguration.Get(ListObbject[listcounter], adapter);
+                            }
+
+                            DataRow r = ListAsDataTable.NewRow();
+
+                            for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
+                            {
+                                r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;
+
+                                //var tp = adapter[fieldcounter].Value.GetType();
+
+                                //if (tp == typeof(DataTable))
+                                //{
+                                //    throw Error.NestedTypeAsDatTableError(
+                                //        adapter[fieldcounter].ParameterName, 
+                                //        ((DataTable)adapter[fieldcounter].Value).TableName);
+                                //}
+                                //else
+                                //{
+
+                                //}                                
+                            }
+
+                            ListAsDataTable.Rows.Add(r);
+                        }                       
                     }
 
-                    for (int pc = 0; pc < o.Count; pc++)
-                    {
-                        object item = o[pc];
-
-
-                    }
-
-                    foreach (var x in o.Count)
-
-                    toEntity.SetTable(Ordinal, dt);
+                    toEntity.SetTable(Ordinal,ListAsDataTable, Configuration.TableTypeName);
                 }
             }
         }
@@ -620,13 +648,36 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             AddMapping(Configuration);
             return Configuration;
         }
-        public ParameterInputEntityConfiguration<T> Maps<T>(Expression<Func<S, List<T>>> memberSelector) where T :class
+        public VarBinaryTypeConfiguration<S> Maps(Expression<Func<S, byte[]>> memberSelector)
         {
-            ObjectTypeConfiguration<S> Configuration = new ObjectTypeConfiguration<S>();
+            VarBinaryTypeConfiguration<S> Configuration = new VarBinaryTypeConfiguration<S>(memberSelector);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+        public ParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T :class
+        {
+            ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
             AddMapping(Configuration);
             ParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector);
             return c;
         }
+
+        public ParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
+        {
+            ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
+            AddMapping(Configuration);
+            ParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector, typename);
+            return c;
+        }
+
+        public ParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
+        {
+            ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
+            AddMapping(Configuration);
+            ParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector, typename, parametername);
+            return c;
+        }
+
         #endregion
     }
 }

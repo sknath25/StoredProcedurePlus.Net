@@ -13,14 +13,14 @@ using System.Text.RegularExpressions;
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
 
-    public class ObjectTypeConfiguration<S> : PropertyConfiguration where S : class
+    public class ListObjectTypeConfiguration<S> : PropertyConfiguration where S : class
     {
-        public ObjectTypeConfiguration() : base(SqlDbType.Structured, true)
+        public ListObjectTypeConfiguration() : base(SqlDbType.Structured, true)
         {
         }
 
+        internal NonPrimitiveEntityConfiguration ChildEntityConfiguration { get; private set; }
 
-        NonPrimitiveEntityConfiguration npc = null;
         MethodInfo mi = null;
 
         public ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
@@ -32,6 +32,8 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 DataType = prop.PropertyType;
                 PropertyName = prop.Name;
                 ParameterName = prop.Name;
+                TableTypeName = typeof(T).Name;
+                
                 if (prop.CanRead)
                 {
                     mi = prop.GetGetMethod();
@@ -39,27 +41,37 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
 
             ParameterInputEntityConfiguration<T> pc = new ParameterInputEntityConfiguration<T>();
-            npc = pc;
+            ChildEntityConfiguration = pc;
             return pc;
         }
 
-        public ObjectTypeConfiguration<S> HasParameterName(string name)
+        public ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
+        {
+            var x = AsTable(memberSelector);
+            TableTypeName = typename;
+            return x;
+        }
+
+        public ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
+        {
+            var x = AsTable(memberSelector);
+            TableTypeName = typename;
+            ParameterName = parametername;
+            return x;
+        }
+
+        public ListObjectTypeConfiguration<S> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
-        public IDataEntityAdapter GetAsDbParameters()
-        {
-            return npc.GetAsDbParameters();
-        }
+        internal string TableTypeName = null;        
 
         public object this[object instance]
         {
             get
             {
-                //npc.GetNewDataAdapter(null);
-
                 object Result = mi.Invoke(instance, null);
                 return Result;
             }

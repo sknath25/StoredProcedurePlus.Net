@@ -18,7 +18,7 @@ namespace StoredProcedurePlus.Net.UnitTests.MockTests
             sp.OnMockExecution += Sp_OnMockExecution;
             AllTypeParams p = new AllTypeParams() { Id = 1, IsEnabled = true };
             p.Childs = new System.Collections.Generic.List<AllTypeChildParams>();
-            p.Childs.Add(new AllTypeChildParams() { Id = 9 });
+            p.Childs.Add(new AllTypeChildParams() { Id = 11 });
             sp.Execute(p);
 
             Assert.IsTrue(p.IsEnabled);
@@ -37,6 +37,62 @@ namespace StoredProcedurePlus.Net.UnitTests.MockTests
             }
 
             args.Result = 1;
+        }
+
+        [TestMethod]
+        public void N2LayerMockTest()
+        {
+            UniversityMockSp sp = new UniversityMockSp();
+            sp.OnMockExecution += Sp_OnMockExecution1;
+            University pu = new University();
+            pu.UniversityType = 3;
+            pu.UniversityName = "UNI 1";
+            pu.Schools = CreateSchools();
+            
+            sp.Execute(pu);
+        }
+
+        List<School> CreateSchools()
+        {
+            List<School> schools = new List<School>();
+
+            for (int i = 0; i <= 100; i++)
+            {
+                School school = new School()
+                {
+                    SchoolName = "SCHOOL : " + i.ToString(),
+                    SchoolType = (short)new Random(4).Next(6),
+                    Students = CreateStudents()
+                };
+
+                schools.Add(school);
+            }
+            return schools;
+        }
+
+        List<Student> CreateStudents()
+        {
+            List<Student> students = new List<Student>();
+
+            for (int i = 0; i <= 100; i++ )
+            {
+                Student std = new Student()
+                {
+                    StudentName = "SUMAN : " + i.ToString(),
+                    StudentType = 8
+                };
+                students.Add(std);    
+            }
+            return students;
+        }
+
+        private void Sp_OnMockExecution1(object sender, MockEventArgs e)
+        {
+            string un = e.Input.GetString(e.Input.GetOrdinal("UniversityName"));
+
+            DataTable alurdom = e.Input.GetTable(e.Input.GetOrdinal("Schools"));
+
+            e.Result = 1;
         }
     }
 }

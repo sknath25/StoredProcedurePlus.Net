@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StoredProcedurePlus.Net.ErrorManagers;
+using System;
 using System.Collections;
 using System.Data;
 
@@ -72,9 +73,14 @@ namespace StoredProcedurePlus.Net.EntityManagers
             return Data.GetString(ordinal);
         }
 
+        public byte[] GetBinary(int ordinal)
+        {
+            return (byte[])Data[ordinal];
+        }
+
         public DataTable GetTable(int ordinal)
         {
-            throw new NotImplementedException();
+            throw Error.ListPropertiesAreReadOnlyError(GetName(ordinal));
         }
 
         #endregion
@@ -155,7 +161,12 @@ namespace StoredProcedurePlus.Net.EntityManagers
             throw new NotImplementedException();
         }
 
-        public void SetTable(int ordinal, DataTable value)
+        public void SetTable(int ordinal, DataTable value, string typename)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetBinary(int ordinal, byte[] value)
         {
             throw new NotImplementedException();
         }

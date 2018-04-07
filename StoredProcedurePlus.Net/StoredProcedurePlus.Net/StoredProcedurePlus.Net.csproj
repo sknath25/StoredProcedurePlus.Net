@@ -58,6 +58,7 @@
     <Compile Include="EntityConfigurationManagers\SupportedTypes\LongTypeConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\LongTypeNullableConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\ListOfObjectTypeConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\VarBinaryTypeConfiguration.cs" />
     <Compile Include="EntityManagers\DbDataEntityAdapter.cs" />
     <Compile Include="EntityManagers\IDataEntityAdapter.cs" />
     <Compile Include="EntityConfigurationManagers\PropertyOrdinalProvider.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="ErrorManagers\EntityConfiguration.cs" />
     <Compile Include="ErrorManagers\Decimal.cs" />
     <Compile Include="ErrorManagers\Double.cs" />
+    <Compile Include="ErrorManagers\VarBinary.cs" />
     <Compile Include="ErrorManagers\String.cs" />
     <Compile Include="ErrorManagers\General.cs" />
     <Compile Include="ErrorManagers\Integer.cs" />

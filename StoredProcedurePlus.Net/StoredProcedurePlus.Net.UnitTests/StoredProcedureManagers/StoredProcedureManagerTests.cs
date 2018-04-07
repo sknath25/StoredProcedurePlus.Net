@@ -401,5 +401,57 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
 
             Assert.IsTrue(school_id > 1);
         }
+
+        [TestMethod]
+        public void TableTypeSpTest()
+        {
+            University pu = new University();
+            pu.UniversityType = 3;
+            pu.UniversityName = "UNI 1";
+            pu.Schools = CreateSchools();
+
+            SPInsertUniversity SP = new SPInsertUniversity();
+            SP.Execute(pu);
+
+            int id = pu.UniversityId;
+
+            Assert.IsTrue(pu.UniversityId > 0);
+        }
+
+
+        List<School> CreateSchools()
+        {
+            List<School> schools = new List<School>();
+
+            for (int i = 0; i <= 100; i++)
+            {
+                School school = new School()
+                {
+                    SchoolName = "SCHOOL : " + i.ToString(),
+                    SchoolType = (short)new Random(4).Next(6),
+                    Students = CreateStudents()
+                };
+
+                schools.Add(school);
+            }
+            return schools;
+        }
+
+        List<Student> CreateStudents()
+        {
+            List<Student> students = new List<Student>();
+
+            for (int i = 0; i <= 100; i++)
+            {
+                Student std = new Student()
+                {
+                    StudentName = "SUMAN : " + i.ToString(),
+                    StudentType = 8
+                };
+                students.Add(std);
+            }
+            return students;
+        }
+
     }
 }
