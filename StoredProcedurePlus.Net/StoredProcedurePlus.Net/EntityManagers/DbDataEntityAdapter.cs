@@ -58,14 +58,19 @@ namespace StoredProcedurePlus.Net.EntityManagers
             return Data.GetInt64(ordinal);
         }
 
-        public decimal GetDecimal(int ordinal)
+        public float GetFloat(int ordinal)
         {
-            return Data.GetDecimal(ordinal);
+            return Data.GetFloat(ordinal);
         }
 
         public double GetDouble(int ordinal)
         {
             return Data.GetDouble(ordinal);
+        }
+
+        public decimal GetDecimal(int ordinal)
+        {
+            return Data.GetDecimal(ordinal);
         }
 
         public DateTime GetDate(int ordinal)
@@ -80,7 +85,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         public byte[] GetBinary(int ordinal)
         {
-            return (byte[])Data[ordinal];
+            return (byte[])Data.GetValue(ordinal);
         }
 
         public DataTable GetTable(int ordinal)
@@ -172,6 +177,16 @@ namespace StoredProcedurePlus.Net.EntityManagers
         }
 
         public void SetBinary(int ordinal, byte[] value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetFloat(int ordinal, float value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetFloat(int ordinal, float? value)
         {
             throw new NotImplementedException();
         }

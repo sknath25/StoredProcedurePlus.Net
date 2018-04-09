@@ -34,8 +34,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 if (AllowedMinLength.HasValue && Length < AllowedMinLength) Error.MinLengthPropertyValidationError(PropertyName, Length, AllowedMinLength.Value);
             }
 
-            base.Validate(value);
-            return value;
+            return base.Validate(value);
         }
 
         public VarBinaryTypeConfiguration<S> Out()

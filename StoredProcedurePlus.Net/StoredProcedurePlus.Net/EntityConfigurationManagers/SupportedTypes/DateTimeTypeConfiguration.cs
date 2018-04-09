@@ -16,6 +16,10 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
             get
             {
+                if (IsDateTime2)
+                {
+                    return SqlDbType.DateTime2;
+                }
                 return SqlDbType.DateTime;
             }
         }
@@ -37,8 +41,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                     Error.DateNotAllowedError(PropertyName, value, AllowedDatesExcept);
             }
 
-            base.Validate(value);
-            return value;
+            return base.Validate(value);
         }
 
         public DateTimeTypeConfiguration<S> Out()
@@ -53,6 +56,12 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
+        bool IsDateTime2 = false;
+        public DateTimeTypeConfiguration<S> AsDateTime2()
+        {
+            IsDateTime2 = true;
+            return this;
+        }
 
         DateTime? AllowedMaxDate = null;
         public DateTimeTypeConfiguration<S> Max(DateTime value)

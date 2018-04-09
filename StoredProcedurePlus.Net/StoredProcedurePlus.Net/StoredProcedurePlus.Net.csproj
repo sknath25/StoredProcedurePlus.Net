@@ -47,6 +47,8 @@
     <Compile Include="EntityConfigurationManagers\SupportedTypes\DateTimeTypeConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\DateTimeTypeNullableConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\DecimalTypeNullableConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\FloatTypeNullableConfiguration.cs" />
+    <Compile Include="EntityConfigurationManagers\SupportedTypes\FloatTypeConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\DoubleTypeNullableConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\ShortTypeNullableConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\SupportedTypes\ShortTypeConfiguration.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="ErrorManagers\Boolean.cs" />
     <Compile Include="ErrorManagers\Connection.cs" />
     <Compile Include="ErrorManagers\DateTime.cs" />
+    <Compile Include="ErrorManagers\Float.cs" />
     <Compile Include="ErrorManagers\Short.cs" />
     <Compile Include="ErrorManagers\Long.cs" />
     <Compile Include="ErrorManagers\StoredProcedureManager.cs" />

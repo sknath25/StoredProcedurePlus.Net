@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class LongTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, long?> where S : class
+    public sealed class FloatTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, float?> where S : class
     {
-        public LongTypeNullableConfiguration(Expression<Func<S, long?>> memberSelector):base(memberSelector)
+        public FloatTypeNullableConfiguration(Expression<Func<S, float?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -16,11 +16,11 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
             get
             {
-                return SqlDbType.BigInt;
+                return SqlDbType.Float;
             }
         }
 
-        protected override long? Validate(long? value)
+        protected override float? Validate(float? value)
         {
             if (IsRequired && !value.HasValue) Error.RequiredPropertyValidationError(PropertyName);
 
@@ -31,13 +31,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
                 if (AllowedValuesOnly != null && AllowedValuesOnly.Length > 0)
                 {
-                    if (!Array.Exists<long>(AllowedValuesOnly, v => v.Equals(value.Value)))
+                    if (!Array.Exists<float>(AllowedValuesOnly, v => v.Equals(value)))
                         Error.ValueNotAllowedError(PropertyName, value.Value, AllowedValuesOnly);
                 }
 
                 if (AllowedValuesExcept != null && AllowedValuesExcept.Length > 0)
                 {
-                    if (Array.Exists<long>(AllowedValuesExcept, v => v.Equals(value.Value)))
+                    if (Array.Exists<float>(AllowedValuesExcept, v => v.Equals(value)))
                         Error.ValueNotAllowedError(PropertyName, value.Value, AllowedValuesExcept);
                 }
             }
@@ -45,50 +45,59 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public LongTypeNullableConfiguration<S> Out()
-        {
-            this.IsOut = true;
-            return this;
-        }
-
-        public LongTypeNullableConfiguration<S> HasParameterName(string name)
-        {
-            this.ParameterName = name;
-            return this;
-        }
-
         internal bool IsRequired { get; private set; }
-        public LongTypeNullableConfiguration<S> Required()
+        public FloatTypeNullableConfiguration<S> Required()
         {
             this.IsRequired = true;
             return this;
         }
 
+        public FloatTypeNullableConfiguration<S> Out()
+        {
+            this.IsOut = true;
+            return this;
+        }
 
-        long? AllowedMaxValue = null;        
-        public LongTypeNullableConfiguration<S> Max(long value)
+        public FloatTypeNullableConfiguration<S> HasParameterName(string name)
+        {
+            this.ParameterName = name;
+            return this;
+        }
+
+
+        internal byte? ScaleSize = null;
+        internal byte? PrecisionSize = null;
+        public FloatTypeNullableConfiguration<S> HasSize(byte scale, byte precision)
+        {
+            ScaleSize = scale;
+            PrecisionSize = precision;
+            return this;
+        }
+
+
+        float? AllowedMaxValue = null;
+        public FloatTypeNullableConfiguration<S> Max(float value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
-        long? AllowedMinValue = null;
-        public LongTypeNullableConfiguration<S> Min(long value)
+        float? AllowedMinValue = null;
+        public FloatTypeNullableConfiguration<S> Min(float value)
         {
             AllowedMinValue = value;
             return this;
         }
 
-        long[] AllowedValuesOnly = null;
-        public LongTypeNullableConfiguration<S> AllowedOnly(long[] values)
+        float[] AllowedValuesOnly = null;
+        public FloatTypeNullableConfiguration<S> AllowedOnly(float[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
-        long[] AllowedValuesExcept = null;        
-
-        public LongTypeNullableConfiguration<S> AllowedExcept(long[] values)
+        float[] AllowedValuesExcept = null;
+        public FloatTypeNullableConfiguration<S> AllowedExcept(float[] values)
         {
             AllowedValuesExcept = values;
             return this;

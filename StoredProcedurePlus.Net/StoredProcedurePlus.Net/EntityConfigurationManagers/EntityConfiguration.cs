@@ -116,15 +116,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         LambdaExpression l = BuildExpression(SourceType, Properties[i]);
                         Maps((Expression<Func<S, long?>>)l);
                     }
-                    if (Properties[i].PropertyType == typeof(decimal))
+                    if (Properties[i].PropertyType == typeof(float))
                     {
                         LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, decimal>>)l);
+                        Maps((Expression<Func<S, float>>)l);
                     }
-                    if (Properties[i].PropertyType == typeof(decimal?))
+                    if (Properties[i].PropertyType == typeof(float?))
                     {
                         LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, decimal?>>)l);
+                        Maps((Expression<Func<S, float?>>)l);
                     }
                     if (Properties[i].PropertyType == typeof(double))
                     {
@@ -135,6 +135,16 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     {
                         LambdaExpression l = BuildExpression(SourceType, Properties[i]);
                         Maps((Expression<Func<S, double?>>)l);
+                    }
+                    if (Properties[i].PropertyType == typeof(decimal))
+                    {
+                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                        Maps((Expression<Func<S, decimal>>)l);
+                    }
+                    if (Properties[i].PropertyType == typeof(decimal?))
+                    {
+                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                        Maps((Expression<Func<S, decimal?>>)l);
                     }
                     if (Properties[i].PropertyType == typeof(DateTime))
                     {
@@ -302,6 +312,31 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         Configuration[Instance] = fromEntity.GetLong(Ordinal);
                     }
                 }
+                else if (configuration.DataType == typeof(float))
+                {
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+                        Error.CannotSetNullToNotNullableFloatProperty(configuration.PropertyName);
+                    }
+                    else
+                    {
+                        FloatTypeConfiguration<S> Configuration = configuration as FloatTypeConfiguration<S>;
+                        Configuration[Instance] = fromEntity.GetFloat(Ordinal);
+                    }
+                }
+                else if (configuration.DataType == typeof(float?))
+                {
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+                        FloatTypeNullableConfiguration<S> Configuration = configuration as FloatTypeNullableConfiguration<S>;
+                        Configuration[Instance] = null;
+                    }
+                    else
+                    {
+                        FloatTypeNullableConfiguration<S> Configuration = configuration as FloatTypeNullableConfiguration<S>;
+                        Configuration[Instance] = fromEntity.GetFloat(Ordinal);
+                    }
+                }
                 else if (configuration.DataType == typeof(double))
                 {
                     if (fromEntity.IsDBNull(Ordinal))
@@ -457,6 +492,16 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     LongTypeNullableConfiguration<S> Configuration = configuration as LongTypeNullableConfiguration<S>;
                     toEntity.SetLong(Ordinal, Configuration[Instance]);
                 }
+                else if (configuration.DataType == typeof(float))
+                {
+                    FloatTypeConfiguration<S> Configuration = configuration as FloatTypeConfiguration<S>;
+                    toEntity.SetFloat(Ordinal, Configuration[Instance]);
+                }
+                else if (configuration.DataType == typeof(float?))
+                {
+                    FloatTypeNullableConfiguration<S> Configuration = configuration as FloatTypeNullableConfiguration<S>;
+                    toEntity.SetFloat(Ordinal, Configuration[Instance]);
+                }
                 else if (configuration.DataType == typeof(double))
                 {
                     DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
@@ -532,10 +577,12 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                                         dtype = typeof(long);
                                     if (dtype == typeof(short?))
                                         dtype = typeof(short);
-                                    if (dtype == typeof(decimal?))
-                                        dtype = typeof(decimal);
+                                    if (dtype == typeof(float?))
+                                        dtype = typeof(float);
                                     if (dtype == typeof(double?))
                                         dtype = typeof(double);
+                                    if (dtype == typeof(decimal?))
+                                        dtype = typeof(decimal);
                                     if (dtype == typeof(DateTime?))
                                         dtype = typeof(DateTime);
                                     if (dtype == typeof(byte[]))
@@ -621,15 +668,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             AddMapping(Configuration);
             return Configuration;
         }
-        public DecimalTypeConfiguration<S> Maps(Expression<Func<S, decimal>> memberSelector)
+        public FloatTypeConfiguration<S> Maps(Expression<Func<S, float>> memberSelector)
         {
-            DecimalTypeConfiguration<S> Configuration = new DecimalTypeConfiguration<S>(memberSelector);
+            FloatTypeConfiguration<S> Configuration = new FloatTypeConfiguration<S>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public DecimalTypeNullableConfiguration<S> Maps(Expression<Func<S, decimal?>> memberSelector)
+        public FloatTypeNullableConfiguration<S> Maps(Expression<Func<S, float?>> memberSelector)
         {
-            DecimalTypeNullableConfiguration<S> Configuration = new DecimalTypeNullableConfiguration<S>(memberSelector);
+            FloatTypeNullableConfiguration<S> Configuration = new FloatTypeNullableConfiguration<S>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
@@ -642,6 +689,18 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         public DoubleTypeNullableConfiguration<S> Maps(Expression<Func<S, double?>> memberSelector)
         {
             DoubleTypeNullableConfiguration<S> Configuration = new DoubleTypeNullableConfiguration<S>(memberSelector);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+        public DecimalTypeConfiguration<S> Maps(Expression<Func<S, decimal>> memberSelector)
+        {
+            DecimalTypeConfiguration<S> Configuration = new DecimalTypeConfiguration<S>(memberSelector);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+        public DecimalTypeNullableConfiguration<S> Maps(Expression<Func<S, decimal?>> memberSelector)
+        {
+            DecimalTypeNullableConfiguration<S> Configuration = new DecimalTypeNullableConfiguration<S>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }

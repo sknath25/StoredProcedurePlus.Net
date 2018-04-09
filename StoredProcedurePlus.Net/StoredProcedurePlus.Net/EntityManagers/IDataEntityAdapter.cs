@@ -16,8 +16,9 @@ namespace StoredProcedurePlus.Net.EntityManagers
         short GetShort(int ordinal);
         int GetInt(int ordinal);
         long GetLong(int ordinal);
-        decimal GetDecimal(int ordinal);
+        float GetFloat(int ordinal);
         double GetDouble(int ordinal);
+        decimal GetDecimal(int ordinal);
         DateTime GetDate(int ordinal);
         string GetString(int ordinal);
         byte[] GetBinary(int ordinal);
@@ -31,14 +32,16 @@ namespace StoredProcedurePlus.Net.EntityManagers
         void SetInt(int ordinal, int? value);
         void SetLong(int ordinal, long value);
         void SetLong(int ordinal, long? value);
-        void SetDecimal(int ordinal, decimal value);
-        void SetDecimal(int ordinal, decimal? value);
+        void SetFloat(int ordinal, float value);
+        void SetFloat(int ordinal, float? value);
         void SetDouble(int ordinal, double value);
         void SetDouble(int ordinal, double? value);
+        void SetDecimal(int ordinal, decimal value);
+        void SetDecimal(int ordinal, decimal? value);
         void SetDateTime(int ordinal, DateTime value);
         void SetDateTime(int ordinal, DateTime? value);
         void SetString(int ordinal, string value);
         void SetBinary(int ordinal, byte[] value);
-        void SetTable(int ordinal, DataTable value, string typename);
+        void SetTable(int ordinal, DataTable value, string typename);               
     }
 }

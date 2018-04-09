@@ -42,8 +42,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            base.Validate(value);
-            return value;
+            return base.Validate(value);
         }
 
         public ShortTypeNullableConfiguration<S> Out()

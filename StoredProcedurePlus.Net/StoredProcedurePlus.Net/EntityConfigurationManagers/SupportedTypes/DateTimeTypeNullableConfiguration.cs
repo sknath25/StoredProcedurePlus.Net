@@ -16,6 +16,10 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
             get
             {
+                if (IsDateTime2)
+                {
+                    return SqlDbType.DateTime2;
+                }
                 return SqlDbType.DateTime;
             }
         }
@@ -42,8 +46,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            base.Validate(value);
-            return value;
+            return base.Validate(value);
         }
 
         public DateTimeTypeNullableConfiguration<S> Out()
@@ -55,6 +58,14 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         public DateTimeTypeNullableConfiguration<S> HasParameterName(string name)
         {
             this.ParameterName = name;
+            return this;
+        }
+
+
+        bool IsDateTime2 = false;
+        public DateTimeTypeNullableConfiguration<S> AsDateTime2()
+        {
+            IsDateTime2 = true;
             return this;
         }
 

@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class IntegerTypeConfiguration<S> : PrimitiveTypeConfiguration<S, int> where S : class
+    public sealed class FloatTypeConfiguration<S> : PrimitiveTypeConfiguration<S, float> where S : class
     {
-        public IntegerTypeConfiguration(Expression<Func<S, int>> memberSelector):base(memberSelector)
+        public FloatTypeConfiguration(Expression<Func<S, float>> memberSelector):base(memberSelector)
         {
         }
 
@@ -16,67 +16,76 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
             get
             {
-                return SqlDbType.Int;
+                return SqlDbType.Float;
             }
         }
 
-        protected override int Validate(int value)
+        protected override float Validate(float value)
         {
             if (AllowedMaxValue.HasValue && value > AllowedMaxValue) Error.MaxValuePropertyValidationError(PropertyName, value, AllowedMaxValue.Value);
             if (AllowedMinValue.HasValue && value < AllowedMinValue) Error.MinValuePropertyValidationError(PropertyName, value, AllowedMinValue.Value);
 
             if (AllowedValuesOnly != null && AllowedValuesOnly.Length > 0)
             {
-                if (!Array.Exists<int>(AllowedValuesOnly, v => v.Equals(value)))
+                if (!Array.Exists<float>(AllowedValuesOnly, v => v.Equals(value)))
                     Error.ValueNotAllowedError(PropertyName, value, AllowedValuesOnly);
             }
 
             if (AllowedValuesExcept != null && AllowedValuesExcept.Length > 0)
             {
-                if (Array.Exists<int>(AllowedValuesExcept, v => v.Equals(value)))
+                if (Array.Exists<float>(AllowedValuesExcept, v => v.Equals(value)))
                     Error.ValueNotAllowedError(PropertyName, value, AllowedValuesExcept);
             }
 
             return base.Validate(value);
         }
 
-        public IntegerTypeConfiguration<S> Out()
+        public FloatTypeConfiguration<S> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public IntegerTypeConfiguration<S> HasParameterName(string name)
+        public FloatTypeConfiguration<S> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
 
-        int? AllowedMaxValue = null;        
-        public IntegerTypeConfiguration<S> Max(int value)
+        internal byte? ScaleSize = null;
+        internal byte? PrecisionSize = null;
+        public FloatTypeConfiguration<S> HasSize(byte scale, byte precision)
+        {
+            ScaleSize = scale;
+            PrecisionSize = precision;
+            return this;
+        }
+
+
+        float? AllowedMaxValue = null;
+        public FloatTypeConfiguration<S> Max(float value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
-        int? AllowedMinValue = null;
-        public IntegerTypeConfiguration<S> Min(int value)
+        float? AllowedMinValue = null;
+        public FloatTypeConfiguration<S> Min(float value)
         {
             AllowedMinValue = value;
             return this;
         }
 
-        int[] AllowedValuesOnly = null;
-        public IntegerTypeConfiguration<S> AllowedOnly(int[] values)
+        float[] AllowedValuesOnly = null;
+        public FloatTypeConfiguration<S> AllowedOnly(float[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
-        int[] AllowedValuesExcept = null;        
-
-        public IntegerTypeConfiguration<S> AllowedExcept(int[] values)
+        float[] AllowedValuesExcept = null;
+        public FloatTypeConfiguration<S> AllowedExcept(float[] values)
         {
             AllowedValuesExcept = values;
             return this;

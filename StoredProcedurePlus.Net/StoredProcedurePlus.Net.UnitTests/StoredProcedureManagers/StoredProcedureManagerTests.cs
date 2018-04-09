@@ -45,7 +45,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 ModifiedDescription = "Some descrition",
                 AttachmentName = "SomeFile",
                 CustomSequence = 1,
-                AttachmentContent = new byte[10]
+                //AttachmentContent = new byte[10]
             });
             p.EventActivityDetail.Add(new EventActivityTable()
             {
@@ -57,7 +57,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 ModifiedDescription = "Some descrition 2",
                 AttachmentName = "SomeFile2",
                 CustomSequence = 2,
-                AttachmentContent = new byte[10]
+                //AttachmentContent = new byte[10]
             });
 
             SP_Insert_Event_Workflow_ActivityTransaction sp = new SP_Insert_Event_Workflow_ActivityTransaction();

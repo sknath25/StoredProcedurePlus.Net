@@ -137,14 +137,19 @@ namespace StoredProcedurePlus.Net.EntityManagers
             return long.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
-        public decimal GetDecimal(int ordinal)
+        public float GetFloat(int ordinal)
         {
-            return decimal.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
+            return float.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public double GetDouble(int ordinal)
         {
             return double.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
+        }
+
+        public decimal GetDecimal(int ordinal)
+        {
+            return decimal.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public DateTime GetDate(int ordinal)
@@ -159,7 +164,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         public DataTable GetTable(int ordinal)
         {
-            return Parameters[ordinal].Item2.Item2.Value as DataTable;
+            return (DataTable)Parameters[ordinal].Item2.Item2.Value;
         }
 
         public byte[] GetBinary(int ordinal)
@@ -239,12 +244,12 @@ namespace StoredProcedurePlus.Net.EntityManagers
             }
         }
 
-        public void SetDecimal(int ordinal, decimal value)
+        public void SetFloat(int ordinal, float value)
         {
             Parameters[ordinal].Item2.Item2.Value = value;
         }
 
-        public void SetDecimal(int ordinal, decimal? value)
+        public void SetFloat(int ordinal, float? value)
         {
             if (value.HasValue)
             {
@@ -262,6 +267,23 @@ namespace StoredProcedurePlus.Net.EntityManagers
         }
 
         public void SetDouble(int ordinal, double? value)
+        {
+            if (value.HasValue)
+            {
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
+            }
+            else
+            {
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
+            }
+        }
+
+        public void SetDecimal(int ordinal, decimal value)
+        {
+            Parameters[ordinal].Item2.Item2.Value = value;
+        }
+
+        public void SetDecimal(int ordinal, decimal? value)
         {
             if (value.HasValue)
             {

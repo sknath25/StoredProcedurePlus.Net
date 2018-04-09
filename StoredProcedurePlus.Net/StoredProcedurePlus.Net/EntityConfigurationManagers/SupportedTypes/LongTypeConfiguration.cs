@@ -16,7 +16,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
             get
             {
-                return SqlDbType.Int;
+                return SqlDbType.BigInt;
             }
         }
 
@@ -37,8 +37,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                     Error.ValueNotAllowedError(PropertyName, value, AllowedValuesExcept);
             }
 
-            base.Validate(value);
-            return value;
+            return base.Validate(value);
         }
 
         public LongTypeConfiguration<S> Out()

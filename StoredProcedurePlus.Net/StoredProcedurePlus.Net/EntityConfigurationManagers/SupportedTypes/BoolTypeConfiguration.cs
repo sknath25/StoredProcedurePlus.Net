@@ -27,8 +27,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 Error.ValueNotAllowedError(PropertyName, value, AllowedValuesOnly);
             }
 
-            base.Validate(value);
-            return value;
+            return base.Validate(value);
         }
 
         public BoolTypeConfiguration<S> Out()

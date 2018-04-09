@@ -37,9 +37,9 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
         protected override void Setup(ProcedureConfiguration<SP_Insert_Event_Workflow_ActivityTransactionParamters> configuration)
         {
             //configuration.Mock = true; // Enable to mock
-            configuration.ConnectionString = "Persist Security Info=False;User ID=sa;Password=Reset123;Initial Catalog=OVSdb;Server=10.12.1.161";
+            configuration.ConnectionString = "Persist Security Info=False;User ID=sa;Password=1234;Initial Catalog=OVSdb;Server=localhost";
             configuration.Input.Maps(v => v.OutStatusID).Out();
-            var EventActivityDetailConfig = configuration.Input.MapAsTable(v => v.EventActivityDetail);
+            var EventActivityDetailConfig = configuration.Input.MapAsTable(v => v.EventActivityDetail, "EventActivityTableX");
             //EventActivityDetailConfig.IncludeUnmappedProperties = false;
             //EventActivityDetailConfig.Maps(v => v.MasterWorkflowId);
             //EventActivityDetailConfig.Maps(v => v.EventId);

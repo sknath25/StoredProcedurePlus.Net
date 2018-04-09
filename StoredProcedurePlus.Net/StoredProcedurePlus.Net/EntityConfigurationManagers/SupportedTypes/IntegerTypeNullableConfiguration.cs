@@ -16,7 +16,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
             get
             {
-                return SqlDbType.SmallInt;
+                return SqlDbType.Int;
             }
         }
 
@@ -42,8 +42,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            base.Validate(value);
-            return value;
+            return base.Validate(value);
         }
 
         public IntegerTypeNullableConfiguration<S> Out()
