@@ -16,6 +16,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         public int FieldCount => Data.FieldCount;
 
+        public Type GetSourceType(int ordinal)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetName(int ordinal)
         {
             return Data.GetName(ordinal);

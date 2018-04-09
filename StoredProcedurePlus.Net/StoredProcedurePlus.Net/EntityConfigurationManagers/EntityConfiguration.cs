@@ -7,6 +7,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Odbc;
+using System.Data.SqlTypes;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -153,6 +155,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     {
                         LambdaExpression l = BuildExpression(SourceType, Properties[i]);
                         Maps((Expression<Func<S, byte[]>>)l);
+                    }
+                   
+                }
+
+                foreach(var c in Configurations)
+                {
+                    if (c is ListObjectTypeConfiguration<S> tc && tc.ChildEntityConfiguration != null)
+                    {
+                        tc.ChildEntityConfiguration.Initialize();
                     }
                 }
             }
@@ -492,7 +503,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     IList ListObbject = (IList)Configuration[Instance];                   
                     DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.ChildEntityConfiguration.GetAsDbParameters();
                     DataTable ListAsDataTable = new DataTable(Configuration.PropertyName);
-
+                   
                     for (int listcounter = 0; listcounter < ListObbject.Count; listcounter++)
                     {
                         if (adapter.FieldCount > 0)
@@ -504,7 +515,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                 for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
                                 {
-                                    var dtype = adapter[fieldcounter].Value.GetType();
+                                    var dtype = adapter.GetSourceType(fieldcounter);
 
                                     if (dtype == typeof(DataTable))
                                     {
@@ -513,8 +524,25 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                                             ((DataTable)adapter[fieldcounter].Value).TableName);
                                     }
 
+                                    if (dtype == typeof(bool?))
+                                        dtype = typeof(bool);
+                                    if (dtype == typeof(int?))
+                                        dtype = typeof(int);
+                                    if (dtype == typeof(long?))
+                                        dtype = typeof(long);
+                                    if (dtype == typeof(short?))
+                                        dtype = typeof(short);
+                                    if (dtype == typeof(decimal?))
+                                        dtype = typeof(decimal);
+                                    if (dtype == typeof(double?))
+                                        dtype = typeof(double);
+                                    if (dtype == typeof(DateTime?))
+                                        dtype = typeof(DateTime);
+                                    if (dtype == typeof(byte[]))
+                                        dtype = typeof(SqlBinary);
+
                                     DataColumn col = new DataColumn(
-                                        adapter[fieldcounter].ParameterName, 
+                                        adapter[fieldcounter].ParameterName,
                                        dtype
                                     );
 
@@ -530,7 +558,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                             for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
                             {
-                                r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;                              
+                                r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;
                             }
 
                             ListAsDataTable.Rows.Add(r);

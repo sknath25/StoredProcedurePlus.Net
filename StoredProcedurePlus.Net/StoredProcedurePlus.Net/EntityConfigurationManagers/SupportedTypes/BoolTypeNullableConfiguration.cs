@@ -8,8 +8,16 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class BoolTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, bool?> where S : class
     {
-        public BoolTypeNullableConfiguration(Expression<Func<S, bool?>> memberSelector):base(memberSelector, SqlDbType.Bit)
+        public BoolTypeNullableConfiguration(Expression<Func<S, bool?>> memberSelector):base(memberSelector)
         {
+        }
+
+        internal override SqlDbType GetDbType
+        {
+            get
+            {
+                return SqlDbType.Bit;
+            }
         }
 
         protected override bool? Validate(bool? value)

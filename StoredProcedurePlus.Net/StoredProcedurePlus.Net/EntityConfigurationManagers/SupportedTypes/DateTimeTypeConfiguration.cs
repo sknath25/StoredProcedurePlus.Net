@@ -8,8 +8,16 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public sealed class DateTimeTypeConfiguration<S> : PrimitiveTypeConfiguration<S, DateTime> where S : class
     {
-        public DateTimeTypeConfiguration(Expression<Func<S, DateTime>> memberSelector):base(memberSelector, SqlDbType.DateTime)
+        public DateTimeTypeConfiguration(Expression<Func<S, DateTime>> memberSelector):base(memberSelector)
         {
+        }
+
+        internal override SqlDbType GetDbType
+        {
+            get
+            {
+                return SqlDbType.DateTime;
+            }
         }
 
         protected override DateTime Validate(DateTime value)

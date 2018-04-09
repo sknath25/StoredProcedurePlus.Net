@@ -22,11 +22,48 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             MyFirstStoredProcedure p1 = new MyFirstStoredProcedure();
             MyFirstStoredProcedure p2 = new MyFirstStoredProcedure();
 
-            SchoolType Entity = new SchoolType() { SchoolName = "Bhadrakali", SchoolId=30 };
+            SchoolType Entity = new SchoolType() { SchoolName = "Bhadrakali", SchoolId = 30 };
             SchoolType Entity1 = new SchoolType() { SchoolName = "l" };
 
             p1.Execute(Entity);
             p1.Execute(Entity1);
+        }
+
+
+        [TestMethod]
+        public void SP_Insert_Event_Workflow_ActivityTransaction_TEST()
+        {
+            SP_Insert_Event_Workflow_ActivityTransactionParamters p = new SP_Insert_Event_Workflow_ActivityTransactionParamters();
+            p.EventActivityDetail = new List<EventActivityTable>();
+            p.EventActivityDetail.Add(new EventActivityTable()
+            {
+                AssignedToGroupId = 1,
+                AttachedBy = 1,
+                AssignmentTypeId = 1,
+                AttachmentExtension = "doc",
+                CreatedBy = 1,
+                ModifiedDescription = "Some descrition",
+                AttachmentName = "SomeFile",
+                CustomSequence = 1,
+                AttachmentContent = new byte[10]
+            });
+            p.EventActivityDetail.Add(new EventActivityTable()
+            {
+                AssignedToGroupId = 1,
+                AttachedBy = 1,
+                AssignmentTypeId = 1,
+                AttachmentExtension = "doc",
+                CreatedBy = 1,
+                ModifiedDescription = "Some descrition 2",
+                AttachmentName = "SomeFile2",
+                CustomSequence = 2,
+                AttachmentContent = new byte[10]
+            });
+
+            SP_Insert_Event_Workflow_ActivityTransaction sp = new SP_Insert_Event_Workflow_ActivityTransaction();
+            sp.Execute(p);
+
+            Assert.IsTrue(p.OutStatusID > 0);
         }
 
         [TestMethod]
@@ -47,13 +84,13 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
         {
             ResourceSummary Input = new ResourceSummary()
             {
-                PersonName="SQL++.NET LIB PERFORMANCE TEST",
-                Country="INDIA",
-                State="GUJRAT",
-                City="BARODA",
-                District="UNSPECIFIED",
-                Street="1 SHANTI NAGAR STREET",
-                HouseNo="C8",
+                PersonName = "SQL++.NET LIB PERFORMANCE TEST",
+                Country = "INDIA",
+                State = "GUJRAT",
+                City = "BARODA",
+                District = "UNSPECIFIED",
+                Street = "1 SHANTI NAGAR STREET",
+                HouseNo = "C8",
                 Pin = Hash,
                 MobileNo = "9051778445",
                 HomePhoneNo = "9051778445",
@@ -61,21 +98,21 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 MothersName = "VISUAL STUDIO",
                 FathersName = "PERFORMANCE TEST",
                 Employer = "COP",
-                EmployerCountry="USA",
-                EmployerCity= "BALA CYNWYD",
+                EmployerCountry = "USA",
+                EmployerCity = "BALA CYNWYD",
                 EmployerState = "PENNSYLVANIA",
-                EmployerDistrict = "PHILADELPHIA",                
-                EmployerPin="19015",
-                EmployerStreet="1800 GREEN STREET",
-                EmployerHouseNo="F2",
+                EmployerDistrict = "PHILADELPHIA",
+                EmployerPin = "19015",
+                EmployerStreet = "1800 GREEN STREET",
+                EmployerHouseNo = "F2",
                 CTC = 1000.56M,
-                NET=10000.65M,
-                Gross = 10000.11M,   
-                MobileNo2= Hash
+                NET = 10000.65M,
+                Gross = 10000.11M,
+                MobileNo2 = Hash
             };
 
             SpResourceSummary Sp = new SpResourceSummary();
-            
+
             Sp.Execute(Input);
             Console.Write(Input.PersonId);
 
@@ -326,10 +363,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
         {
             ResourceSummary Input = new ResourceSummary()
             {
-                PersonName = "SQL++.NET LIB PERFORMANCE TEST",                
+                PersonName = "SQL++.NET LIB PERFORMANCE TEST",
             };
 
-            IEnumerable<ResourceSummary> Result=null;
+            IEnumerable<ResourceSummary> Result = null;
 
             using (ConnectionScope scope = new ConnectionScope())
             {
@@ -345,7 +382,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
 
                 sw.Stop();
 
-                Console.Write( string.Format("Record Retrived : {0} in time : {1}", Result!=null?Result.Count():0,  sw.Elapsed.TotalMilliseconds));
+                Console.Write(string.Format("Record Retrived : {0} in time : {1}", Result != null ? Result.Count() : 0, sw.Elapsed.TotalMilliseconds));
 
             }
 
@@ -372,7 +409,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
             P_Student.Value = dataTable;
 
             SqlParameter P_SchoolType = new SqlParameter("@SchoolType", 1);
-            SqlParameter P_SchoolId = new SqlParameter("@SchoolId",null);
+            SqlParameter P_SchoolId = new SqlParameter("@SchoolId", null);
             P_SchoolId.Direction = ParameterDirection.Output;
             SqlParameter P_SchoolName = new SqlParameter("@SchoolName", "School 1");
             SqlParameter P_SchoolDescription = new SqlParameter("@SchoolDescription", "My school 1");

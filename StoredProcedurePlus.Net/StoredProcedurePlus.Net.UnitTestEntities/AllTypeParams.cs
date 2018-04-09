@@ -48,4 +48,29 @@ namespace StoredProcedurePlus.Net.UnitTestEntities
         public string StudentId { get; set; }
         public string StudentAddress { get; set; }
     }
+
+    public class SP_Insert_Event_Workflow_ActivityTransactionParamters
+    {
+        public List<EventActivityTable> EventActivityDetail { get; set; }
+        public int OutStatusID { get; set; }
+    }
+
+    public class EventActivityTable
+    {
+        public int? MasterWorkflowId { get; set; }
+        public int? EventId { get; set; }
+        public int? ActivityId { get; set; }
+        public string ModifiedDescription { get; set; }
+        public int? CustomSequence { get; set; }
+        public int? AssignedToGroupId { get; set; }
+        public DateTime? ActivityStartDate { get; set; }
+        public DateTime? ActivityEndDate { get; set; }
+        public int? AssignmentTypeId { get; set; }
+        public int? CreatedBy { get; set; }
+        public string AttachmentName { get; set; }
+        public string AttachmentExtension { get; set; }
+        public byte[] AttachmentContent { get; set; }
+        public DateTime? UploadDate { get; set; }
+        public int? AttachedBy { get; set; }
+    }
 }

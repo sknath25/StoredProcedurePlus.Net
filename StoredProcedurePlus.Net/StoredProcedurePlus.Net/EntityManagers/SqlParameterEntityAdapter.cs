@@ -13,13 +13,13 @@ namespace StoredProcedurePlus.Net.EntityManagers
     {
         const string PARAMETERPREFIX = "@";
 
-        readonly Dictionary<int, Tuple<string, SqlParameter>> Parameters;
+        readonly Dictionary<int, Tuple<Type,Tuple<string, SqlParameter>>> Parameters;
 
         protected DbParameterEntityAdapter(List<PropertyConfiguration> values)
         {
             if (values != null)
             {
-                Parameters = new Dictionary<int, Tuple<string, SqlParameter>>();
+                Parameters = new Dictionary<int, Tuple<Type, Tuple<string, SqlParameter>>>();
 
                 for (int i = 0; i < values.Count; i++)
                 {
@@ -50,7 +50,9 @@ namespace StoredProcedurePlus.Net.EntityManagers
                         }
                     }
 
-                    if (values[i].IsOut && values[i].GetDbType == System.Data.SqlDbType.VarChar)
+                    if (values[i].IsOut && 
+                        (values[i].GetDbType == System.Data.SqlDbType.VarChar || 
+                        values[i].GetDbType == System.Data.SqlDbType.NVarChar))
                     {
                         if (values[i].Size1 > 0)
                         {
@@ -62,7 +64,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
                         }
                     }
 
-                    Parameters.Add(i, new Tuple<string, SqlParameter>(values[i].PropertyName, parameter));
+                    Parameters.Add(i, new Tuple<Type, Tuple<string, SqlParameter>>(
+                        values[i].DataType,
+                        new Tuple<string, SqlParameter>(values[i].PropertyName, parameter
+                        )
+                    ));
                 }
             }
         }
@@ -71,13 +77,18 @@ namespace StoredProcedurePlus.Net.EntityManagers
         {
             get
             {
-                return Parameters[ordinal].Item2;
+                return Parameters[ordinal].Item2.Item2;
             }
         }
 
         public int FieldCount => Parameters.Count;
 
         public string GetName(int ordinal)
+        {
+            return Parameters[ordinal].Item2.Item1;
+        }
+
+        public Type GetSourceType(int ordinal)
         {
             return Parameters[ordinal].Item1;
         }
@@ -86,7 +97,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
         {
             for(int i = 0; i< Parameters.Count; i++)
             {
-                if (Parameters[i].Item1 == name) return i;
+                if (Parameters[i].Item2.Item1 == name) return i;
             }
 
             throw new IndexOutOfRangeException();
@@ -94,7 +105,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         public bool IsDBNull(int ordinal)
         {
-            if(Parameters[ordinal].Item2.Value == DBNull.Value)
+            if(Parameters[ordinal].Item2.Item2.Value == DBNull.Value)
             {
                 return true;
             }
@@ -108,52 +119,52 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         public bool GetBool(int ordinal)
         {
-            return bool.Parse(Parameters[ordinal].Item2.Value.ToString());
+            return bool.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public short GetShort(int ordinal)
         {
-            return short.Parse(Parameters[ordinal].Item2.Value.ToString());
+            return short.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public int GetInt(int ordinal)
         {
-            return int.Parse(Parameters[ordinal].Item2.Value.ToString());
+            return int.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public long GetLong(int ordinal)
         {
-            return long.Parse(Parameters[ordinal].Item2.Value.ToString());
+            return long.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public decimal GetDecimal(int ordinal)
         {
-            return decimal.Parse(Parameters[ordinal].Item2.Value.ToString());
+            return decimal.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public double GetDouble(int ordinal)
         {
-            return double.Parse(Parameters[ordinal].Item2.Value.ToString());
+            return double.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public DateTime GetDate(int ordinal)
         {
-            return DateTime.Parse(Parameters[ordinal].Item2.Value.ToString());
+            return DateTime.Parse(Parameters[ordinal].Item2.Item2.Value.ToString());
         }
 
         public string GetString(int ordinal)
         {
-            return Parameters[ordinal].Item2.Value.ToString();
+            return Parameters[ordinal].Item2.Item2.Value.ToString();
         }
 
         public DataTable GetTable(int ordinal)
         {
-            return (DataTable)Parameters[ordinal].Item2.Value;
+            return Parameters[ordinal].Item2.Item2.Value as DataTable;
         }
 
         public byte[] GetBinary(int ordinal)
         {
-            return (byte[])Parameters[ordinal].Item2.Value;
+            return (byte[])Parameters[ordinal].Item2.Item2.Value;
         }
 
         #endregion
@@ -162,138 +173,138 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         public void SetBool(int ordinal, bool value)
         {
-            Parameters[ordinal].Item2.Value = value;
+            Parameters[ordinal].Item2.Item2.Value = value;
         }
 
         public void SetBool(int ordinal, bool? value)
         {
             if (value.HasValue)
             {
-                Parameters[ordinal].Item2.Value = value.Value;
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
         }
 
         public void SetShort(int ordinal, short value)
         {
-            Parameters[ordinal].Item2.Value = value;
+            Parameters[ordinal].Item2.Item2.Value = value;
         }
 
         public void SetShort(int ordinal, short? value)
         {
             if (value.HasValue)
             {
-                Parameters[ordinal].Item2.Value = value.Value;
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
         }
 
         public void SetInt(int ordinal, int value)
         {
-            Parameters[ordinal].Item2.Value = value;
+            Parameters[ordinal].Item2.Item2.Value = value;
         }
 
         public void SetInt(int ordinal, int? value)
         {
             if (value.HasValue)
             {
-                Parameters[ordinal].Item2.Value = value.Value;
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
         }
 
         public void SetLong(int ordinal, long value)
         {
-            Parameters[ordinal].Item2.Value = value;
+            Parameters[ordinal].Item2.Item2.Value = value;
         }
 
         public void SetLong(int ordinal, long? value)
         {
             if (value.HasValue)
             {
-                Parameters[ordinal].Item2.Value = value.Value;
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
         }
 
         public void SetDecimal(int ordinal, decimal value)
         {
-            Parameters[ordinal].Item2.Value = value;
+            Parameters[ordinal].Item2.Item2.Value = value;
         }
 
         public void SetDecimal(int ordinal, decimal? value)
         {
             if (value.HasValue)
             {
-                Parameters[ordinal].Item2.Value = value.Value;
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
         }
 
         public void SetDouble(int ordinal, double value)
         {
-            Parameters[ordinal].Item2.Value = value;
+            Parameters[ordinal].Item2.Item2.Value = value;
         }
 
         public void SetDouble(int ordinal, double? value)
         {
             if (value.HasValue)
             {
-                Parameters[ordinal].Item2.Value = value.Value;
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
         }
 
         public void SetDateTime(int ordinal, DateTime value)
         {
-            Parameters[ordinal].Item2.Value = value;
+            Parameters[ordinal].Item2.Item2.Value = value;
         }
 
         public void SetDateTime(int ordinal, DateTime? value)
         {
             if (value.HasValue)
             {
-                Parameters[ordinal].Item2.Value = value.Value;
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
         }
 
         public void SetString(int ordinal, string value)
         {
-            Parameters[ordinal].Item2.Value = value ?? (object)DBNull.Value;
+            Parameters[ordinal].Item2.Item2.Value = value ?? (object)DBNull.Value;
         }
 
         public void SetTable(int ordinal, DataTable value, string typename)
         {
             if (value == null)
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = value;
-                Parameters[ordinal].Item2.TypeName = typename;
+                Parameters[ordinal].Item2.Item2.Value = value;
+                Parameters[ordinal].Item2.Item2.TypeName = typename;
             }
         }
 
@@ -301,11 +312,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
         {
             if (value == null)
             {
-                Parameters[ordinal].Item2.Value = DBNull.Value;
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
             else
             {
-                Parameters[ordinal].Item2.Value = value;
+                Parameters[ordinal].Item2.Item2.Value = value;
             }
         }
 

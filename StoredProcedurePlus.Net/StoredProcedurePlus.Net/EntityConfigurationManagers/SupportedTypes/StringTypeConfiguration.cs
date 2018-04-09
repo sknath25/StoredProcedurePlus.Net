@@ -9,9 +9,21 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public class StringTypeConfiguration<S> : PrimitiveTypeConfiguration<S,string> where S : class
     {
-        public StringTypeConfiguration(Expression<Func<S, string>> memberSelector):base(memberSelector, SqlDbType.VarChar)
+        public StringTypeConfiguration(Expression<Func<S, string>> memberSelector):base(memberSelector)
         {
 
+        }
+
+        internal override SqlDbType GetDbType
+        {
+            get
+            {
+                if (IsNVarChar)
+                {
+                    return SqlDbType.NVarChar;
+                }
+                return SqlDbType.VarChar;
+            }
         }
 
         protected override string Validate(string value)
@@ -94,20 +106,27 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         public StringTypeConfiguration<S> Out()
         {
-            this.IsOut = true;
+            IsOut = true;
             return this;
         }
 
         public StringTypeConfiguration<S> HasParameterName(string name)
         {
-            this.ParameterName = name;
+            ParameterName = name;
+            return this;
+        }
+
+        bool IsNVarChar = false;
+        public StringTypeConfiguration<S> AsNVarChar()
+        {
+            IsNVarChar = true;
             return this;
         }
 
         internal bool IsRequired { get; private set; }
         public StringTypeConfiguration<S> Required()
         {
-            this.IsRequired = true;
+            IsRequired = true;
             return this;
         }
 
@@ -115,7 +134,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         public StringTypeConfiguration<S> MaxLength(uint value)
         {
             AllowedMaxLength = value;
-            base.Size1 = value;
+            Size1 = value;
             return this;
         }
 

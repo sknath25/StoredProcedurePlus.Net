@@ -9,9 +9,17 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
     public class VarBinaryTypeConfiguration<S> : PrimitiveTypeConfiguration<S,byte[]> where S : class
     {
-        public VarBinaryTypeConfiguration(Expression<Func<S, byte[]>> memberSelector):base(memberSelector, SqlDbType.VarBinary)
+        public VarBinaryTypeConfiguration(Expression<Func<S, byte[]>> memberSelector):base(memberSelector)
         {
 
+        }
+
+        internal override SqlDbType GetDbType
+        {
+            get
+            {
+                return SqlDbType.VarBinary;
+            }
         }
 
         protected override byte[] Validate(byte [] value)

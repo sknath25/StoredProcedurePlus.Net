@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
 
-    public class ListObjectTypeConfiguration<S> : PropertyConfiguration where S : class
+    internal class ListObjectTypeConfiguration<S> : PropertyConfiguration where S : class
     {
         MethodInfo mi = null;
 
@@ -21,11 +21,20 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         internal string TableTypeName = null;
 
-        public ListObjectTypeConfiguration() : base(SqlDbType.Structured, true)
+        internal ListObjectTypeConfiguration() : base(true)
         {
+            ChildEntityConfiguration = null;
         }
 
-        public ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
+        internal override SqlDbType GetDbType
+        {
+            get
+            {
+                return SqlDbType.Structured;
+            }
+        }
+
+        internal ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
         {
             if (memberSelector.Body is MemberExpression me)
             {
@@ -50,22 +59,22 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return pc;
         }
 
-        public ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
+        internal ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
         {
             var x = AsTable(memberSelector);
             TableTypeName = typename;
             return x;
         }
 
-        public ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
+        internal ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
         {
             var x = AsTable(memberSelector);
             TableTypeName = typename;
             ParameterName = parametername;
             return x;
-        }     
+        }
 
-        public object this[object instance]
+        internal object this[object instance]
         {
             get
             {
