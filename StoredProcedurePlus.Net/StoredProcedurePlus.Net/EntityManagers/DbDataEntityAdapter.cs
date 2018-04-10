@@ -1,6 +1,5 @@
 ﻿using StoredProcedurePlus.Net.ErrorManagers;
 using System;
-using System.Collections;
 using System.Data;
 
 namespace StoredProcedurePlus.Net.EntityManagers

@@ -69,7 +69,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities
         public int? CreatedBy { get; set; }
         public string AttachmentName { get; set; }
         public string AttachmentExtension { get; set; }
-        //public byte[] AttachmentContent { get; set; }
+        public byte[] AttachmentContent { get; set; }
         public DateTime? UploadDate { get; set; }
         public int? AttachedBy { get; set; }
     }

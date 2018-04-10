@@ -35,6 +35,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
         {
             SP_Insert_Event_Workflow_ActivityTransactionParamters p = new SP_Insert_Event_Workflow_ActivityTransactionParamters();
             p.EventActivityDetail = new List<EventActivityTable>();
+
             p.EventActivityDetail.Add(new EventActivityTable()
             {
                 AssignedToGroupId = 1,
@@ -42,11 +43,11 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 AssignmentTypeId = 1,
                 AttachmentExtension = "doc",
                 CreatedBy = 1,
-                ModifiedDescription = "Some descrition",
                 AttachmentName = "SomeFile",
                 CustomSequence = 1,
-                //AttachmentContent = new byte[10]
+                AttachmentContent = new byte[10]
             });
+
             p.EventActivityDetail.Add(new EventActivityTable()
             {
                 AssignedToGroupId = 1,
@@ -54,15 +55,13 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 AssignmentTypeId = 1,
                 AttachmentExtension = "doc",
                 CreatedBy = 1,
-                ModifiedDescription = "Some descrition 2",
                 AttachmentName = "SomeFile2",
                 CustomSequence = 2,
-                //AttachmentContent = new byte[10]
+                AttachmentContent = new byte[10]
             });
 
             SP_Insert_Event_Workflow_ActivityTransaction sp = new SP_Insert_Event_Workflow_ActivityTransaction();
             sp.Execute(p);
-
             Assert.IsTrue(p.OutStatusID > 0);
         }
 

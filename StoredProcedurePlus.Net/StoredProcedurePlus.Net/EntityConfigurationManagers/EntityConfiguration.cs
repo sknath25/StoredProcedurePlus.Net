@@ -7,8 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Odbc;
-using System.Data.SqlTypes;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -16,7 +14,14 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
     public class ParameterInputEntityConfiguration<S> : EntityConfiguration<S> where S : class
     {
+    }
 
+    public class TVPParameterInputEntityConfiguration<S> : EntityConfiguration<S> where S : class
+    {
+        internal override void Initialize()
+        {
+            base.InitializePropertyConfigurations(true);
+        }
     }
 
     internal interface IHasDefaultConstructor
@@ -43,7 +48,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         private class DbParameterEntityAdapterProxy : DbParameterEntityAdapter
         {
-            internal DbParameterEntityAdapterProxy(List<PropertyConfiguration> configurations) :base(configurations)
+            internal DbParameterEntityAdapterProxy(List<PropertyConfiguration> configurations) : base(configurations)
             {
 
             }
@@ -76,105 +81,124 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         #endregion
 
-        protected override void InitializePropertyConfigurations()
+        protected override void InitializePropertyConfigurations(bool IsIncludeUnmappedProperties)
         {
             SourceType = typeof(S);
 
             PropertyInfo[] Properties = SourceType.GetProperties();
 
-            for (int i = 0; i < Properties.Length; i++)
+            if (IsIncludeUnmappedProperties)
             {
-                if (!Configurations.Exists(v=>v.PropertyName == Properties[i].Name))
+                for (int i = 0; i < Properties.Length; i++)
                 {
-                    if (Properties[i].PropertyType == typeof(bool))
+                    if (!Configurations.Exists(v => v.PropertyName == Properties[i].Name))
                     {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, bool>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(bool?))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, bool?>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(int))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, int>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(int?))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, int?>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(long))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, long>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(long?))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, long?>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(float))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, float>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(float?))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, float?>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(double))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, double>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(double?))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, double?>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(decimal))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, decimal>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(decimal?))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, decimal?>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(DateTime))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, DateTime>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(DateTime?))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, DateTime?>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(string))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, string>>)l);
-                    }
-                    if (Properties[i].PropertyType == typeof(byte[]))
-                    {
-                        LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                        Maps((Expression<Func<S, byte[]>>)l);
-                    }
-                   
-                }
+                        if (Properties[i].PropertyType == typeof(bool))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, bool>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(bool?))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, bool?>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(int))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, int>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(int?))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, int?>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(long))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, long>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(long?))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, long?>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(float))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, float>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(float?))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, float?>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(double))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, double>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(double?))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, double?>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(decimal))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, decimal>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(decimal?))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, decimal?>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(DateTime))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, DateTime>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(DateTime?))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, DateTime?>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(string))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, string>>)l);
+                        }
+                        if (Properties[i].PropertyType == typeof(byte[]))
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<S, byte[]>>)l);
+                        }
 
-                foreach(var c in Configurations)
-                {
-                    if (c is ListObjectTypeConfiguration<S> tc && tc.ChildEntityConfiguration != null)
-                    {
-                        tc.ChildEntityConfiguration.Initialize();
                     }
+                }
+            }
+
+            if (Properties.Length == Configurations.Count)
+            {
+                for (int i = 0; i < Properties.Length; i++)
+                {
+                    for (int s = 0; s < Configurations.Count; s++)
+                    {
+                        if (Configurations[s].PropertyName == Properties[i].Name)
+                        {
+                            PropertyConfiguration buff = Configurations[i];
+                            Configurations[i] = Configurations[s];
+                            Configurations[s] = buff;
+                        }
+                    }
+                }
+            }
+
+            foreach (var c in Configurations)
+            {
+                if (c is ListObjectTypeConfiguration<S> tc && tc.ChildEntityConfiguration != null)
+                {
+                    tc.ChildEntityConfiguration.Initialize();
                 }
             }
         }
@@ -186,7 +210,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             return new DbParameterEntityAdapterProxy(Configurations);
         }
 
-        internal EntityConfiguration(){}
+        internal EntityConfiguration() { }
 
         override internal void Prepare(IDataEntityAdapter record)
         {
@@ -206,7 +230,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
             S Instance = (S)toInstance;
 
-            for(int i = 0; i < Configurations.Count; i++) 
+            for (int i = 0; i < Configurations.Count; i++)
             {
                 PropertyConfiguration configuration = Configurations[i];
 
@@ -423,7 +447,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     {
                         StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
                         Configuration[Instance] = fromEntity.GetString(Ordinal);
-                    }               
+                    }
                 }
                 else if (configuration.DataType == typeof(byte[]))
                 {
@@ -541,18 +565,18 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 {
                     VarBinaryTypeConfiguration<S> Configuration = configuration as VarBinaryTypeConfiguration<S>;
                     toEntity.SetBinary(Ordinal, Configuration[Instance]);
-                }                
+                }
                 else if (configuration.IsEnumerable)
                 {
                     ListObjectTypeConfiguration<S> Configuration = configuration as ListObjectTypeConfiguration<S>;
-                    IList ListObbject = (IList)Configuration[Instance];                   
+                    IList ListObbject = (IList)Configuration[Instance];
                     DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.ChildEntityConfiguration.GetAsDbParameters();
-                    DataTable ListAsDataTable = new DataTable(Configuration.PropertyName);
-                   
+                    //DataTable ListAsDataTable = new DataTable(Configuration.PropertyName);
+                    DataTable ListAsDataTable = new DataTable();
                     for (int listcounter = 0; listcounter < ListObbject.Count; listcounter++)
                     {
                         if (adapter.FieldCount > 0)
-                        {                           
+                        {
                             if (listcounter == 0)
                             {
                                 Configuration.ChildEntityConfiguration.Prepare(adapter);
@@ -585,8 +609,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                                         dtype = typeof(decimal);
                                     if (dtype == typeof(DateTime?))
                                         dtype = typeof(DateTime);
-                                    if (dtype == typeof(byte[]))
-                                        dtype = typeof(SqlBinary);
+                                    //if (dtype == typeof(byte[]))
+                                    //    dtype = typeof(SqlBinary);
 
                                     DataColumn col = new DataColumn(
                                         adapter[fieldcounter].ParameterName,
@@ -605,14 +629,23 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                             for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
                             {
-                                r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;
+                                var name = adapter[fieldcounter].ParameterName;
+
+                                if (adapter.GetSourceType(fieldcounter) == typeof(byte[]))
+                                {
+                                    r[adapter[fieldcounter].ParameterName] = (byte[])adapter[fieldcounter].Value;
+                                }
+                                else
+                                {
+                                    r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;
+                                }
                             }
 
                             ListAsDataTable.Rows.Add(r);
-                        }                       
+                        }
                     }
 
-                    toEntity.SetTable(Ordinal,ListAsDataTable, Configuration.TableTypeName);
+                    toEntity.SetTable(Ordinal, ListAsDataTable, Configuration.TableTypeName);
                 }
             }
         }
@@ -728,27 +761,27 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             AddMapping(Configuration);
             return Configuration;
         }
-        public ParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T :class
+        public TVPParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
         {
             ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
             AddMapping(Configuration);
-            ParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector);
+            TVPParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector);
             return c;
         }
 
-        public ParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
+        public TVPParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
         {
             ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
             AddMapping(Configuration);
-            ParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector, typename);
+            TVPParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector, typename);
             return c;
         }
 
-        public ParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
+        public TVPParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
         {
             ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
             AddMapping(Configuration);
-            ParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector, typename, parametername);
+            TVPParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector, typename, parametername);
             return c;
         }
 

@@ -1,14 +1,10 @@
 ﻿using StoredProcedurePlus.Net.EntityConfigurationManagers.Core;
-using StoredProcedurePlus.Net.EntityManagers;
-using StoredProcedurePlus.Net.ErrorManagers;
 using StoredProcedurePlus.Net.StoredProcedureManagers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
@@ -34,7 +30,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        internal ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
+        internal TVPParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
         {
             if (memberSelector.Body is MemberExpression me)
             {
@@ -54,19 +50,19 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            ParameterInputEntityConfiguration<T> pc = new ParameterInputEntityConfiguration<T>();
+            TVPParameterInputEntityConfiguration<T> pc = new TVPParameterInputEntityConfiguration<T>();
             ChildEntityConfiguration = pc;
             return pc;
         }
 
-        internal ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
+        internal TVPParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
         {
             var x = AsTable(memberSelector);
             TableTypeName = typename;
             return x;
         }
 
-        internal ParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
+        internal TVPParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
         {
             var x = AsTable(memberSelector);
             TableTypeName = typename;

@@ -17,12 +17,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         internal virtual void Initialize()
         {
-            if (!IncludeUnmappedProperties) return;
-
-            InitializePropertyConfigurations();
+            InitializePropertyConfigurations(IncludeUnmappedProperties);
         }
 
-        protected abstract void InitializePropertyConfigurations();
+        protected abstract void InitializePropertyConfigurations(bool IsIncludeUnmappedProperties);
 
         abstract internal void Prepare(IDataEntityAdapter record);
 
