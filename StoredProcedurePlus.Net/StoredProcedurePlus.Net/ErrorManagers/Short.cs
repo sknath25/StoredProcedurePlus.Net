@@ -25,7 +25,7 @@ namespace StoredProcedurePlus.Net.ErrorManagers
         #region CannotSetNullToNotNullableIntProperty
         internal static void CannotSetNullToNotNullableShortProperty(string propertyName)
         {
-            throw new InvalidOperationException("Cannot set null value into not nullable short property : " + propertyName);
+            throw new InvalidOperationException("Cannot set null value into non nullable short property : " + propertyName);
         }
         #endregion
 

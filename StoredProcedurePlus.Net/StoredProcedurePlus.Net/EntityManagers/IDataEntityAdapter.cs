@@ -41,6 +41,6 @@ namespace StoredProcedurePlus.Net.EntityManagers
         void SetDateTime(int ordinal, DateTime? value);
         void SetString(int ordinal, string value);
         void SetBinary(int ordinal, byte[] value);
-        void SetTable(int ordinal, DataTable value, string typename);               
+        void SetTable(int ordinal, DataTable value, string declaredTableTypeName);               
     }
 }

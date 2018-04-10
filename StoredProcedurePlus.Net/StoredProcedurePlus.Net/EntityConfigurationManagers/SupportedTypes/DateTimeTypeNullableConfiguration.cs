@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class DateTimeTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, DateTime?> where S : class
+    public sealed class DateTimeTypeNullableConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, DateTime?> where TContainerType : class
     {
-        public DateTimeTypeNullableConfiguration(Expression<Func<S, DateTime?>> memberSelector):base(memberSelector)
+        public DateTimeTypeNullableConfiguration(Expression<Func<TContainerType, DateTime?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -49,13 +49,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public DateTimeTypeNullableConfiguration<S> Out()
+        public DateTimeTypeNullableConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public DateTimeTypeNullableConfiguration<S> HasParameterName(string name)
+        public DateTimeTypeNullableConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -63,49 +63,49 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         bool IsDateTime2 = false;
-        public DateTimeTypeNullableConfiguration<S> AsDateTime2()
+        public DateTimeTypeNullableConfiguration<TContainerType> AsDateTime2()
         {
             IsDateTime2 = true;
             return this;
         }
 
         internal bool IsRequired { get; private set; }
-        public DateTimeTypeNullableConfiguration<S> Required()
+        public DateTimeTypeNullableConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
         }
 
         DateTime? AllowedMaxDate = null;
-        public DateTimeTypeNullableConfiguration<S> Max(DateTime value)
+        public DateTimeTypeNullableConfiguration<TContainerType> Max(DateTime value)
         {
             AllowedMaxDate = value;
             return this;
         }
 
         DateTime? AllowedMinDate = null;
-        public DateTimeTypeNullableConfiguration<S> Min(DateTime value)
+        public DateTimeTypeNullableConfiguration<TContainerType> Min(DateTime value)
         {
             AllowedMinDate = value;
             return this;
         }
 
         DateTime[] AllowedDatesOnly = null;
-        public DateTimeTypeNullableConfiguration<S> AllowedOnly(DateTime[] values)
+        public DateTimeTypeNullableConfiguration<TContainerType> AllowedOnly(DateTime[] values)
         {
             AllowedDatesOnly = values;
             return this;
         }
 
         DateTime[] AllowedDatesExcept = null;
-        public DateTimeTypeNullableConfiguration<S> AllowedExcept(DateTime[] values)
+        public DateTimeTypeNullableConfiguration<TContainerType> AllowedExcept(DateTime[] values)
         {
             AllowedDatesExcept = values;
             return this;
         }
 
         string AllowedDateTimeFormat = null;
-        public DateTimeTypeNullableConfiguration<S> Format(string value)
+        public DateTimeTypeNullableConfiguration<TContainerType> Format(string value)
         {
             AllowedDateTimeFormat = value;
             return this;

@@ -15,7 +15,7 @@ namespace StoredProcedurePlus.Net.ErrorManagers
         #region CannotSetNullToNotNullableIntProperty
         internal static void CannotSetNullToNotNullableBooleanProperty(string propertyName)
         {
-            throw new InvalidOperationException("Cannot set null value into not nullable boolean property : " + propertyName);
+            throw new InvalidOperationException("Cannot set null value into non nullable boolean property : " + propertyName);
         }
         #endregion
 

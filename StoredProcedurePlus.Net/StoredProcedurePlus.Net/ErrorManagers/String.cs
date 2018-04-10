@@ -41,7 +41,7 @@ namespace StoredProcedurePlus.Net.ErrorManagers
                 + propertyName
                 + " Pattern matching timed out for given timeout " 
                 + paternTimeOut 
-                + "ms. against the pattern : " 
+                + "ms against the pattern : " 
                 + stringPattern);
         }
 

@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class DoubleTypeConfiguration<S> : PrimitiveTypeConfiguration<S, double> where S : class
+    public sealed class DoubleTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, double> where TContainerType : class
     {
-        public DoubleTypeConfiguration(Expression<Func<S, double>> memberSelector):base(memberSelector)
+        public DoubleTypeConfiguration(Expression<Func<TContainerType, double>> memberSelector):base(memberSelector)
         {
         }
 
@@ -40,13 +40,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public DoubleTypeConfiguration<S> Out()
+        public DoubleTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public DoubleTypeConfiguration<S> HasParameterName(string name)
+        public DoubleTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -55,7 +55,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         internal byte? ScaleSize = null;
         internal byte? PrecisionSize = null;
-        public DoubleTypeConfiguration<S> HasSize(byte scale, byte precision)
+        public DoubleTypeConfiguration<TContainerType> HasSize(byte scale, byte precision)
         {
             ScaleSize = scale;
             PrecisionSize = precision;
@@ -64,28 +64,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         double? AllowedMaxValue = null;
-        public DoubleTypeConfiguration<S> Max(double value)
+        public DoubleTypeConfiguration<TContainerType> Max(double value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         double? AllowedMinValue = null;
-        public DoubleTypeConfiguration<S> Min(double value)
+        public DoubleTypeConfiguration<TContainerType> Min(double value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         double[] AllowedValuesOnly = null;
-        public DoubleTypeConfiguration<S> AllowedOnly(double[] values)
+        public DoubleTypeConfiguration<TContainerType> AllowedOnly(double[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         double[] AllowedValuesExcept = null;
-        public DoubleTypeConfiguration<S> AllowedExcept(double[] values)
+        public DoubleTypeConfiguration<TContainerType> AllowedExcept(double[] values)
         {
             AllowedValuesExcept = values;
             return this;

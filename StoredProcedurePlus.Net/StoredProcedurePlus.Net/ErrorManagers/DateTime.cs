@@ -19,12 +19,12 @@ namespace StoredProcedurePlus.Net.ErrorManagers
         }
         internal static void DateNotAllowedError(string propertyName, DateTime value, DateTime[] allowedValuesOnly)
         {
-            throw new InvalidOperationException("Cannot set given value " + value + " into datetime property : " + propertyName + " where allowed values are only " + string.Join(", ", allowedValuesOnly));
+            throw new InvalidOperationException("Cannot set given value " + value + " into DateTime property : " + propertyName + " where allowed values are only " + string.Join(", ", allowedValuesOnly));
         }
 
         internal static void CannotSetNullToNotNullableDateTimeProperty(string propertyName)
         {
-            throw new InvalidOperationException("Cannot set null value into not nullable datetime property : " + propertyName);
+            throw new InvalidOperationException("Cannot set null value into non nullable DateTime property : " + propertyName);
         }
     }
 }

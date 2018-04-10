@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class DecimalTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, decimal?> where S : class
+    public sealed class DecimalTypeNullableConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, decimal?> where TContainerType : class
     {
-        public DecimalTypeNullableConfiguration(Expression<Func<S, decimal?>> memberSelector):base(memberSelector)
+        public DecimalTypeNullableConfiguration(Expression<Func<TContainerType, decimal?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -46,19 +46,19 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         }
 
         internal bool IsRequired { get; private set; }
-        public DecimalTypeNullableConfiguration<S> Required()
+        public DecimalTypeNullableConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
         }
 
-        public DecimalTypeNullableConfiguration<S> Out()
+        public DecimalTypeNullableConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public DecimalTypeNullableConfiguration<S> HasParameterName(string name)
+        public DecimalTypeNullableConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -66,7 +66,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         internal byte? ScaleSize = null;
         internal byte? PrecisionSize = null;
-        public DecimalTypeNullableConfiguration<S> HasSize(byte scale, byte precision)
+        public DecimalTypeNullableConfiguration<TContainerType> HasSize(byte scale, byte precision)
         {
             ScaleSize = scale;
             PrecisionSize = precision;
@@ -75,28 +75,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         decimal? AllowedMaxValue = null;
-        public DecimalTypeNullableConfiguration<S> Max(decimal value)
+        public DecimalTypeNullableConfiguration<TContainerType> Max(decimal value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         decimal? AllowedMinValue = null;
-        public DecimalTypeNullableConfiguration<S> Min(decimal value)
+        public DecimalTypeNullableConfiguration<TContainerType> Min(decimal value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         decimal[] AllowedValuesOnly = null;
-        public DecimalTypeNullableConfiguration<S> AllowedOnly(decimal[] values)
+        public DecimalTypeNullableConfiguration<TContainerType> AllowedOnly(decimal[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         decimal[] AllowedValuesExcept = null;
-        public DecimalTypeNullableConfiguration<S> AllowedExcept(decimal[] values)
+        public DecimalTypeNullableConfiguration<TContainerType> AllowedExcept(decimal[] values)
         {
             AllowedValuesExcept = values;
             return this;

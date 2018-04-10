@@ -12,11 +12,11 @@ using System.Reflection;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public class ParameterInputEntityConfiguration<S> : EntityConfiguration<S> where S : class
+    public class ParameterInputEntityConfiguration<TContainerType> : EntityConfiguration<TContainerType> where TContainerType : class
     {
     }
 
-    public class TVPParameterInputEntityConfiguration<S> : EntityConfiguration<S> where S : class
+    public class TvpParameterInputEntityConfiguration<TContainerType> : EntityConfiguration<TContainerType> where TContainerType : class
     {
         internal override void Initialize()
         {
@@ -29,15 +29,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         object CreateNewDefaultInstance();
     }
 
-    public class OutputEntityConfiguration<S> : EntityConfiguration<S>, IHasDefaultConstructor where S : class, new()
+    public class OutputEntityConfiguration<TContainerType> : EntityConfiguration<TContainerType>, IHasDefaultConstructor where TContainerType : class, new()
     {
         object IHasDefaultConstructor.CreateNewDefaultInstance()
         {
-            return new S();
+            return new TContainerType();
         }
     }
 
-    public class EntityConfiguration<S> : NonPrimitiveEntityConfiguration where S : class
+    public class EntityConfiguration<TContainerType> : NonPrimitiveEntityConfiguration where TContainerType : class
     {
         #region Private
 
@@ -64,7 +64,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         private readonly List<PropertyConfiguration> Configurations = new List<PropertyConfiguration>();
 
-        private LambdaExpression BuildExpression(Type sourceType, PropertyInfo propertyInfo)
+        private static LambdaExpression BuildExpression(Type sourceType, PropertyInfo propertyInfo)
         {
             var parameter = Expression.Parameter(sourceType, propertyInfo.Name);
             var property = Expression.Property(parameter, propertyInfo);
@@ -81,9 +81,31 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         #endregion
 
+
+        #region Private Static : Prime Types
+        static readonly Type type_bool = typeof(bool);
+        static readonly Type type_nbool = typeof(bool?);
+        static readonly Type type_short = typeof(short);
+        static readonly Type type_nshort = typeof(short?);
+        static readonly Type type_int = typeof(int);
+        static readonly Type type_nint = typeof(int?);
+        static readonly Type type_long = typeof(long);
+        static readonly Type type_nlong = typeof(long?);
+        static readonly Type type_float = typeof(float);
+        static readonly Type type_nfloat = typeof(float?);
+        static readonly Type type_double = typeof(double);
+        static readonly Type type_ndouble = typeof(double?);
+        static readonly Type type_decimal = typeof(decimal);
+        static readonly Type type_ndecimal = typeof(decimal?);
+        static readonly Type type_datetime = typeof(DateTime);
+        static readonly Type type_ndatetime = typeof(DateTime?);
+        static readonly Type type_bytearray = typeof(byte[]);
+        static readonly Type type_string = typeof(string);
+        #endregion
+
         protected override void InitializePropertyConfigurations(bool IsIncludeUnmappedProperties)
         {
-            SourceType = typeof(S);
+            SourceType = typeof(TContainerType);
 
             PropertyInfo[] Properties = SourceType.GetProperties();
 
@@ -93,87 +115,96 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                 {
                     if (!Configurations.Exists(v => v.PropertyName == Properties[i].Name))
                     {
-                        if (Properties[i].PropertyType == typeof(bool))
+                        if (Properties[i].PropertyType == type_bool)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, bool>>)l);
+                            Maps((Expression<Func<TContainerType, bool>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(bool?))
+                        if (Properties[i].PropertyType == type_nbool)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, bool?>>)l);
+                            Maps((Expression<Func<TContainerType, bool?>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(int))
+                        if (Properties[i].PropertyType == type_short)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, int>>)l);
+                            Maps((Expression<Func<TContainerType, short>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(int?))
+                        if (Properties[i].PropertyType == type_nshort)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, int?>>)l);
+                            Maps((Expression<Func<TContainerType, short?>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(long))
+                        if (Properties[i].PropertyType == type_int)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, long>>)l);
+                            Maps((Expression<Func<TContainerType, int>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(long?))
+                        if (Properties[i].PropertyType == type_nint)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, long?>>)l);
+                            Maps((Expression<Func<TContainerType, int?>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(float))
+                        if (Properties[i].PropertyType == type_long)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, float>>)l);
+                            Maps((Expression<Func<TContainerType, long>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(float?))
+                        if (Properties[i].PropertyType == type_nlong)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, float?>>)l);
+                            Maps((Expression<Func<TContainerType, long?>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(double))
+                        if (Properties[i].PropertyType == type_float)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, double>>)l);
+                            Maps((Expression<Func<TContainerType, float>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(double?))
+                        if (Properties[i].PropertyType == type_nfloat)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, double?>>)l);
+                            Maps((Expression<Func<TContainerType, float?>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(decimal))
+                        if (Properties[i].PropertyType == type_double)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, decimal>>)l);
+                            Maps((Expression<Func<TContainerType, double>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(decimal?))
+                        if (Properties[i].PropertyType == type_ndouble)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, decimal?>>)l);
+                            Maps((Expression<Func<TContainerType, double?>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(DateTime))
+                        if (Properties[i].PropertyType == type_decimal)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, DateTime>>)l);
+                            Maps((Expression<Func<TContainerType, decimal>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(DateTime?))
+                        if (Properties[i].PropertyType == type_ndecimal)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, DateTime?>>)l);
+                            Maps((Expression<Func<TContainerType, decimal?>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(string))
+                        if (Properties[i].PropertyType == type_datetime)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, string>>)l);
+                            Maps((Expression<Func<TContainerType, DateTime>>)l);
                         }
-                        if (Properties[i].PropertyType == typeof(byte[]))
+                        if (Properties[i].PropertyType == type_ndatetime)
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
-                            Maps((Expression<Func<S, byte[]>>)l);
+                            Maps((Expression<Func<TContainerType, DateTime?>>)l);
                         }
-
+                        if (Properties[i].PropertyType == type_string)
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<TContainerType, string>>)l);
+                        }
+                        if (Properties[i].PropertyType == type_bytearray)
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<TContainerType, byte[]>>)l);
+                        }
                     }
                 }
             }
@@ -196,7 +227,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
             foreach (var c in Configurations)
             {
-                if (c is ListObjectTypeConfiguration<S> tc && tc.ChildEntityConfiguration != null)
+                if (c is ListObjectTypeConfiguration<TContainerType> tc && tc.ChildEntityConfiguration != null)
                 {
                     tc.ChildEntityConfiguration.Initialize();
                 }
@@ -228,15 +259,17 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         {
             if (OrdinalProvider == null) Error.PrepareDidnotCalled();
 
-            S Instance = (S)toInstance;
+            TContainerType Instance = (TContainerType)toInstance;
+
+            int Ordinal;
 
             for (int i = 0; i < Configurations.Count; i++)
             {
                 PropertyConfiguration configuration = Configurations[i];
 
-                int Ordinal = OrdinalProvider[configuration.PropertyName];
+                Ordinal = OrdinalProvider[configuration.PropertyName];
 
-                if (configuration.DataType == typeof(bool))
+                if (configuration.DataType == type_bool)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
@@ -244,24 +277,24 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     }
                     else
                     {
-                        BoolTypeConfiguration<S> Configuration = configuration as BoolTypeConfiguration<S>;
+                        BoolTypeConfiguration<TContainerType> Configuration = configuration as BoolTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetBool(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(bool?))
+                else if (configuration.DataType == type_nbool)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        BoolTypeNullableConfiguration<S> Configuration = configuration as BoolTypeNullableConfiguration<S>;
+                        BoolTypeNullableConfiguration<TContainerType> Configuration = configuration as BoolTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        BoolTypeNullableConfiguration<S> Configuration = configuration as BoolTypeNullableConfiguration<S>;
+                        BoolTypeNullableConfiguration<TContainerType> Configuration = configuration as BoolTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetBool(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(short))
+                else if (configuration.DataType == type_short)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
@@ -269,24 +302,24 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     }
                     else
                     {
-                        ShortTypeConfiguration<S> Configuration = configuration as ShortTypeConfiguration<S>;
+                        ShortTypeConfiguration<TContainerType> Configuration = configuration as ShortTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetShort(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(short?))
+                else if (configuration.DataType == type_nshort)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        ShortTypeNullableConfiguration<S> Configuration = configuration as ShortTypeNullableConfiguration<S>;
+                        ShortTypeNullableConfiguration<TContainerType> Configuration = configuration as ShortTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        ShortTypeNullableConfiguration<S> Configuration = configuration as ShortTypeNullableConfiguration<S>;
+                        ShortTypeNullableConfiguration<TContainerType> Configuration = configuration as ShortTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetShort(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(int))
+                else if (configuration.DataType == type_int)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
@@ -294,24 +327,24 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     }
                     else
                     {
-                        IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
+                        IntegerTypeConfiguration<TContainerType> Configuration = configuration as IntegerTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetInt(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(int?))
+                else if (configuration.DataType == type_nint)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        IntegerTypeNullableConfiguration<S> Configuration = configuration as IntegerTypeNullableConfiguration<S>;
+                        IntegerTypeNullableConfiguration<TContainerType> Configuration = configuration as IntegerTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        IntegerTypeNullableConfiguration<S> Configuration = configuration as IntegerTypeNullableConfiguration<S>;
+                        IntegerTypeNullableConfiguration<TContainerType> Configuration = configuration as IntegerTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetInt(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(long))
+                else if (configuration.DataType == type_long)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
@@ -319,24 +352,24 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     }
                     else
                     {
-                        LongTypeConfiguration<S> Configuration = configuration as LongTypeConfiguration<S>;
+                        LongTypeConfiguration<TContainerType> Configuration = configuration as LongTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetLong(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(long?))
+                else if (configuration.DataType == type_nlong)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        LongTypeNullableConfiguration<S> Configuration = configuration as LongTypeNullableConfiguration<S>;
+                        LongTypeNullableConfiguration<TContainerType> Configuration = configuration as LongTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        LongTypeNullableConfiguration<S> Configuration = configuration as LongTypeNullableConfiguration<S>;
+                        LongTypeNullableConfiguration<TContainerType> Configuration = configuration as LongTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetLong(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(float))
+                else if (configuration.DataType == type_float)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
@@ -344,24 +377,24 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     }
                     else
                     {
-                        FloatTypeConfiguration<S> Configuration = configuration as FloatTypeConfiguration<S>;
+                        FloatTypeConfiguration<TContainerType> Configuration = configuration as FloatTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetFloat(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(float?))
+                else if (configuration.DataType == type_nfloat)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        FloatTypeNullableConfiguration<S> Configuration = configuration as FloatTypeNullableConfiguration<S>;
+                        FloatTypeNullableConfiguration<TContainerType> Configuration = configuration as FloatTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        FloatTypeNullableConfiguration<S> Configuration = configuration as FloatTypeNullableConfiguration<S>;
+                        FloatTypeNullableConfiguration<TContainerType> Configuration = configuration as FloatTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetFloat(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(double))
+                else if (configuration.DataType == type_double)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
@@ -369,24 +402,24 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     }
                     else
                     {
-                        DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
+                        DoubleTypeConfiguration<TContainerType> Configuration = configuration as DoubleTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetDouble(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(double?))
+                else if (configuration.DataType == type_ndouble)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        DoubleTypeNullableConfiguration<S> Configuration = configuration as DoubleTypeNullableConfiguration<S>;
+                        DoubleTypeNullableConfiguration<TContainerType> Configuration = configuration as DoubleTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        DoubleTypeNullableConfiguration<S> Configuration = configuration as DoubleTypeNullableConfiguration<S>;
+                        DoubleTypeNullableConfiguration<TContainerType> Configuration = configuration as DoubleTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetDouble(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(decimal))
+                else if (configuration.DataType == type_decimal)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
@@ -394,24 +427,24 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     }
                     else
                     {
-                        DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
+                        DecimalTypeConfiguration<TContainerType> Configuration = configuration as DecimalTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetDecimal(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(decimal?))
+                else if (configuration.DataType == type_ndecimal)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        DecimalTypeNullableConfiguration<S> Configuration = configuration as DecimalTypeNullableConfiguration<S>;
+                        DecimalTypeNullableConfiguration<TContainerType> Configuration = configuration as DecimalTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        DecimalTypeNullableConfiguration<S> Configuration = configuration as DecimalTypeNullableConfiguration<S>;
+                        DecimalTypeNullableConfiguration<TContainerType> Configuration = configuration as DecimalTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetDecimal(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(DateTime))
+                else if (configuration.DataType == type_datetime)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
@@ -419,46 +452,46 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     }
                     else
                     {
-                        DateTimeTypeConfiguration<S> Configuration = configuration as DateTimeTypeConfiguration<S>;
+                        DateTimeTypeConfiguration<TContainerType> Configuration = configuration as DateTimeTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetDate(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(DateTime?))
+                else if (configuration.DataType == type_ndatetime)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        DateTimeTypeNullableConfiguration<S> Configuration = configuration as DateTimeTypeNullableConfiguration<S>;
+                        DateTimeTypeNullableConfiguration<TContainerType> Configuration = configuration as DateTimeTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        DateTimeTypeNullableConfiguration<S> Configuration = configuration as DateTimeTypeNullableConfiguration<S>;
+                        DateTimeTypeNullableConfiguration<TContainerType> Configuration = configuration as DateTimeTypeNullableConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetDate(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(string))
+                else if (configuration.DataType == type_string)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
+                        StringTypeConfiguration<TContainerType> Configuration = configuration as StringTypeConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
+                        StringTypeConfiguration<TContainerType> Configuration = configuration as StringTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetString(Ordinal);
                     }
                 }
-                else if (configuration.DataType == typeof(byte[]))
+                else if (configuration.DataType == type_bytearray)
                 {
                     if (fromEntity.IsDBNull(Ordinal))
                     {
-                        VarBinaryTypeConfiguration<S> Configuration = configuration as VarBinaryTypeConfiguration<S>;
+                        VarBinaryTypeConfiguration<TContainerType> Configuration = configuration as VarBinaryTypeConfiguration<TContainerType>;
                         Configuration[Instance] = null;
                     }
                     else
                     {
-                        VarBinaryTypeConfiguration<S> Configuration = configuration as VarBinaryTypeConfiguration<S>;
+                        VarBinaryTypeConfiguration<TContainerType> Configuration = configuration as VarBinaryTypeConfiguration<TContainerType>;
                         Configuration[Instance] = fromEntity.GetBinary(Ordinal);
                     }
                 }
@@ -469,110 +502,109 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         {
             if (OrdinalProvider == null) Error.PrepareDidnotCalled();
 
-            S Instance = (S)fromInstance;
+            TContainerType Instance = (TContainerType)fromInstance;
 
             for (int i = 0; i < Configurations.Count; i++)
             {
                 PropertyConfiguration configuration = Configurations[i];
 
                 int Ordinal = OrdinalProvider[configuration.PropertyName];
-                if (configuration.DataType == typeof(bool))
+                if (configuration.DataType == type_bool)
                 {
-                    BoolTypeConfiguration<S> Configuration = configuration as BoolTypeConfiguration<S>;
+                    BoolTypeConfiguration<TContainerType> Configuration = configuration as BoolTypeConfiguration<TContainerType>;
                     toEntity.SetBool(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(bool?))
+                else if (configuration.DataType == type_nbool)
                 {
-                    BoolTypeNullableConfiguration<S> Configuration = configuration as BoolTypeNullableConfiguration<S>;
+                    BoolTypeNullableConfiguration<TContainerType> Configuration = configuration as BoolTypeNullableConfiguration<TContainerType>;
                     toEntity.SetBool(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(short))
+                else if (configuration.DataType == type_short)
                 {
-                    ShortTypeConfiguration<S> Configuration = configuration as ShortTypeConfiguration<S>;
+                    ShortTypeConfiguration<TContainerType> Configuration = configuration as ShortTypeConfiguration<TContainerType>;
                     toEntity.SetShort(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(short?))
+                else if (configuration.DataType == type_nshort)
                 {
-                    ShortTypeNullableConfiguration<S> Configuration = configuration as ShortTypeNullableConfiguration<S>;
+                    ShortTypeNullableConfiguration<TContainerType> Configuration = configuration as ShortTypeNullableConfiguration<TContainerType>;
                     toEntity.SetShort(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(int))
+                else if (configuration.DataType == type_int)
                 {
-                    IntegerTypeConfiguration<S> Configuration = configuration as IntegerTypeConfiguration<S>;
+                    IntegerTypeConfiguration<TContainerType> Configuration = configuration as IntegerTypeConfiguration<TContainerType>;
                     toEntity.SetInt(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(int?))
+                else if (configuration.DataType == type_nint)
                 {
-                    IntegerTypeNullableConfiguration<S> Configuration = configuration as IntegerTypeNullableConfiguration<S>;
+                    IntegerTypeNullableConfiguration<TContainerType> Configuration = configuration as IntegerTypeNullableConfiguration<TContainerType>;
                     toEntity.SetInt(Ordinal, Configuration[Instance]);
                 }
-                if (configuration.DataType == typeof(long))
+                if (configuration.DataType == type_long)
                 {
-                    LongTypeConfiguration<S> Configuration = configuration as LongTypeConfiguration<S>;
+                    LongTypeConfiguration<TContainerType> Configuration = configuration as LongTypeConfiguration<TContainerType>;
                     toEntity.SetLong(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(long?))
+                else if (configuration.DataType == type_nlong)
                 {
-                    LongTypeNullableConfiguration<S> Configuration = configuration as LongTypeNullableConfiguration<S>;
+                    LongTypeNullableConfiguration<TContainerType> Configuration = configuration as LongTypeNullableConfiguration<TContainerType>;
                     toEntity.SetLong(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(float))
+                else if (configuration.DataType == type_float)
                 {
-                    FloatTypeConfiguration<S> Configuration = configuration as FloatTypeConfiguration<S>;
+                    FloatTypeConfiguration<TContainerType> Configuration = configuration as FloatTypeConfiguration<TContainerType>;
                     toEntity.SetFloat(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(float?))
+                else if (configuration.DataType == type_nfloat)
                 {
-                    FloatTypeNullableConfiguration<S> Configuration = configuration as FloatTypeNullableConfiguration<S>;
+                    FloatTypeNullableConfiguration<TContainerType> Configuration = configuration as FloatTypeNullableConfiguration<TContainerType>;
                     toEntity.SetFloat(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(double))
+                else if (configuration.DataType == type_double)
                 {
-                    DoubleTypeConfiguration<S> Configuration = configuration as DoubleTypeConfiguration<S>;
+                    DoubleTypeConfiguration<TContainerType> Configuration = configuration as DoubleTypeConfiguration<TContainerType>;
                     toEntity.SetDouble(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(double?))
+                else if (configuration.DataType == type_ndouble)
                 {
-                    DoubleTypeNullableConfiguration<S> Configuration = configuration as DoubleTypeNullableConfiguration<S>;
+                    DoubleTypeNullableConfiguration<TContainerType> Configuration = configuration as DoubleTypeNullableConfiguration<TContainerType>;
                     toEntity.SetDouble(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(decimal))
+                else if (configuration.DataType == type_decimal)
                 {
-                    DecimalTypeConfiguration<S> Configuration = configuration as DecimalTypeConfiguration<S>;
+                    DecimalTypeConfiguration<TContainerType> Configuration = configuration as DecimalTypeConfiguration<TContainerType>;
                     toEntity.SetDecimal(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(decimal?))
+                else if (configuration.DataType == type_ndecimal)
                 {
-                    DecimalTypeNullableConfiguration<S> Configuration = configuration as DecimalTypeNullableConfiguration<S>;
+                    DecimalTypeNullableConfiguration<TContainerType> Configuration = configuration as DecimalTypeNullableConfiguration<TContainerType>;
                     toEntity.SetDecimal(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(DateTime))
+                else if (configuration.DataType == type_datetime)
                 {
-                    DateTimeTypeConfiguration<S> Configuration = configuration as DateTimeTypeConfiguration<S>;
+                    DateTimeTypeConfiguration<TContainerType> Configuration = configuration as DateTimeTypeConfiguration<TContainerType>;
                     toEntity.SetDateTime(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(DateTime?))
+                else if (configuration.DataType == type_ndatetime)
                 {
-                    DateTimeTypeNullableConfiguration<S> Configuration = configuration as DateTimeTypeNullableConfiguration<S>;
+                    DateTimeTypeNullableConfiguration<TContainerType> Configuration = configuration as DateTimeTypeNullableConfiguration<TContainerType>;
                     toEntity.SetDateTime(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(string))
+                else if (configuration.DataType == type_string)
                 {
-                    StringTypeConfiguration<S> Configuration = configuration as StringTypeConfiguration<S>;
+                    StringTypeConfiguration<TContainerType> Configuration = configuration as StringTypeConfiguration<TContainerType>;
                     toEntity.SetString(Ordinal, Configuration[Instance]);
                 }
-                else if (configuration.DataType == typeof(byte[]))
+                else if (configuration.DataType == type_bytearray)
                 {
-                    VarBinaryTypeConfiguration<S> Configuration = configuration as VarBinaryTypeConfiguration<S>;
+                    VarBinaryTypeConfiguration<TContainerType> Configuration = configuration as VarBinaryTypeConfiguration<TContainerType>;
                     toEntity.SetBinary(Ordinal, Configuration[Instance]);
                 }
                 else if (configuration.IsEnumerable)
                 {
-                    ListObjectTypeConfiguration<S> Configuration = configuration as ListObjectTypeConfiguration<S>;
+                    ListObjectTypeConfiguration<TContainerType> Configuration = configuration as ListObjectTypeConfiguration<TContainerType>;
                     IList ListObbject = (IList)Configuration[Instance];
                     DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.ChildEntityConfiguration.GetAsDbParameters();
-                    //DataTable ListAsDataTable = new DataTable(Configuration.PropertyName);
-                    DataTable ListAsDataTable = new DataTable();
+                    DataTable ListAsDataTable = new DataTable(Configuration.PropertyName);
                     for (int listcounter = 0; listcounter < ListObbject.Count; listcounter++)
                     {
                         if (adapter.FieldCount > 0)
@@ -593,30 +625,31 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                                             ((DataTable)adapter[fieldcounter].Value).TableName);
                                     }
 
-                                    if (dtype == typeof(bool?))
-                                        dtype = typeof(bool);
-                                    if (dtype == typeof(int?))
-                                        dtype = typeof(int);
-                                    if (dtype == typeof(long?))
-                                        dtype = typeof(long);
-                                    if (dtype == typeof(short?))
-                                        dtype = typeof(short);
-                                    if (dtype == typeof(float?))
-                                        dtype = typeof(float);
-                                    if (dtype == typeof(double?))
-                                        dtype = typeof(double);
-                                    if (dtype == typeof(decimal?))
-                                        dtype = typeof(decimal);
-                                    if (dtype == typeof(DateTime?))
-                                        dtype = typeof(DateTime);
-                                    //if (dtype == typeof(byte[]))
-                                    //    dtype = typeof(SqlBinary);
+                                    if (dtype == type_nbool)
+                                        dtype = type_bool;
 
-                                    DataColumn col = new DataColumn(
-                                        adapter[fieldcounter].ParameterName,
-                                       dtype
-                                    );
+                                    if (dtype == type_nshort)
+                                        dtype = type_short;
 
+                                    if (dtype == type_nint)
+                                        dtype = type_int;
+
+                                    if (dtype == type_nlong)
+                                        dtype = type_long;
+
+                                    if (dtype == type_nfloat)
+                                        dtype = type_float;
+
+                                    if (dtype == type_ndouble)
+                                        dtype = type_double;
+
+                                    if (dtype == type_ndecimal)
+                                        dtype = type_decimal;
+
+                                    if (dtype == type_ndatetime)
+                                        dtype = type_datetime;
+
+                                    DataColumn col = new DataColumn(adapter[fieldcounter].ParameterName, dtype);
                                     ListAsDataTable.Columns.Add(col);
                                 }
                             }
@@ -631,7 +664,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                             {
                                 var name = adapter[fieldcounter].ParameterName;
 
-                                if (adapter.GetSourceType(fieldcounter) == typeof(byte[]))
+                                if (adapter.GetSourceType(fieldcounter) == type_bytearray)
                                 {
                                     r[adapter[fieldcounter].ParameterName] = (byte[])adapter[fieldcounter].Value;
                                 }
@@ -653,135 +686,135 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         #endregion
 
         #region Public
-        public BoolTypeConfiguration<S> Maps(Expression<Func<S, bool>> memberSelector)
+        public BoolTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, bool>> memberSelector)
         {
-            BoolTypeConfiguration<S> Configuration = new BoolTypeConfiguration<S>(memberSelector);
+            BoolTypeConfiguration<TContainerType> Configuration = new BoolTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public BoolTypeNullableConfiguration<S> Maps(Expression<Func<S, bool?>> memberSelector)
+        public BoolTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, bool?>> memberSelector)
         {
-            BoolTypeNullableConfiguration<S> Configuration = new BoolTypeNullableConfiguration<S>(memberSelector);
+            BoolTypeNullableConfiguration<TContainerType> Configuration = new BoolTypeNullableConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public ShortTypeConfiguration<S> Maps(Expression<Func<S, short>> memberSelector)
+        public ShortTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, short>> memberSelector)
         {
-            ShortTypeConfiguration<S> Configuration = new ShortTypeConfiguration<S>(memberSelector);
+            ShortTypeConfiguration<TContainerType> Configuration = new ShortTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public ShortTypeNullableConfiguration<S> Maps(Expression<Func<S, short?>> memberSelector)
+        public ShortTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, short?>> memberSelector)
         {
-            ShortTypeNullableConfiguration<S> Configuration = new ShortTypeNullableConfiguration<S>(memberSelector);
+            ShortTypeNullableConfiguration<TContainerType> Configuration = new ShortTypeNullableConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public IntegerTypeConfiguration<S> Maps(Expression<Func<S, int>> memberSelector)
+        public IntegerTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, int>> memberSelector)
         {
-            IntegerTypeConfiguration<S> Configuration = new IntegerTypeConfiguration<S>(memberSelector);
+            IntegerTypeConfiguration<TContainerType> Configuration = new IntegerTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public IntegerTypeNullableConfiguration<S> Maps(Expression<Func<S, int?>> memberSelector)
+        public IntegerTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, int?>> memberSelector)
         {
-            IntegerTypeNullableConfiguration<S> Configuration = new IntegerTypeNullableConfiguration<S>(memberSelector);
+            IntegerTypeNullableConfiguration<TContainerType> Configuration = new IntegerTypeNullableConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public LongTypeConfiguration<S> Maps(Expression<Func<S, long>> memberSelector)
+        public LongTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, long>> memberSelector)
         {
-            LongTypeConfiguration<S> Configuration = new LongTypeConfiguration<S>(memberSelector);
+            LongTypeConfiguration<TContainerType> Configuration = new LongTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public LongTypeNullableConfiguration<S> Maps(Expression<Func<S, long?>> memberSelector)
+        public LongTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, long?>> memberSelector)
         {
-            LongTypeNullableConfiguration<S> Configuration = new LongTypeNullableConfiguration<S>(memberSelector);
+            LongTypeNullableConfiguration<TContainerType> Configuration = new LongTypeNullableConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public FloatTypeConfiguration<S> Maps(Expression<Func<S, float>> memberSelector)
+        public FloatTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, float>> memberSelector)
         {
-            FloatTypeConfiguration<S> Configuration = new FloatTypeConfiguration<S>(memberSelector);
+            FloatTypeConfiguration<TContainerType> Configuration = new FloatTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public FloatTypeNullableConfiguration<S> Maps(Expression<Func<S, float?>> memberSelector)
+        public FloatTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, float?>> memberSelector)
         {
-            FloatTypeNullableConfiguration<S> Configuration = new FloatTypeNullableConfiguration<S>(memberSelector);
+            FloatTypeNullableConfiguration<TContainerType> Configuration = new FloatTypeNullableConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public DoubleTypeConfiguration<S> Maps(Expression<Func<S, double>> memberSelector)
+        public DoubleTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, double>> memberSelector)
         {
-            DoubleTypeConfiguration<S> Configuration = new DoubleTypeConfiguration<S>(memberSelector);
+            DoubleTypeConfiguration<TContainerType> Configuration = new DoubleTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public DoubleTypeNullableConfiguration<S> Maps(Expression<Func<S, double?>> memberSelector)
+        public DoubleTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, double?>> memberSelector)
         {
-            DoubleTypeNullableConfiguration<S> Configuration = new DoubleTypeNullableConfiguration<S>(memberSelector);
+            DoubleTypeNullableConfiguration<TContainerType> Configuration = new DoubleTypeNullableConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public DecimalTypeConfiguration<S> Maps(Expression<Func<S, decimal>> memberSelector)
+        public DecimalTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, decimal>> memberSelector)
         {
-            DecimalTypeConfiguration<S> Configuration = new DecimalTypeConfiguration<S>(memberSelector);
+            DecimalTypeConfiguration<TContainerType> Configuration = new DecimalTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public DecimalTypeNullableConfiguration<S> Maps(Expression<Func<S, decimal?>> memberSelector)
+        public DecimalTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, decimal?>> memberSelector)
         {
-            DecimalTypeNullableConfiguration<S> Configuration = new DecimalTypeNullableConfiguration<S>(memberSelector);
+            DecimalTypeNullableConfiguration<TContainerType> Configuration = new DecimalTypeNullableConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public DateTimeTypeConfiguration<S> Maps(Expression<Func<S, DateTime>> memberSelector)
+        public DateTimeTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, DateTime>> memberSelector)
         {
-            DateTimeTypeConfiguration<S> Configuration = new DateTimeTypeConfiguration<S>(memberSelector);
+            DateTimeTypeConfiguration<TContainerType> Configuration = new DateTimeTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public DateTimeTypeNullableConfiguration<S> Maps(Expression<Func<S, DateTime?>> memberSelector)
+        public DateTimeTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, DateTime?>> memberSelector)
         {
-            DateTimeTypeNullableConfiguration<S> Configuration = new DateTimeTypeNullableConfiguration<S>(memberSelector);
+            DateTimeTypeNullableConfiguration<TContainerType> Configuration = new DateTimeTypeNullableConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public StringTypeConfiguration<S> Maps(Expression<Func<S, string>> memberSelector)
+        public StringTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, string>> memberSelector)
         {
-            StringTypeConfiguration<S> Configuration = new StringTypeConfiguration<S>(memberSelector);
+            StringTypeConfiguration<TContainerType> Configuration = new StringTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public VarBinaryTypeConfiguration<S> Maps(Expression<Func<S, byte[]>> memberSelector)
+        public VarBinaryTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, byte[]>> memberSelector)
         {
-            VarBinaryTypeConfiguration<S> Configuration = new VarBinaryTypeConfiguration<S>(memberSelector);
+            VarBinaryTypeConfiguration<TContainerType> Configuration = new VarBinaryTypeConfiguration<TContainerType>(memberSelector);
             AddMapping(Configuration);
             return Configuration;
         }
-        public TVPParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
+        public TvpParameterInputEntityConfiguration<TPropertyType> MapAsTable<TPropertyType>(Expression<Func<TContainerType, List<TPropertyType>>> memberSelector) where TPropertyType : class
         {
-            ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
+            ListObjectTypeConfiguration<TContainerType> Configuration = new ListObjectTypeConfiguration<TContainerType>();
             AddMapping(Configuration);
-            TVPParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector);
+            TvpParameterInputEntityConfiguration<TPropertyType> c = Configuration.AsTable(memberSelector);
             return c;
         }
 
-        public TVPParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
+        public TvpParameterInputEntityConfiguration<TPropertyType> MapAsTable<TPropertyType>(Expression<Func<TContainerType, List<TPropertyType>>> memberSelector, string typename) where TPropertyType : class
         {
-            ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
+            ListObjectTypeConfiguration<TContainerType> Configuration = new ListObjectTypeConfiguration<TContainerType>();
             AddMapping(Configuration);
-            TVPParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector, typename);
+            TvpParameterInputEntityConfiguration<TPropertyType> c = Configuration.AsTable(memberSelector, typename);
             return c;
         }
 
-        public TVPParameterInputEntityConfiguration<T> MapAsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
+        public TvpParameterInputEntityConfiguration<TPropertyType> MapAsTable<TPropertyType>(Expression<Func<TContainerType, List<TPropertyType>>> memberSelector, string typename, string parametername) where TPropertyType : class
         {
-            ListObjectTypeConfiguration<S> Configuration = new ListObjectTypeConfiguration<S>();
+            ListObjectTypeConfiguration<TContainerType> Configuration = new ListObjectTypeConfiguration<TContainerType>();
             AddMapping(Configuration);
-            TVPParameterInputEntityConfiguration<T> c = Configuration.AsTable(memberSelector, typename, parametername);
+            TvpParameterInputEntityConfiguration<TPropertyType> c = Configuration.AsTable(memberSelector, typename, parametername);
             return c;
         }
 

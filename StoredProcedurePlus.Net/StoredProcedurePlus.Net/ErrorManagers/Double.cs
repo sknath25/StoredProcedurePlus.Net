@@ -26,7 +26,7 @@ namespace StoredProcedurePlus.Net.ErrorManagers
 
         internal static void CannotSetNullToNotNullableDoubleProperty(string propertyName)
         {
-            throw new InvalidOperationException("Cannot set null value into not nullable double property : " + propertyName);
+            throw new InvalidOperationException("Cannot set null value into non nullable double property : " + propertyName);
         }
     }
 }

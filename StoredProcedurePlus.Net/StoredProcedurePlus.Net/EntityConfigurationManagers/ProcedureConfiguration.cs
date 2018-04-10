@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
-    public sealed class ProcedureConfiguration<S> where S : class
+    public sealed class ProcedureConfiguration<TContainerType> where TContainerType : class
     {
         public string ConnectionStringName { get; set; }
         public string ConnectionString { get; set; }
@@ -14,7 +14,14 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         internal List<NonPrimitiveEntityConfiguration> OutputSets;
 
-        public ParameterInputEntityConfiguration<S> Input;
+        private ParameterInputEntityConfiguration<TContainerType> _Input;
+        public ParameterInputEntityConfiguration<TContainerType> Input
+        {
+            get
+            {
+                return _Input;
+            }
+        }
 
         public OutputEntityConfiguration<T> CanReturnCollectionOf<T>() where T : class, new ()
         {
@@ -26,14 +33,14 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         public ProcedureConfiguration()
         {
             ConnectionStringName = "DbString"; // Default
-            Input = new ParameterInputEntityConfiguration<S>();
+            _Input = new ParameterInputEntityConfiguration<TContainerType>();
             OutputSets = new List<NonPrimitiveEntityConfiguration>();
             Connection = new ConnectionFactory();
         }
 
         internal void Initialize()
         {
-            Input.Initialize();
+            _Input.Initialize();
 
             for(int i = 0; i < OutputSets.Count; i++ )
             {

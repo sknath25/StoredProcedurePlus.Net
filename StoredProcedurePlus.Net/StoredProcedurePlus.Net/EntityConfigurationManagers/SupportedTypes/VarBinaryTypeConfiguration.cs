@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public class VarBinaryTypeConfiguration<S> : PrimitiveTypeConfiguration<S,byte[]> where S : class
+    public class VarBinaryTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType,byte[]> where TContainerType : class
     {
-        public VarBinaryTypeConfiguration(Expression<Func<S, byte[]>> memberSelector):base(memberSelector)
+        public VarBinaryTypeConfiguration(Expression<Func<TContainerType, byte[]>> memberSelector):base(memberSelector)
         {
 
         }
@@ -37,27 +37,27 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public VarBinaryTypeConfiguration<S> Out()
+        public VarBinaryTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public VarBinaryTypeConfiguration<S> HasParameterName(string name)
+        public VarBinaryTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
         internal bool IsRequired { get; private set; }
-        public VarBinaryTypeConfiguration<S> Required()
+        public VarBinaryTypeConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
         }
 
         uint? AllowedMaxLength = null;
-        public VarBinaryTypeConfiguration<S> MaxLength(uint value)
+        public VarBinaryTypeConfiguration<TContainerType> MaxLength(uint value)
         {
             AllowedMaxLength = value;
             base.Size1 = value;
@@ -65,7 +65,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         }
 
         uint? AllowedMinLength = null;
-        public VarBinaryTypeConfiguration<S> MinLength(uint value)
+        public VarBinaryTypeConfiguration<TContainerType> MinLength(uint value)
         {
             AllowedMinLength = value;
             return this;

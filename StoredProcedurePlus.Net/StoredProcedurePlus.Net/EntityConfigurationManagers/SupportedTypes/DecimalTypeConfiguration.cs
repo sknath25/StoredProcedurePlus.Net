@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class DecimalTypeConfiguration<S> : PrimitiveTypeConfiguration<S, decimal> where S : class
+    public sealed class DecimalTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, decimal> where TContainerType : class
     {
-        public DecimalTypeConfiguration(Expression<Func<S, decimal>> memberSelector):base(memberSelector)
+        public DecimalTypeConfiguration(Expression<Func<TContainerType, decimal>> memberSelector):base(memberSelector)
         {
         }
 
@@ -40,13 +40,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public DecimalTypeConfiguration<S> Out()
+        public DecimalTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public DecimalTypeConfiguration<S> HasParameterName(string name)
+        public DecimalTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -54,7 +54,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         internal byte? ScaleSize = null;
         internal byte? PrecisionSize = null;
-        public DecimalTypeConfiguration<S> HasSize(byte scale, byte precision)
+        public DecimalTypeConfiguration<TContainerType> HasSize(byte scale, byte precision)
         {
             ScaleSize = scale;
             PrecisionSize = precision;
@@ -63,28 +63,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         decimal? AllowedMaxValue = null;
-        public DecimalTypeConfiguration<S> Max(decimal value)
+        public DecimalTypeConfiguration<TContainerType> Max(decimal value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         decimal? AllowedMinValue = null;
-        public DecimalTypeConfiguration<S> Min(decimal value)
+        public DecimalTypeConfiguration<TContainerType> Min(decimal value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         decimal[] AllowedValuesOnly = null;
-        public DecimalTypeConfiguration<S> AllowedOnly(decimal[] values)
+        public DecimalTypeConfiguration<TContainerType> AllowedOnly(decimal[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         decimal[] AllowedValuesExcept = null;
-        public DecimalTypeConfiguration<S> AllowedExcept(decimal[] values)
+        public DecimalTypeConfiguration<TContainerType> AllowedExcept(decimal[] values)
         {
             AllowedValuesExcept = values;
             return this;

@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public class StringTypeConfiguration<S> : PrimitiveTypeConfiguration<S,string> where S : class
+    public class StringTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType,string> where TContainerType : class
     {
-        public StringTypeConfiguration(Expression<Func<S, string>> memberSelector):base(memberSelector)
+        public StringTypeConfiguration(Expression<Func<TContainerType, string>> memberSelector):base(memberSelector)
         {
 
         }
@@ -103,34 +103,34 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public StringTypeConfiguration<S> Out()
+        public StringTypeConfiguration<TContainerType> Out()
         {
             IsOut = true;
             return this;
         }
 
-        public StringTypeConfiguration<S> HasParameterName(string name)
+        public StringTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             ParameterName = name;
             return this;
         }
 
         bool IsNVarChar = false;
-        public StringTypeConfiguration<S> AsNVarChar()
+        public StringTypeConfiguration<TContainerType> AsNVarChar()
         {
             IsNVarChar = true;
             return this;
         }
 
         internal bool IsRequired { get; private set; }
-        public StringTypeConfiguration<S> Required()
+        public StringTypeConfiguration<TContainerType> Required()
         {
             IsRequired = true;
             return this;
         }
 
         uint? AllowedMaxLength = null;
-        public StringTypeConfiguration<S> MaxLength(uint value)
+        public StringTypeConfiguration<TContainerType> MaxLength(uint value)
         {
             AllowedMaxLength = value;
             Size1 = value;
@@ -138,42 +138,42 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         }
 
         uint? AllowedMinLength = null;
-        public StringTypeConfiguration<S> MinLength(uint value)
+        public StringTypeConfiguration<TContainerType> MinLength(uint value)
         {
             AllowedMinLength = value;
             return this;
         }
 
         string[] AllowedValuesOnly = null;
-        public StringTypeConfiguration<S> AllowedOnly(string[] values)
+        public StringTypeConfiguration<TContainerType> AllowedOnly(string[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         string[] AllowedValuesExcept = null;
-        public StringTypeConfiguration<S> AllowedExcept(string[] values)
+        public StringTypeConfiguration<TContainerType> AllowedExcept(string[] values)
         {
             AllowedValuesExcept = values;
             return this;
         }
 
         internal bool IsTrim = false;
-        public StringTypeConfiguration<S> Trim()
+        public StringTypeConfiguration<TContainerType> Trim()
         {
             IsTrim = true;
             return this;
         }
 
         internal bool IsLTrim = false;
-        public StringTypeConfiguration<S> LTrim()
+        public StringTypeConfiguration<TContainerType> LTrim()
         {
             IsLTrim = true;
             return this;
         }
 
         internal bool IsRTrim = false;
-        public StringTypeConfiguration<S> RTrim()
+        public StringTypeConfiguration<TContainerType> RTrim()
         {
             IsRTrim = true;
             return this;
@@ -182,21 +182,21 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         #region Pattern validation
 
         string StringPattern = null;
-        public StringTypeConfiguration<S> Pattern(string regX)
+        public StringTypeConfiguration<TContainerType> Pattern(string regX)
         {
             StringPattern = regX;
             return this;
         }
 
         double PaternTimeOut = 200; //Default
-        public StringTypeConfiguration<S> PatternMatchingTimeout(double timeout)
+        public StringTypeConfiguration<TContainerType> PatternMatchingTimeout(double timeout)
         {
             PaternTimeOut = timeout;
             return this;
         }
 
         RegexOptions Pattern_Option = RegexOptions.IgnoreCase; //Default
-        public StringTypeConfiguration<S> PatternOption(RegexOptions option)
+        public StringTypeConfiguration<TContainerType> PatternOption(RegexOptions option)
         {
             Pattern_Option = option;
             return this;
@@ -212,7 +212,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         PreDefinedPatterns DefinedPattern = PreDefinedPatterns.None;
 
-        public StringTypeConfiguration<S> Email()
+        public StringTypeConfiguration<TContainerType> Email()
         {
             DefinedPattern = PreDefinedPatterns.Email;
             StringPattern = @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
@@ -220,14 +220,14 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
-        public StringTypeConfiguration<S> WebSite()
+        public StringTypeConfiguration<TContainerType> Website()
         {
             DefinedPattern = PreDefinedPatterns.Website;
             StringPattern = @"(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?";
             return this;
         }
 
-        public StringTypeConfiguration<S> FtpSite()
+        public StringTypeConfiguration<TContainerType> Ftpsite()
         {
             DefinedPattern = PreDefinedPatterns.Ftp;
             StringPattern = @"(ftp):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?";

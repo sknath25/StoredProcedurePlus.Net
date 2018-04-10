@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class DateTimeTypeConfiguration<S> : PrimitiveTypeConfiguration<S, DateTime> where S : class
+    public sealed class DateTimeTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, DateTime> where TContainerType : class
     {
-        public DateTimeTypeConfiguration(Expression<Func<S, DateTime>> memberSelector):base(memberSelector)
+        public DateTimeTypeConfiguration(Expression<Func<TContainerType, DateTime>> memberSelector):base(memberSelector)
         {
         }
 
@@ -44,55 +44,55 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public DateTimeTypeConfiguration<S> Out()
+        public DateTimeTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public DateTimeTypeConfiguration<S> HasParameterName(string name)
+        public DateTimeTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
         bool IsDateTime2 = false;
-        public DateTimeTypeConfiguration<S> AsDateTime2()
+        public DateTimeTypeConfiguration<TContainerType> AsDateTime2()
         {
             IsDateTime2 = true;
             return this;
         }
 
         DateTime? AllowedMaxDate = null;
-        public DateTimeTypeConfiguration<S> Max(DateTime value)
+        public DateTimeTypeConfiguration<TContainerType> Max(DateTime value)
         {
             AllowedMaxDate = value;
             return this;
         }
 
         DateTime? AllowedMinDate = null;
-        public DateTimeTypeConfiguration<S> Min(DateTime value)
+        public DateTimeTypeConfiguration<TContainerType> Min(DateTime value)
         {
             AllowedMinDate = value;
             return this;
         }
 
         DateTime[] AllowedDatesOnly = null;
-        public DateTimeTypeConfiguration<S> AllowedOnly(DateTime[] values)
+        public DateTimeTypeConfiguration<TContainerType> AllowedOnly(DateTime[] values)
         {
             AllowedDatesOnly = values;
             return this;
         }
 
         DateTime[] AllowedDatesExcept = null;
-        public DateTimeTypeConfiguration<S> AllowedExcept(DateTime[] values)
+        public DateTimeTypeConfiguration<TContainerType> AllowedExcept(DateTime[] values)
         {
             AllowedDatesExcept = values;
             return this;
         }
 
         string AllowedDateTimeFormat = null;
-        public DateTimeTypeConfiguration<S> Format(string value)
+        public DateTimeTypeConfiguration<TContainerType> Format(string value)
         {
             AllowedDateTimeFormat = value;
             return this;

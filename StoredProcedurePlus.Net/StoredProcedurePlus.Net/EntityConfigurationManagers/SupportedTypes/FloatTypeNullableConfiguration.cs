@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class FloatTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, float?> where S : class
+    public sealed class FloatTypeNullableConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, float?> where TContainerType : class
     {
-        public FloatTypeNullableConfiguration(Expression<Func<S, float?>> memberSelector):base(memberSelector)
+        public FloatTypeNullableConfiguration(Expression<Func<TContainerType, float?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -46,19 +46,19 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         }
 
         internal bool IsRequired { get; private set; }
-        public FloatTypeNullableConfiguration<S> Required()
+        public FloatTypeNullableConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
         }
 
-        public FloatTypeNullableConfiguration<S> Out()
+        public FloatTypeNullableConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public FloatTypeNullableConfiguration<S> HasParameterName(string name)
+        public FloatTypeNullableConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -67,7 +67,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         internal byte? ScaleSize = null;
         internal byte? PrecisionSize = null;
-        public FloatTypeNullableConfiguration<S> HasSize(byte scale, byte precision)
+        public FloatTypeNullableConfiguration<TContainerType> HasSize(byte scale, byte precision)
         {
             ScaleSize = scale;
             PrecisionSize = precision;
@@ -76,28 +76,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         float? AllowedMaxValue = null;
-        public FloatTypeNullableConfiguration<S> Max(float value)
+        public FloatTypeNullableConfiguration<TContainerType> Max(float value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         float? AllowedMinValue = null;
-        public FloatTypeNullableConfiguration<S> Min(float value)
+        public FloatTypeNullableConfiguration<TContainerType> Min(float value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         float[] AllowedValuesOnly = null;
-        public FloatTypeNullableConfiguration<S> AllowedOnly(float[] values)
+        public FloatTypeNullableConfiguration<TContainerType> AllowedOnly(float[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         float[] AllowedValuesExcept = null;
-        public FloatTypeNullableConfiguration<S> AllowedExcept(float[] values)
+        public FloatTypeNullableConfiguration<TContainerType> AllowedExcept(float[] values)
         {
             AllowedValuesExcept = values;
             return this;

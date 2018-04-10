@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class LongTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, long?> where S : class
+    public sealed class LongTypeNullableConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, long?> where TContainerType : class
     {
-        public LongTypeNullableConfiguration(Expression<Func<S, long?>> memberSelector):base(memberSelector)
+        public LongTypeNullableConfiguration(Expression<Func<TContainerType, long?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -45,20 +45,20 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public LongTypeNullableConfiguration<S> Out()
+        public LongTypeNullableConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public LongTypeNullableConfiguration<S> HasParameterName(string name)
+        public LongTypeNullableConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
         internal bool IsRequired { get; private set; }
-        public LongTypeNullableConfiguration<S> Required()
+        public LongTypeNullableConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
@@ -66,21 +66,21 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         long? AllowedMaxValue = null;        
-        public LongTypeNullableConfiguration<S> Max(long value)
+        public LongTypeNullableConfiguration<TContainerType> Max(long value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         long? AllowedMinValue = null;
-        public LongTypeNullableConfiguration<S> Min(long value)
+        public LongTypeNullableConfiguration<TContainerType> Min(long value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         long[] AllowedValuesOnly = null;
-        public LongTypeNullableConfiguration<S> AllowedOnly(long[] values)
+        public LongTypeNullableConfiguration<TContainerType> AllowedOnly(long[] values)
         {
             AllowedValuesOnly = values;
             return this;
@@ -88,7 +88,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         long[] AllowedValuesExcept = null;        
 
-        public LongTypeNullableConfiguration<S> AllowedExcept(long[] values)
+        public LongTypeNullableConfiguration<TContainerType> AllowedExcept(long[] values)
         {
             AllowedValuesExcept = values;
             return this;

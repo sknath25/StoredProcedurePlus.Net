@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class ShortTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, short?> where S : class
+    public sealed class ShortTypeNullableConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, short?> where TContainerType : class
     {
-        public ShortTypeNullableConfiguration(Expression<Func<S, short?>> memberSelector):base(memberSelector)
+        public ShortTypeNullableConfiguration(Expression<Func<TContainerType, short?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -45,20 +45,20 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public ShortTypeNullableConfiguration<S> Out()
+        public ShortTypeNullableConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public ShortTypeNullableConfiguration<S> HasParameterName(string name)
+        public ShortTypeNullableConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
         internal bool IsRequired { get; private set; }
-        public ShortTypeNullableConfiguration<S> Required()
+        public ShortTypeNullableConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
@@ -66,28 +66,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         short? AllowedMaxValue = null;        
-        public ShortTypeNullableConfiguration<S> Max(short value)
+        public ShortTypeNullableConfiguration<TContainerType> Max(short value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         short? AllowedMinValue = null;
-        public ShortTypeNullableConfiguration<S> Min(short value)
+        public ShortTypeNullableConfiguration<TContainerType> Min(short value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         short[] AllowedValuesOnly = null;
-        public ShortTypeNullableConfiguration<S> AllowedOnly(short[] values)
+        public ShortTypeNullableConfiguration<TContainerType> AllowedOnly(short[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         short[] AllowedValuesExcept = null;        
-        public ShortTypeNullableConfiguration<S> AllowedExcept(short[] values)
+        public ShortTypeNullableConfiguration<TContainerType> AllowedExcept(short[] values)
         {
             AllowedValuesExcept = values;
             return this;

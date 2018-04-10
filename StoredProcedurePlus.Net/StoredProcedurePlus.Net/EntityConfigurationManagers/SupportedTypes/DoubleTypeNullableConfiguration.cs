@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class DoubleTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, double?> where S : class
+    public sealed class DoubleTypeNullableConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, double?> where TContainerType : class
     {
-        public DoubleTypeNullableConfiguration(Expression<Func<S, double?>> memberSelector):base(memberSelector)
+        public DoubleTypeNullableConfiguration(Expression<Func<TContainerType, double?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -46,19 +46,19 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         }
 
         internal bool IsRequired { get; private set; }
-        public DoubleTypeNullableConfiguration<S> Required()
+        public DoubleTypeNullableConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
         }
 
-        public DoubleTypeNullableConfiguration<S> Out()
+        public DoubleTypeNullableConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public DoubleTypeNullableConfiguration<S> HasParameterName(string name)
+        public DoubleTypeNullableConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -66,7 +66,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         internal byte? ScaleSize = null;
         internal byte? PrecisionSize = null;
-        public DoubleTypeNullableConfiguration<S> HasSize(byte scale, byte precision)
+        public DoubleTypeNullableConfiguration<TContainerType> HasSize(byte scale, byte precision)
         {
             ScaleSize = scale;
             PrecisionSize = precision;
@@ -75,28 +75,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         double? AllowedMaxValue = null;
-        public DoubleTypeNullableConfiguration<S> Max(double value)
+        public DoubleTypeNullableConfiguration<TContainerType> Max(double value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         double? AllowedMinValue = null;
-        public DoubleTypeNullableConfiguration<S> Min(double value)
+        public DoubleTypeNullableConfiguration<TContainerType> Min(double value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         double[] AllowedValuesOnly = null;
-        public DoubleTypeNullableConfiguration<S> AllowedOnly(double[] values)
+        public DoubleTypeNullableConfiguration<TContainerType> AllowedOnly(double[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         double[] AllowedValuesExcept = null;
-        public DoubleTypeNullableConfiguration<S> AllowedExcept(double[] values)
+        public DoubleTypeNullableConfiguration<TContainerType> AllowedExcept(double[] values)
         {
             AllowedValuesExcept = values;
             return this;

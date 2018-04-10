@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class ShortTypeConfiguration<S> : PrimitiveTypeConfiguration<S, short> where S : class
+    public sealed class ShortTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, short> where TContainerType : class
     {
-        public ShortTypeConfiguration(Expression<Func<S, short>> memberSelector):base(memberSelector)
+        public ShortTypeConfiguration(Expression<Func<TContainerType, short>> memberSelector):base(memberSelector)
         {
         }
 
@@ -40,13 +40,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public ShortTypeConfiguration<S> Out()
+        public ShortTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public ShortTypeConfiguration<S> HasParameterName(string name)
+        public ShortTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -54,28 +54,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         short? AllowedMaxValue = null;        
-        public ShortTypeConfiguration<S> Max(short value)
+        public ShortTypeConfiguration<TContainerType> Max(short value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         short? AllowedMinValue = null;
-        public ShortTypeConfiguration<S> Min(short value)
+        public ShortTypeConfiguration<TContainerType> Min(short value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         short[] AllowedValuesOnly = null;
-        public ShortTypeConfiguration<S> AllowedOnly(short[] values)
+        public ShortTypeConfiguration<TContainerType> AllowedOnly(short[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         short[] AllowedValuesExcept = null;        
-        public ShortTypeConfiguration<S> AllowedExcept(short[] values)
+        public ShortTypeConfiguration<TContainerType> AllowedExcept(short[] values)
         {
             AllowedValuesExcept = values;
             return this;

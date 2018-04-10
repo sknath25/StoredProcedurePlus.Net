@@ -6,7 +6,7 @@ namespace StoredProcedurePlus.Net.ErrorManagers
     {
         internal static void CannotCreateInstanceOfTypeNull()
         {
-            throw new NullReferenceException("Cannot create instace from null type");
+            throw new NullReferenceException("Cannot create instance from null type");
         }
     }
 }

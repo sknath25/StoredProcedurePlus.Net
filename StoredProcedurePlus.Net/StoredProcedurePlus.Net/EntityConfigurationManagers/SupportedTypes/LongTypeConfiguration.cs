@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class LongTypeConfiguration<S> : PrimitiveTypeConfiguration<S, long> where S : class
+    public sealed class LongTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, long> where TContainerType : class
     {
-        public LongTypeConfiguration(Expression<Func<S, long>> memberSelector):base(memberSelector)
+        public LongTypeConfiguration(Expression<Func<TContainerType, long>> memberSelector):base(memberSelector)
         {
         }
 
@@ -40,13 +40,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public LongTypeConfiguration<S> Out()
+        public LongTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public LongTypeConfiguration<S> HasParameterName(string name)
+        public LongTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -54,28 +54,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         long? AllowedMaxValue = null;        
-        public LongTypeConfiguration<S> Max(long value)
+        public LongTypeConfiguration<TContainerType> Max(long value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         long? AllowedMinValue = null;
-        public LongTypeConfiguration<S> Min(long value)
+        public LongTypeConfiguration<TContainerType> Min(long value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         long[] AllowedValuesOnly = null;
-        public LongTypeConfiguration<S> AllowedOnly(long[] values)
+        public LongTypeConfiguration<TContainerType> AllowedOnly(long[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         long[] AllowedValuesExcept = null;        
-        public LongTypeConfiguration<S> AllowedExcept(long[] values)
+        public LongTypeConfiguration<TContainerType> AllowedExcept(long[] values)
         {
             AllowedValuesExcept = values;
             return this;

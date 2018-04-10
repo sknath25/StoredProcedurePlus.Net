@@ -4,32 +4,32 @@ using System.Reflection;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 {
-    internal class EntityAccessor<S> where S : class
+    internal class EntityAccessor<TContainerType> where TContainerType : class
     {
-        internal static EntityAccessor<S, T> Create<T>(Expression<Func<S, T>> memberSelector)
+        internal static EntityAccessor<TContainerType, TPropertyType> Create<TPropertyType>(Expression<Func<TContainerType, TPropertyType>> memberSelector)
         {
-            return new GetterSetter<T>(memberSelector);
+            return new GetterSetter<TPropertyType>(memberSelector);
         }
 
-        class GetterSetter<T> : EntityAccessor<S, T>
+        class GetterSetter<TPropertyType> : EntityAccessor<TContainerType, TPropertyType>
         {
-            public GetterSetter(Expression<Func<S, T>> memberSelector) : base(memberSelector)
+            public GetterSetter(Expression<Func<TContainerType, TPropertyType>> memberSelector) : base(memberSelector)
             {
                 
             }
         }
     }
 
-    internal class EntityAccessor<S, T> : EntityAccessor<S> where S : class
+    internal class EntityAccessor<TContainerType, TPropertyType> : EntityAccessor<TContainerType> where TContainerType : class
     {
-        readonly Func<S, T> Getter;
-        readonly Action<S, T> Setter;
+        readonly Func<TContainerType, TPropertyType> Getter;
+        readonly Action<TContainerType, TPropertyType> Setter;
         internal Type DataType { get; private set; }
         internal string PropertyName { get; private set; }
         public bool IsReadable { get; private set; }
         public bool IsWritable { get; private set; }
 
-        internal T this[S instance]
+        internal TPropertyType this[TContainerType instance]
         {
             get
             {
@@ -47,7 +47,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
             }
         }
 
-        protected EntityAccessor(Expression<Func<S, T>> memberSelector) //SUMAN: This shouldn't be accessed by outsider.
+        protected EntityAccessor(Expression<Func<TContainerType, TPropertyType>> memberSelector) //SUMAN: This shouldn't be accessed by outsider.
         {
             if (memberSelector.Body is MemberExpression me)
             {
@@ -62,28 +62,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
             }
         }
 
-        void AssignGetDelegate(bool assignable, ref Func<S, T> assignee, MethodInfo assignor)
+        static void AssignGetDelegate(bool assignable, ref Func<TContainerType, TPropertyType> assignee, MethodInfo assignor)
         {
             if (assignable)
             {
-                var target = Expression.Parameter(typeof(S));
+                var target = Expression.Parameter(typeof(TContainerType));
                 var body = Expression.Call(target, assignor);
 
-                assignee = Expression.Lambda<Func<S, T>>(body, target)
+                assignee = Expression.Lambda<Func<TContainerType, TPropertyType>>(body, target)
                     .Compile();
             }
         }
 
-        void AssignSetDelegate(bool assignable, ref Action<S, T> assignee, MethodInfo assignor)
+        static void AssignSetDelegate(bool assignable, ref Action<TContainerType, TPropertyType> assignee, MethodInfo assignor)
         {
             if (assignable)
             {               
-                var target = Expression.Parameter(typeof(S));
-                var value = Expression.Parameter(typeof(T));
+                var target = Expression.Parameter(typeof(TContainerType));
+                var value = Expression.Parameter(typeof(TPropertyType));
                 var body = Expression.Call(target, assignor,
-                    Expression.Convert(value, typeof(T)));
+                    Expression.Convert(value, typeof(TPropertyType)));
 
-                assignee = Expression.Lambda<Action<S, T>>(body, target, value)
+                assignee = Expression.Lambda<Action<TContainerType, TPropertyType>>(body, target, value)
                     .Compile();
             }
         }

@@ -24,14 +24,14 @@ namespace StoredProcedurePlus.Net
             ConnectionState.Broken;
 
         ConnectionFactory ConnectionFactory;
-        readonly ConnectionScopeTypes ScopeType;
+        readonly ConnectionScopeType ScopeType;
 
         public ConnectionScope()
         {
-            ScopeType = ConnectionScopeTypes.CloseAfterEachExecution;
+            ScopeType = ConnectionScopeType.CloseAfterEachExecution;
         }
 
-        public ConnectionScope(ConnectionScopeTypes type)
+        public ConnectionScope(ConnectionScopeType type)
         {
             ScopeType = type;
         }
@@ -54,11 +54,11 @@ namespace StoredProcedurePlus.Net
         {
             if (Connection == null) return;
 
-            if (Connection.State == ReadyToClose && ScopeType == ConnectionScopeTypes.CloseAfterEachExecution)
+            if (Connection.State == ReadyToClose && ScopeType == ConnectionScopeType.CloseAfterEachExecution)
             {
                 Connection.Close();
             }
-            else if(ScopeType == ConnectionScopeTypes.DisposeAfterEachExecution)
+            else if(ScopeType == ConnectionScopeType.DisposeAfterEachExecution)
             {
                 Connection.Dispose();
                 Connection = null;
@@ -97,7 +97,7 @@ namespace StoredProcedurePlus.Net
         }
     }
 
-    public enum ConnectionScopeTypes
+    public enum ConnectionScopeType
     {
         DisposeAfterEachExecution,
         CloseAfterEachExecution,

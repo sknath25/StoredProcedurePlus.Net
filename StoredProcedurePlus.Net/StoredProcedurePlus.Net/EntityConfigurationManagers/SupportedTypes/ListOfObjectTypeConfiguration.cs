@@ -9,7 +9,7 @@ using System.Reflection;
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
 
-    internal class ListObjectTypeConfiguration<S> : PropertyConfiguration where S : class
+    internal class ListObjectTypeConfiguration<TContainerType> : PropertyConfiguration where TContainerType : class
     {
         MethodInfo mi = null;
 
@@ -30,7 +30,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             }
         }
 
-        internal TVPParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector) where T : class
+        internal TvpParameterInputEntityConfiguration<TPropertyType> AsTable<TPropertyType>(Expression<Func<TContainerType, List<TPropertyType>>> memberSelector) where TPropertyType : class
         {
             if (memberSelector.Body is MemberExpression me)
             {
@@ -38,7 +38,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 DataType = prop.PropertyType;
                 PropertyName = prop.Name;
                 ParameterName = prop.Name;
-                TableTypeName = typeof(T).Name;
+                TableTypeName = typeof(TPropertyType).Name;
                 
                 if (prop.CanRead)
                 {
@@ -50,19 +50,19 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
                 }
             }
 
-            TVPParameterInputEntityConfiguration<T> pc = new TVPParameterInputEntityConfiguration<T>();
+            TvpParameterInputEntityConfiguration<TPropertyType> pc = new TvpParameterInputEntityConfiguration<TPropertyType>();
             ChildEntityConfiguration = pc;
             return pc;
         }
 
-        internal TVPParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename) where T : class
+        internal TvpParameterInputEntityConfiguration<TPropertyType> AsTable<TPropertyType>(Expression<Func<TContainerType, List<TPropertyType>>> memberSelector, string typename) where TPropertyType : class
         {
             var x = AsTable(memberSelector);
             TableTypeName = typename;
             return x;
         }
 
-        internal TVPParameterInputEntityConfiguration<T> AsTable<T>(Expression<Func<S, List<T>>> memberSelector, string typename, string parametername) where T : class
+        internal TvpParameterInputEntityConfiguration<TPropertyType> AsTable<TPropertyType>(Expression<Func<TContainerType, List<TPropertyType>>> memberSelector, string typename, string parametername) where TPropertyType : class
         {
             var x = AsTable(memberSelector);
             TableTypeName = typename;
@@ -74,8 +74,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
         {
             get
             {
-                object Result = mi.Invoke(instance, null);
-                return Result;
+                return mi.Invoke(instance, null);
             }
         }
     }

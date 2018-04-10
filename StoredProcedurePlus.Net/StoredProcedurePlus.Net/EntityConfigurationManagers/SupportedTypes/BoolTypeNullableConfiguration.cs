@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class BoolTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, bool?> where S : class
+    public sealed class BoolTypeNullableConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, bool?> where TContainerType : class
     {
-        public BoolTypeNullableConfiguration(Expression<Func<S, bool?>> memberSelector):base(memberSelector)
+        public BoolTypeNullableConfiguration(Expression<Func<TContainerType, bool?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -35,27 +35,27 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public BoolTypeNullableConfiguration<S> Out()
+        public BoolTypeNullableConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public BoolTypeNullableConfiguration<S> HasParameterName(string name)
+        public BoolTypeNullableConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
         internal bool IsRequired { get; private set; }
-        public BoolTypeNullableConfiguration<S> Required()
+        public BoolTypeNullableConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
         }
 
         bool AllowedValuesOnly = true;
-        public BoolTypeNullableConfiguration<S> AllowedOnly(bool values)
+        public BoolTypeNullableConfiguration<TContainerType> AllowedOnly(bool values)
         {
             AllowedValuesOnly = values;
             return this;

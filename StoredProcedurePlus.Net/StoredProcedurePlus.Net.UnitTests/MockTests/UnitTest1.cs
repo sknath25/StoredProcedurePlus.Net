@@ -15,7 +15,7 @@ namespace StoredProcedurePlus.Net.UnitTests.MockTests
         public void MockTestSpp()
         {
             MockSp sp = new MockSp();
-            sp.OnMockExecution += Sp_OnMockExecution;
+            sp.OnMockExecutionEventHandler += Sp_OnMockExecution;
             AllTypeParams p = new AllTypeParams() { Id = 1, IsEnabled = true };
             p.Childs = new System.Collections.Generic.List<AllTypeChildParams>();
             p.Childs.Add(new AllTypeChildParams() { Id = 11 });
@@ -43,7 +43,7 @@ namespace StoredProcedurePlus.Net.UnitTests.MockTests
         public void N2LayerMockTest()
         {
             UniversityMockSp sp = new UniversityMockSp();
-            sp.OnMockExecution += Sp_OnMockExecution1;
+            sp.OnMockExecutionEventHandler += Sp_OnMockExecution1;
             University pu = new University();
             pu.UniversityType = 3;
             pu.UniversityName = "UNI 1";

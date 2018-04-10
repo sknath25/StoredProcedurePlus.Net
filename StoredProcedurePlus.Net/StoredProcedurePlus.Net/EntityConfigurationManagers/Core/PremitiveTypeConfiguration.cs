@@ -4,23 +4,23 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 {
-    public abstract class PrimitiveTypeConfiguration<S,T>: PropertyConfiguration where S : class
+    public abstract class PrimitiveTypeConfiguration<TContainerType,TPropertyType>: PropertyConfiguration where TContainerType : class
     {
-        readonly EntityAccessor<S, T> Accessor;
+        readonly EntityAccessor<TContainerType, TPropertyType> Accessor;
 
-        protected PrimitiveTypeConfiguration(Expression<Func<S, T>> memberSelector):base()
+        protected PrimitiveTypeConfiguration(Expression<Func<TContainerType, TPropertyType>> memberSelector):base()
         {
-            Accessor = EntityAccessor<S>.Create(memberSelector);
+            Accessor = EntityAccessor<TContainerType>.Create(memberSelector);
             PropertyName = Accessor.PropertyName;
             ParameterName = PropertyName;
             DataType = Accessor.DataType;
         }
 
-        public T this[S instance]
+        public TPropertyType this[TContainerType instance]
         {
             get
             {
-                T Result = Validate(Accessor[instance]);
+                TPropertyType Result = Validate(Accessor[instance]);
                 return Result;
             }
             set
@@ -29,7 +29,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
             }
         }
 
-        protected virtual T Validate(T value)
+        protected virtual TPropertyType Validate(TPropertyType value)
         {
             return value;
         }

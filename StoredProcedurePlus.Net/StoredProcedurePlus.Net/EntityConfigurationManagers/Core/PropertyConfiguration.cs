@@ -38,7 +38,10 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.Core
 
         public bool Equals(PropertyConfiguration other)
         {
-            if (other.PropertyName == this.PropertyName) return true; else return false;
+            if (other.PropertyName == this.PropertyName)
+                return true;
+            else
+                return false;
         }
     }
 }

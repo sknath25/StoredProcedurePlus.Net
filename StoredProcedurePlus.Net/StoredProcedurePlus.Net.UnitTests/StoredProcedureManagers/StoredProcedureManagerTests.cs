@@ -201,7 +201,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 MobileNo2 = Hash
             };
 
-            using (ConnectionScope scope = new ConnectionScope(ConnectionScopeTypes.CloseAfterEachExecution))
+            using (ConnectionScope scope = new ConnectionScope(ConnectionScopeType.CloseAfterEachExecution))
             {
                 SpResourceSummary Sp = new SpResourceSummary();
 
@@ -248,7 +248,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 MobileNo2 = Hash
             };
 
-            using (ConnectionScope scope = new ConnectionScope(ConnectionScopeTypes.KeepOpen))
+            using (ConnectionScope scope = new ConnectionScope(ConnectionScopeType.KeepOpen))
             {
                 SpResourceSummary Sp = new SpResourceSummary();
 
@@ -295,7 +295,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 MobileNo2 = Hash
             };
 
-            using (ConnectionScope scope = new ConnectionScope(ConnectionScopeTypes.DisposeAfterEachExecution))
+            using (ConnectionScope scope = new ConnectionScope(ConnectionScopeType.DisposeAfterEachExecution))
             {
                 SpResourceSummary Sp = new SpResourceSummary();
 

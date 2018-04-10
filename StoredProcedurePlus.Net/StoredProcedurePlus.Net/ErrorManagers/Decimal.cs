@@ -20,7 +20,7 @@ namespace StoredProcedurePlus.Net.ErrorManagers
         }
         internal static void CannotSetNullToNotNullableDecimalProperty(string propertyName)
         {
-            throw new InvalidOperationException("Cannot set null value into not nullable decimal property : " + propertyName);
+            throw new InvalidOperationException("Cannot set null value into non nullable decimal property : " + propertyName);
         }
 
         internal static void ValueNotAllowedError(string propertyName, decimal value, decimal[] allowedValuesOnly)

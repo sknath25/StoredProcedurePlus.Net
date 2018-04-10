@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class FloatTypeConfiguration<S> : PrimitiveTypeConfiguration<S, float> where S : class
+    public sealed class FloatTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, float> where TContainerType : class
     {
-        public FloatTypeConfiguration(Expression<Func<S, float>> memberSelector):base(memberSelector)
+        public FloatTypeConfiguration(Expression<Func<TContainerType, float>> memberSelector):base(memberSelector)
         {
         }
 
@@ -40,13 +40,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public FloatTypeConfiguration<S> Out()
+        public FloatTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public FloatTypeConfiguration<S> HasParameterName(string name)
+        public FloatTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -55,7 +55,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         internal byte? ScaleSize = null;
         internal byte? PrecisionSize = null;
-        public FloatTypeConfiguration<S> HasSize(byte scale, byte precision)
+        public FloatTypeConfiguration<TContainerType> HasSize(byte scale, byte precision)
         {
             ScaleSize = scale;
             PrecisionSize = precision;
@@ -64,28 +64,28 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         float? AllowedMaxValue = null;
-        public FloatTypeConfiguration<S> Max(float value)
+        public FloatTypeConfiguration<TContainerType> Max(float value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         float? AllowedMinValue = null;
-        public FloatTypeConfiguration<S> Min(float value)
+        public FloatTypeConfiguration<TContainerType> Min(float value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         float[] AllowedValuesOnly = null;
-        public FloatTypeConfiguration<S> AllowedOnly(float[] values)
+        public FloatTypeConfiguration<TContainerType> AllowedOnly(float[] values)
         {
             AllowedValuesOnly = values;
             return this;
         }
 
         float[] AllowedValuesExcept = null;
-        public FloatTypeConfiguration<S> AllowedExcept(float[] values)
+        public FloatTypeConfiguration<TContainerType> AllowedExcept(float[] values)
         {
             AllowedValuesExcept = values;
             return this;

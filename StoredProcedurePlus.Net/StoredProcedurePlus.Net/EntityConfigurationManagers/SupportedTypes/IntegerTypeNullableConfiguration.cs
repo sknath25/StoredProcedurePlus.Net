@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class IntegerTypeNullableConfiguration<S> : PrimitiveTypeConfiguration<S, int?> where S : class
+    public sealed class IntegerTypeNullableConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, int?> where TContainerType : class
     {
-        public IntegerTypeNullableConfiguration(Expression<Func<S, int?>> memberSelector):base(memberSelector)
+        public IntegerTypeNullableConfiguration(Expression<Func<TContainerType, int?>> memberSelector):base(memberSelector)
         {
         }
 
@@ -45,20 +45,20 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public IntegerTypeNullableConfiguration<S> Out()
+        public IntegerTypeNullableConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public IntegerTypeNullableConfiguration<S> HasParameterName(string name)
+        public IntegerTypeNullableConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
         internal bool IsRequired { get; private set; }
-        public IntegerTypeNullableConfiguration<S> Required()
+        public IntegerTypeNullableConfiguration<TContainerType> Required()
         {
             this.IsRequired = true;
             return this;
@@ -66,21 +66,21 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         int? AllowedMaxValue = null;        
-        public IntegerTypeNullableConfiguration<S> Max(int value)
+        public IntegerTypeNullableConfiguration<TContainerType> Max(int value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         int? AllowedMinValue = null;
-        public IntegerTypeNullableConfiguration<S> Min(int value)
+        public IntegerTypeNullableConfiguration<TContainerType> Min(int value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         int[] AllowedValuesOnly = null;
-        public IntegerTypeNullableConfiguration<S> AllowedOnly(int[] values)
+        public IntegerTypeNullableConfiguration<TContainerType> AllowedOnly(int[] values)
         {
             AllowedValuesOnly = values;
             return this;
@@ -88,7 +88,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         int[] AllowedValuesExcept = null;        
 
-        public IntegerTypeNullableConfiguration<S> AllowedExcept(int[] values)
+        public IntegerTypeNullableConfiguration<TContainerType> AllowedExcept(int[] values)
         {
             AllowedValuesExcept = values;
             return this;

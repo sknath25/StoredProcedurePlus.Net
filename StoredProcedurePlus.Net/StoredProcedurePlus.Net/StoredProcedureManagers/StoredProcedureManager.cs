@@ -19,18 +19,18 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         public int Result { get; set; }
     }
 
-    public delegate void MockExecutionHandler(object sender, MockEventArgs e);
+    public delegate void EventHandler<MockEventArgs>(object sender, MockEventArgs e);
 
     /// <summary>
     /// The New Stored procedure class decorated with two generic types. 1st one for the Stored procedure class and 2nd one for the parameter type.
     /// </summary>
-    /// <typeparam name="D">The derive class type</typeparam>
-    /// <typeparam name="S">The paraneter class type</typeparam>
-    public abstract class StoredProcedureManager<D, S> where S : class, new() where D : StoredProcedureManager<D, S>
+    /// <typeparam name="TSelf">The derive class type</typeparam>
+    /// <typeparam name="TParameterContainerType">The paraneter class type</typeparam>
+    public abstract class StoredProcedureManager<TSelf, TParameterContainerType> where TParameterContainerType : class, new() where TSelf : StoredProcedureManager<TSelf, TParameterContainerType>
     {
         static object Locker = new object();
 
-        readonly static ProcedureConfiguration<S> Configuration = new ProcedureConfiguration<S>();
+        readonly static ProcedureConfiguration<TParameterContainerType> Configuration = new ProcedureConfiguration<TParameterContainerType>();
 
         List<List<object>> ResultSet = null;
 
@@ -64,18 +64,18 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         }
 
-        protected abstract void Setup(ProcedureConfiguration<S> configuration);
+        protected abstract void Setup(ProcedureConfiguration<TParameterContainerType> configuration);
 
         #endregion
 
         #region Public Events 
-        public event MockExecutionHandler OnMockExecution = null;
+        public event EventHandler<MockEventArgs> OnMockExecutionEventHandler = null;
         #endregion
 
         #region Public Methods
 
         [SuppressMessage("Microsoft.Security", "CA2100", Justification = "The command text is not user given")]
-        public int Execute(S input, ConnectionScope scope)
+        public int Execute(TParameterContainerType input, ConnectionScope scope)
         {
             this.Initialize();
 
@@ -122,10 +122,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                             if (Configuration.Mock)
                             {
-                                if (OnMockExecution != null)
+                                if (OnMockExecutionEventHandler != null)
                                 {
                                     MockEventArgs Args = new MockEventArgs(adapter);
-                                    OnMockExecution?.Invoke(this, Args);
+                                    OnMockExecutionEventHandler?.Invoke(this, Args);
                                     Result = Args.Result;
                                 }
                             }
@@ -176,10 +176,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         {
                             if (Configuration.Mock)
                             {
-                                if (OnMockExecution != null)
+                                if (OnMockExecutionEventHandler != null)
                                 {
                                     MockEventArgs Args = new MockEventArgs(adapter);
-                                    OnMockExecution?.Invoke(this, Args);
+                                    OnMockExecutionEventHandler?.Invoke(this, Args);
                                     Result = Args.Result;
                                 }
                             }
@@ -223,10 +223,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                             if (Configuration.Mock)
                             {
-                                if (OnMockExecution != null)
+                                if (OnMockExecutionEventHandler != null)
                                 {
                                     MockEventArgs Args = new MockEventArgs(adapter);
-                                    OnMockExecution?.Invoke(this, Args);
+                                    OnMockExecutionEventHandler?.Invoke(this, Args);
                                     Result = Args.Result;
                                 }
                             }
@@ -277,10 +277,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         {
                             if (Configuration.Mock)
                             {
-                                if (OnMockExecution != null)
+                                if (OnMockExecutionEventHandler != null)
                                 {
                                     MockEventArgs Args = new MockEventArgs(adapter);
-                                    OnMockExecution?.Invoke(this, Args);
+                                    OnMockExecutionEventHandler?.Invoke(this, Args);
                                     Result = Args.Result;
                                 }
                             }
@@ -310,7 +310,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             return Result;
         }
 
-        public int Execute(S input)
+        public int Execute(TParameterContainerType input)
         {
             return this.Execute(input, null);
         }
@@ -377,7 +377,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         #endregion
 
         #region Public Events 
-        public event MockExecutionHandler OnMockExecution = null;
+        public event EventHandler<MockEventArgs> OnMockExecution = null;
         #endregion
 
         #region Public Methods
@@ -402,7 +402,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     Command.CommandText = this.GetType().Name;
                 }
 
-                CommandBehavior Behavior = CommandBehavior.Default;
+                //CommandBehavior Behavior = CommandBehavior.Default;
 
                 if (scope == null)
                 {
@@ -443,7 +443,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                 if (Command.Connection != null)
                                 {
-                                    using (IDataReader DataReader = Command.ExecuteReader(Behavior))
+                                    using (IDataReader DataReader = Command.ExecuteReader())
                                     {
                                         do
                                         {
@@ -544,7 +544,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
                                 if (Command.Connection != null)
                                 {
-                                    using (IDataReader DataReader = Command.ExecuteReader(Behavior))
+                                    using (IDataReader DataReader = Command.ExecuteReader())
                                     {
                                         do
                                         {

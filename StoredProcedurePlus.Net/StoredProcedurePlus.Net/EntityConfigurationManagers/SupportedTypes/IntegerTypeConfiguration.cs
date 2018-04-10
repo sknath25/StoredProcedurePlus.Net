@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class IntegerTypeConfiguration<S> : PrimitiveTypeConfiguration<S, int> where S : class
+    public sealed class IntegerTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, int> where TContainerType : class
     {
-        public IntegerTypeConfiguration(Expression<Func<S, int>> memberSelector):base(memberSelector)
+        public IntegerTypeConfiguration(Expression<Func<TContainerType, int>> memberSelector):base(memberSelector)
         {
         }
 
@@ -40,13 +40,13 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public IntegerTypeConfiguration<S> Out()
+        public IntegerTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public IntegerTypeConfiguration<S> HasParameterName(string name)
+        public IntegerTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
@@ -54,21 +54,21 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
 
         int? AllowedMaxValue = null;        
-        public IntegerTypeConfiguration<S> Max(int value)
+        public IntegerTypeConfiguration<TContainerType> Max(int value)
         {
             AllowedMaxValue = value;
             return this;
         }
 
         int? AllowedMinValue = null;
-        public IntegerTypeConfiguration<S> Min(int value)
+        public IntegerTypeConfiguration<TContainerType> Min(int value)
         {
             AllowedMinValue = value;
             return this;
         }
 
         int[] AllowedValuesOnly = null;
-        public IntegerTypeConfiguration<S> AllowedOnly(int[] values)
+        public IntegerTypeConfiguration<TContainerType> AllowedOnly(int[] values)
         {
             AllowedValuesOnly = values;
             return this;
@@ -76,7 +76,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         int[] AllowedValuesExcept = null;        
 
-        public IntegerTypeConfiguration<S> AllowedExcept(int[] values)
+        public IntegerTypeConfiguration<TContainerType> AllowedExcept(int[] values)
         {
             AllowedValuesExcept = values;
             return this;

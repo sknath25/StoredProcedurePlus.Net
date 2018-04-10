@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 
 namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 {
-    public sealed class BoolTypeConfiguration<S> : PrimitiveTypeConfiguration<S, bool> where S : class
+    public sealed class BoolTypeConfiguration<TContainerType> : PrimitiveTypeConfiguration<TContainerType, bool> where TContainerType : class
     {
-        public BoolTypeConfiguration(Expression<Func<S, bool>> memberSelector):base(memberSelector)
+        public BoolTypeConfiguration(Expression<Func<TContainerType, bool>> memberSelector):base(memberSelector)
         {
         }
 
@@ -30,20 +30,20 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return base.Validate(value);
         }
 
-        public BoolTypeConfiguration<S> Out()
+        public BoolTypeConfiguration<TContainerType> Out()
         {
             this.IsOut = true;
             return this;
         }
 
-        public BoolTypeConfiguration<S> HasParameterName(string name)
+        public BoolTypeConfiguration<TContainerType> HasParameterName(string name)
         {
             this.ParameterName = name;
             return this;
         }
 
         bool AllowedValuesOnly = true;
-        public BoolTypeConfiguration<S> AllowedOnly(bool values)
+        public BoolTypeConfiguration<TContainerType> AllowedOnly(bool values)
         {
             AllowedValuesOnly = values;
             return this;
