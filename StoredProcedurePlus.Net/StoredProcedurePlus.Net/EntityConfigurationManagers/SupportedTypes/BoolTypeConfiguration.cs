@@ -22,7 +22,7 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
 
         protected override bool Validate(bool value)
         {
-            if (AllowedValuesOnly != value)
+            if (_IsAllowedSet && AllowedValuesOnly != value)
             {
                 Error.ValueNotAllowedError(PropertyName, value, AllowedValuesOnly);
             }
@@ -42,9 +42,11 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers.SupportedTypes
             return this;
         }
 
-        bool AllowedValuesOnly = true;
+        bool _IsAllowedSet = false;
+        bool AllowedValuesOnly = false;
         public BoolTypeConfiguration<TContainerType> AllowedOnly(bool values)
         {
+            _IsAllowedSet = true;
             AllowedValuesOnly = values;
             return this;
         }

@@ -49,13 +49,46 @@ namespace StoredProcedurePlus.Net.UnitTestEntities
         public string StudentAddress { get; set; }
     }
 
+ 
     public class SP_Insert_Event_Workflow_ActivityTransactionParamters
     {
-        public List<EventActivityTable> EventActivityDetail { get; set; }
+        /*
+            @EventName  varchar(200)
+           ,@EventDescription  nvarchar(500)
+           ,@HasVoting bit
+		   ,@HasAttachment bit
+		   ,@HasWorkflow bit
+		   ,@WorkflowId int
+           ,@CategoryId int
+           ,@LocationId int = null
+           ,@DepartmentId int = null
+           ,@SectionId int = null
+           ,@VotingStartDate datetime
+           ,@VotingEndDate datetime
+           ,@RefEventId int = NULL
+           ,@CreatedBy int
+		   ,@EventActivityDetail EventActivityInsertTable Readonly
+		   ,@OutStatusID int OUT 
+        */
+        public string EventName { get; set; }
+        public string EventDescription { get; set; }
+        public bool HasVoting { get; set; }
+        public bool HasAttachment { get; set; }
+        public bool HasWorkflow { get; set; }
+        public int WorkflowId { get; set; }
+        public int CategoryId { get; set; }
+        public int? LocationId { get; set; }
+        public int? DepartmentId { get; set; }
+        public int? SectionId { get; set; }
+        public DateTime? VotingStartDate { get; set; }
+        public DateTime? VotingEndDate { get; set; }
+        public int? RefEventId { get; set; }
+        public int CreatedBy { get; set; }
+        public List<EventActivityInsertTable> EventActivityDetail { get; set; }
         public int OutStatusID { get; set; }
     }
 
-    public class EventActivityTable
+    public class EventActivityInsertTable
     {
         public int? MasterWorkflowId { get; set; }
         public int? EventId { get; set; }
@@ -63,6 +96,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities
         public string ModifiedDescription { get; set; }
         public int? CustomSequence { get; set; }
         public int? AssignedToGroupId { get; set; }
+        public string AssignedToEmailId { get; set; }
         public DateTime? ActivityStartDate { get; set; }
         public DateTime? ActivityEndDate { get; set; }
         public int? AssignmentTypeId { get; set; }
@@ -73,4 +107,6 @@ namespace StoredProcedurePlus.Net.UnitTestEntities
         public DateTime? UploadDate { get; set; }
         public int? AttachedBy { get; set; }
     }
+
+ 
 }

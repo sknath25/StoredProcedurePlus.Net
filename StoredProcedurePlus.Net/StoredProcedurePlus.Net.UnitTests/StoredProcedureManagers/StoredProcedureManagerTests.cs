@@ -34,9 +34,12 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
         public void SP_Insert_Event_Workflow_ActivityTransaction_TEST()
         {
             SP_Insert_Event_Workflow_ActivityTransactionParamters p = new SP_Insert_Event_Workflow_ActivityTransactionParamters();
-            p.EventActivityDetail = new List<EventActivityTable>();
+            p.EventActivityDetail = new List<EventActivityInsertTable>();
+            p.CategoryId = 1;
+            p.WorkflowId = 1;
+            p.CreatedBy = 1;
 
-            p.EventActivityDetail.Add(new EventActivityTable()
+            p.EventActivityDetail.Add(new EventActivityInsertTable()
             {
                 AssignedToGroupId = 1,
                 AttachedBy = 1,
@@ -48,7 +51,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers.UnitTests
                 AttachmentContent = new byte[10]
             });
 
-            p.EventActivityDetail.Add(new EventActivityTable()
+            p.EventActivityDetail.Add(new EventActivityInsertTable()
             {
                 AssignedToGroupId = 1,
                 AttachedBy = 1,

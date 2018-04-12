@@ -28,7 +28,7 @@ namespace StoredProcedurePlus.Net
 
         public ConnectionScope()
         {
-            ScopeType = ConnectionScopeType.CloseAfterEachExecution;
+            ScopeType = ConnectionScopeType.DisposeAfterEachExecution;
         }
 
         public ConnectionScope(ConnectionScopeType type)
