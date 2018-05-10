@@ -169,6 +169,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
             return (byte[])Parameters[ordinal].Item2.Item2.Value;
         }
 
+        public Guid GetGuid(int ordinal)
+        {
+            return (Guid)Parameters[ordinal].Item2.Item2.Value;
+        }
+
         #endregion
 
         #region Setters
@@ -336,6 +341,23 @@ namespace StoredProcedurePlus.Net.EntityManagers
             else
             {
                 Parameters[ordinal].Item2.Item2.Value = value;
+            }
+        }
+
+        public void SetGuid(int ordinal, Guid value)
+        {
+            Parameters[ordinal].Item2.Item2.Value = value;
+        }
+
+        public void SetGuid(int ordinal, Guid? value)
+        {
+            if (value.HasValue)
+            {
+                Parameters[ordinal].Item2.Item2.Value = value.Value;
+            }
+            else
+            {
+                Parameters[ordinal].Item2.Item2.Value = DBNull.Value;
             }
         }
 

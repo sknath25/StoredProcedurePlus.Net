@@ -21,6 +21,7 @@ namespace StoredProcedurePlus.Net.EntityManagers
         DateTime GetDate(int ordinal);
         string GetString(int ordinal);
         byte[] GetBinary(int ordinal);
+        Guid GetGuid(int ordinal);
         DataTable GetTable(int ordinal);
 
         void SetBool(int ordinal, bool value);
@@ -41,6 +42,8 @@ namespace StoredProcedurePlus.Net.EntityManagers
         void SetDateTime(int ordinal, DateTime? value);
         void SetString(int ordinal, string value);
         void SetBinary(int ordinal, byte[] value);
+        void SetGuid(int ordinal, Guid value);
+        void SetGuid(int ordinal, Guid? value);
         void SetTable(int ordinal, DataTable value, string declaredTableTypeName);               
     }
 }

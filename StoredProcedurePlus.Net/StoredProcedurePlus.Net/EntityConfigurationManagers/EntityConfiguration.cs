@@ -101,6 +101,9 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
         static readonly Type type_ndatetime = typeof(DateTime?);
         static readonly Type type_bytearray = typeof(byte[]);
         static readonly Type type_string = typeof(string);
+        static readonly Type type_guid = typeof(Guid);
+        static readonly Type type_nguid = typeof(Guid?);
+
         #endregion
 
         protected override void InitializePropertyConfigurations(bool IsIncludeUnmappedProperties)
@@ -204,6 +207,16 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         {
                             LambdaExpression l = BuildExpression(SourceType, Properties[i]);
                             Maps((Expression<Func<TContainerType, byte[]>>)l);
+                        }
+                        if (Properties[i].PropertyType == type_guid)
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<TContainerType, Guid>>)l);
+                        }
+                        if (Properties[i].PropertyType == type_nguid)
+                        {
+                            LambdaExpression l = BuildExpression(SourceType, Properties[i]);
+                            Maps((Expression<Func<TContainerType, Guid?>>)l);
                         }
                     }
                 }
@@ -495,6 +508,31 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         Configuration[Instance] = fromEntity.GetBinary(Ordinal);
                     }
                 }
+                else if (configuration.DataType == type_guid)
+                {
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+                        Error.CannotSetNullToNotNullableGuidProperty(configuration.PropertyName);
+                    }
+                    else
+                    {
+                        UniqueIdentifierTypeConfiguration<TContainerType> Configuration = configuration as UniqueIdentifierTypeConfiguration<TContainerType>;
+                        Configuration[Instance] = fromEntity.GetGuid(Ordinal);
+                    }
+                }
+                else if (configuration.DataType == type_nguid)
+                {
+                    if (fromEntity.IsDBNull(Ordinal))
+                    {
+                        UniqueIdentifierTypeNullableConfiguration<TContainerType> Configuration = configuration as UniqueIdentifierTypeNullableConfiguration<TContainerType>;
+                        Configuration[Instance] = null;
+                    }
+                    else
+                    {
+                        UniqueIdentifierTypeNullableConfiguration<TContainerType> Configuration = configuration as UniqueIdentifierTypeNullableConfiguration<TContainerType>;
+                        Configuration[Instance] = fromEntity.GetGuid(Ordinal);
+                    }
+                }
             }
         }
 
@@ -599,86 +637,105 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     VarBinaryTypeConfiguration<TContainerType> Configuration = configuration as VarBinaryTypeConfiguration<TContainerType>;
                     toEntity.SetBinary(Ordinal, Configuration[Instance]);
                 }
+                else if (configuration.DataType == type_guid)
+                {
+                    UniqueIdentifierTypeConfiguration<TContainerType> Configuration = configuration as UniqueIdentifierTypeConfiguration<TContainerType>;
+                    toEntity.SetGuid(Ordinal, Configuration[Instance]);
+                }
+                else if (configuration.DataType == type_nguid)
+                {
+                    UniqueIdentifierTypeNullableConfiguration<TContainerType> Configuration = configuration as UniqueIdentifierTypeNullableConfiguration<TContainerType>;
+                    toEntity.SetGuid(Ordinal, Configuration[Instance]);
+                }
                 else if (configuration.IsEnumerable)
                 {
                     ListObjectTypeConfiguration<TContainerType> Configuration = configuration as ListObjectTypeConfiguration<TContainerType>;
                     IList ListObbject = (IList)Configuration[Instance];
-                    DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.ChildEntityConfiguration.GetAsDbParameters();
-                    DataTable ListAsDataTable = new DataTable(Configuration.PropertyName);
-                    for (int listcounter = 0; listcounter < ListObbject.Count; listcounter++)
+                    if (ListObbject == null)
                     {
-                        if (adapter.FieldCount > 0)
+                        toEntity.SetTable(Ordinal, null, Configuration.TableTypeName);
+                    }
+                    else
+                    {
+                        DbParameterEntityAdapter adapter = (DbParameterEntityAdapter)Configuration.ChildEntityConfiguration.GetAsDbParameters();
+                        DataTable ListAsDataTable = new DataTable(Configuration.PropertyName);
+                        for (int listcounter = 0; listcounter < ListObbject.Count; listcounter++)
                         {
-                            if (listcounter == 0)
+                            if (adapter.FieldCount > 0)
                             {
-                                Configuration.ChildEntityConfiguration.Prepare(adapter);
-                                Configuration.ChildEntityConfiguration.Get(ListObbject[listcounter], adapter);
-
-                                for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
+                                if (listcounter == 0)
                                 {
-                                    var dtype = adapter.GetSourceType(fieldcounter);
+                                    Configuration.ChildEntityConfiguration.Prepare(adapter);
+                                    Configuration.ChildEntityConfiguration.Get(ListObbject[listcounter], adapter);
 
-                                    if (dtype == typeof(DataTable))
+                                    for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
                                     {
-                                        throw Error.NestedTypeAsDatTableError(
-                                            adapter[fieldcounter].ParameterName,
-                                            ((DataTable)adapter[fieldcounter].Value).TableName);
+                                        var dtype = adapter.GetSourceType(fieldcounter);
+
+                                        if (dtype == typeof(DataTable))
+                                        {
+                                            throw Error.NestedTypeAsDatTableError(
+                                                adapter[fieldcounter].ParameterName,
+                                                ((DataTable)adapter[fieldcounter].Value).TableName);
+                                        }
+
+                                        if (dtype == type_nbool)
+                                            dtype = type_bool;
+
+                                        if (dtype == type_nshort)
+                                            dtype = type_short;
+
+                                        if (dtype == type_nint)
+                                            dtype = type_int;
+
+                                        if (dtype == type_nlong)
+                                            dtype = type_long;
+
+                                        if (dtype == type_nfloat)
+                                            dtype = type_float;
+
+                                        if (dtype == type_ndouble)
+                                            dtype = type_double;
+
+                                        if (dtype == type_ndecimal)
+                                            dtype = type_decimal;
+
+                                        if (dtype == type_ndatetime)
+                                            dtype = type_datetime;
+
+                                        if (dtype == type_nguid)
+                                            dtype = type_guid;
+
+                                        DataColumn col = new DataColumn(adapter[fieldcounter].ParameterName, dtype);
+                                        ListAsDataTable.Columns.Add(col);
                                     }
-
-                                    if (dtype == type_nbool)
-                                        dtype = type_bool;
-
-                                    if (dtype == type_nshort)
-                                        dtype = type_short;
-
-                                    if (dtype == type_nint)
-                                        dtype = type_int;
-
-                                    if (dtype == type_nlong)
-                                        dtype = type_long;
-
-                                    if (dtype == type_nfloat)
-                                        dtype = type_float;
-
-                                    if (dtype == type_ndouble)
-                                        dtype = type_double;
-
-                                    if (dtype == type_ndecimal)
-                                        dtype = type_decimal;
-
-                                    if (dtype == type_ndatetime)
-                                        dtype = type_datetime;
-
-                                    DataColumn col = new DataColumn(adapter[fieldcounter].ParameterName, dtype);
-                                    ListAsDataTable.Columns.Add(col);
-                                }
-                            }
-                            else
-                            {
-                                Configuration.ChildEntityConfiguration.Get(ListObbject[listcounter], adapter);
-                            }
-
-                            DataRow r = ListAsDataTable.NewRow();
-
-                            for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
-                            {
-                                var name = adapter[fieldcounter].ParameterName;
-
-                                if (adapter.GetSourceType(fieldcounter) == type_bytearray)
-                                {
-                                    r[adapter[fieldcounter].ParameterName] = (byte[])adapter[fieldcounter].Value;
                                 }
                                 else
                                 {
-                                    r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;
+                                    Configuration.ChildEntityConfiguration.Get(ListObbject[listcounter], adapter);
                                 }
+
+                                DataRow r = ListAsDataTable.NewRow();
+
+                                for (int fieldcounter = 0; fieldcounter < adapter.FieldCount; fieldcounter++)
+                                {
+                                    var name = adapter[fieldcounter].ParameterName;
+
+                                    if (adapter.GetSourceType(fieldcounter) == type_bytearray)
+                                    {
+                                        r[adapter[fieldcounter].ParameterName] = (byte[])adapter[fieldcounter].Value;
+                                    }
+                                    else
+                                    {
+                                        r[adapter[fieldcounter].ParameterName] = adapter[fieldcounter].Value;
+                                    }
+                                }
+
+                                ListAsDataTable.Rows.Add(r);
                             }
-
-                            ListAsDataTable.Rows.Add(r);
                         }
+                        toEntity.SetTable(Ordinal, ListAsDataTable, Configuration.TableTypeName);
                     }
-
-                    toEntity.SetTable(Ordinal, ListAsDataTable, Configuration.TableTypeName);
                 }
             }
         }
@@ -794,6 +851,19 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
             AddMapping(Configuration);
             return Configuration;
         }
+        public UniqueIdentifierTypeConfiguration<TContainerType> Maps(Expression<Func<TContainerType, Guid>> memberSelector)
+        {
+            UniqueIdentifierTypeConfiguration<TContainerType> Configuration = new UniqueIdentifierTypeConfiguration<TContainerType>(memberSelector);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+        public UniqueIdentifierTypeNullableConfiguration<TContainerType> Maps(Expression<Func<TContainerType, Guid?>> memberSelector)
+        {
+            UniqueIdentifierTypeNullableConfiguration<TContainerType> Configuration = new UniqueIdentifierTypeNullableConfiguration<TContainerType>(memberSelector);
+            AddMapping(Configuration);
+            return Configuration;
+        }
+
         public TvpParameterInputEntityConfiguration<TPropertyType> MapAsTable<TPropertyType>(Expression<Func<TContainerType, List<TPropertyType>>> memberSelector) where TPropertyType : class
         {
             ListObjectTypeConfiguration<TContainerType> Configuration = new ListObjectTypeConfiguration<TContainerType>();

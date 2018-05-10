@@ -116,6 +116,16 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                             Configuration.Input.Get(input, adapter);
                         }
 
+                        for(int p_counter = 0; p_counter < Command.Parameters.Count; p_counter++)
+                        {
+                            SqlParameter p_parameter = (SqlParameter)Command.Parameters[p_counter];
+                            if (p_parameter.SqlDbType == SqlDbType.Structured && 
+                                (p_parameter.Value == DBNull.Value || (p_parameter.Value as DataTable).Rows.Count <= 0))
+                            {
+                                Command.Parameters.RemoveAt(p_counter);
+                            }
+                        }
+
                         if (Configuration.OutputSets.Any())
                         {
                             int ResultSetIndex = 0;
@@ -215,6 +225,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         if (adapter.FieldCount > 0)
                         {
                             Configuration.Input.Get(input, adapter);
+                        }
+
+                        for (int p_counter = 0; p_counter < Command.Parameters.Count; p_counter++)
+                        {
+                            SqlParameter p_parameter = (SqlParameter)Command.Parameters[p_counter];
+                            if (p_parameter.SqlDbType == SqlDbType.Structured && p_parameter.Value == DBNull.Value)
+                            {
+                                Command.Parameters.RemoveAt(p_counter);
+                            }
                         }
 
                         if (Configuration.OutputSets.Any())
@@ -424,6 +443,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                             Configuration.Input.Get(input, adapter);
                         }
 
+                        for (int p_counter = 0; p_counter < Command.Parameters.Count; p_counter++)
+                        {
+                            SqlParameter p_parameter = (SqlParameter)Command.Parameters[p_counter];
+                            if (p_parameter.SqlDbType == SqlDbType.Structured && p_parameter.Value == DBNull.Value)
+                            {
+                                Command.Parameters.RemoveAt(p_counter);
+                            }
+                        }
+
                         if (Configuration.OutputSets.Any())
                         {
                             int ResultSetIndex = 0;
@@ -523,6 +551,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                         if (adapter.FieldCount > 0)
                         {
                             Configuration.Input.Get(input, adapter);
+                        }
+
+                        for (int p_counter = 0; p_counter < Command.Parameters.Count; p_counter++)
+                        {
+                            SqlParameter p_parameter = (SqlParameter)Command.Parameters[p_counter];
+                            if (p_parameter.SqlDbType == SqlDbType.Structured && p_parameter.Value == DBNull.Value)
+                            {
+                                Command.Parameters.RemoveAt(p_counter);
+                            }
                         }
 
                         if (Configuration.OutputSets.Any())

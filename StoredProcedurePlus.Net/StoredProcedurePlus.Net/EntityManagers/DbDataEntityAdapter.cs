@@ -87,6 +87,11 @@ namespace StoredProcedurePlus.Net.EntityManagers
             return (byte[])Data.GetValue(ordinal);
         }
 
+        public Guid GetGuid(int ordinal)
+        {
+            return Data.GetGuid(ordinal);
+        }
+
         public DataTable GetTable(int ordinal)
         {
             throw Error.ListPropertiesAreReadOnlyError(GetName(ordinal));
@@ -186,6 +191,16 @@ namespace StoredProcedurePlus.Net.EntityManagers
         }
 
         public void SetFloat(int ordinal, float? value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetGuid(int ordinal, Guid? value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetGuid(int ordinal, Guid value)
         {
             throw new NotImplementedException();
         }
