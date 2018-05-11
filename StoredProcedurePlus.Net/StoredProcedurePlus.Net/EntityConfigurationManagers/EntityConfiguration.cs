@@ -291,7 +291,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         BoolTypeConfiguration<TContainerType> Configuration = configuration as BoolTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetBool(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetBool(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForBool(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_nbool)
@@ -304,7 +312,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         BoolTypeNullableConfiguration<TContainerType> Configuration = configuration as BoolTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetBool(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetBool(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForBool(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_short)
@@ -316,7 +332,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         ShortTypeConfiguration<TContainerType> Configuration = configuration as ShortTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetShort(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetShort(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForShort(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_nshort)
@@ -329,7 +353,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         ShortTypeNullableConfiguration<TContainerType> Configuration = configuration as ShortTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetShort(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetShort(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForShort(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_int)
@@ -341,7 +373,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         IntegerTypeConfiguration<TContainerType> Configuration = configuration as IntegerTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetInt(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetInt(Ordinal);
+                        }
+                        catch(System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForInt(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_nint)
@@ -354,7 +394,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         IntegerTypeNullableConfiguration<TContainerType> Configuration = configuration as IntegerTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetInt(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetInt(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForInt(configuration.PropertyName);
+                        }                       
                     }
                 }
                 else if (configuration.DataType == type_long)
@@ -366,7 +414,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         LongTypeConfiguration<TContainerType> Configuration = configuration as LongTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetLong(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetLong(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForLong(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_nlong)
@@ -379,7 +435,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         LongTypeNullableConfiguration<TContainerType> Configuration = configuration as LongTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetLong(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetLong(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForLong(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_float)
@@ -391,7 +455,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         FloatTypeConfiguration<TContainerType> Configuration = configuration as FloatTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetFloat(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetFloat(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForFloat(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_nfloat)
@@ -404,7 +476,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         FloatTypeNullableConfiguration<TContainerType> Configuration = configuration as FloatTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetFloat(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetFloat(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForFloat(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_double)
@@ -416,7 +496,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         DoubleTypeConfiguration<TContainerType> Configuration = configuration as DoubleTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetDouble(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetDouble(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForDouble(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_ndouble)
@@ -429,7 +517,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         DoubleTypeNullableConfiguration<TContainerType> Configuration = configuration as DoubleTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetDouble(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetDouble(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForDouble(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_decimal)
@@ -441,7 +537,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         DecimalTypeConfiguration<TContainerType> Configuration = configuration as DecimalTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetDecimal(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetDecimal(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForDecimal(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_ndecimal)
@@ -454,7 +558,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         DecimalTypeNullableConfiguration<TContainerType> Configuration = configuration as DecimalTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetDecimal(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetDecimal(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForDecimal(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_datetime)
@@ -466,7 +578,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         DateTimeTypeConfiguration<TContainerType> Configuration = configuration as DateTimeTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetDate(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetDate(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForDate(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_ndatetime)
@@ -479,7 +599,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         DateTimeTypeNullableConfiguration<TContainerType> Configuration = configuration as DateTimeTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetDate(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetDate(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForDate(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_string)
@@ -492,7 +620,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         StringTypeConfiguration<TContainerType> Configuration = configuration as StringTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetString(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetString(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.DbToPropertyCastErrorForString(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_bytearray)
@@ -505,7 +641,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         VarBinaryTypeConfiguration<TContainerType> Configuration = configuration as VarBinaryTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetBinary(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetBinary(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.CastErrorToVarBinaryForProperty(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_guid)
@@ -517,7 +661,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         UniqueIdentifierTypeConfiguration<TContainerType> Configuration = configuration as UniqueIdentifierTypeConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetGuid(Ordinal);
+                        
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetGuid(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.CastErrorToGuidForProperty(configuration.PropertyName);
+                        }
                     }
                 }
                 else if (configuration.DataType == type_nguid)
@@ -530,7 +682,15 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
                     else
                     {
                         UniqueIdentifierTypeNullableConfiguration<TContainerType> Configuration = configuration as UniqueIdentifierTypeNullableConfiguration<TContainerType>;
-                        Configuration[Instance] = fromEntity.GetGuid(Ordinal);
+
+                        try
+                        {
+                            Configuration[Instance] = fromEntity.GetGuid(Ordinal);
+                        }
+                        catch (System.InvalidCastException)
+                        {
+                            Error.CastErrorToGuidForProperty(configuration.PropertyName);
+                        }
                     }
                 }
             }

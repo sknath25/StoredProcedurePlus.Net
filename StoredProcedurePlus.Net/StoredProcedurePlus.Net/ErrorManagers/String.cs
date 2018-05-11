@@ -66,5 +66,60 @@ namespace StoredProcedurePlus.Net.ErrorManagers
                 + ", against the pattern : "
                 + patternName);
         }
+
+        internal static void DbToPropertyCastErrorForString(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to string property " + propertyName);
+        }
+
+        internal static void DbToPropertyCastErrorForBool(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to boolean property " + propertyName);
+        }
+
+        internal static void DbToPropertyCastErrorForShort(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to short property " + propertyName);
+        }
+
+        internal static void DbToPropertyCastErrorForInt(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to integer property " + propertyName);
+        }
+
+        internal static void DbToPropertyCastErrorForLong(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to long integer property " + propertyName);
+        }
+
+        internal static void DbToPropertyCastErrorForFloat(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to float property " + propertyName);
+        }
+
+        internal static void DbToPropertyCastErrorForDouble(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to double property " + propertyName);
+        }
+
+        internal static void DbToPropertyCastErrorForDecimal(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to decimal property " + propertyName);
+        }
+
+        internal static void DbToPropertyCastErrorForDate(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to date property " + propertyName);
+        }
+
+        internal static void CastErrorToVarBinaryForProperty(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to var binary property " + propertyName);
+        }
+
+        internal static void CastErrorToGuidForProperty(string propertyName)
+        {
+            throw new InvalidOperationException("Conversipn failed while setting database value to GUID property " + propertyName);
+        }
     }
 }

@@ -84,5 +84,21 @@ namespace StoredProcedurePlus.Net.UnitTests.RealSituationTests
 
             Assert.IsTrue(Items != null && Items.Count > 0);
         }
+
+        [TestMethod]
+        public void Sp_campaignListTest()
+        {
+            sp_campaign_select_paramters p = new sp_campaign_select_paramters()
+            {
+                PageNo = 0,
+                RecordPerPage = 100,
+                CampaignNameContains = "Test"
+            };
+
+            sp_campaign_select sp = new sp_campaign_select();
+            sp.Execute(p);
+            List<sp_campaign_select_result_type> rt = sp.GetResult<sp_campaign_select_result_type>().ToList();
+        }
+
     }
 }

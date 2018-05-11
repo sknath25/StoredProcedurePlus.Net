@@ -44,4 +44,36 @@ namespace StoredProcedurePlus.Net.UnitTests.RealSituationTests
             //resultconfig.Maps(v => v.CategoryName).Trim();
         }
     }
+
+
+    public class sp_campaign_select_paramters
+    {
+        public int? PageNo { get; set; }
+        public int? RecordPerPage { get; set; }
+        public string CampaignNameContains { get; set; }
+    }
+
+    public class sp_campaign_select_result_type
+    {
+        public long RecordIndex { get; set; }
+        public int? ParentCampaignId { get; set; }
+        public string ParentCampaignName { get; set; }
+        public int CampaignId { get; set; }
+        public string CampaignName { get; set; }
+        public string CampaignDesc { get; set; }
+        public string CampaignStatus { get; set; }
+        public int TotalEvents { get; set; }
+        public DateTime? EventsStartDate { get; set; }
+        public DateTime? EventsEndDate { get; set; }
+    }
+
+    public class sp_campaign_select : StoredProcedureManager<sp_campaign_select, sp_campaign_select_paramters>
+    {
+        protected override void Setup(ProcedureConfiguration<sp_campaign_select_paramters> configuration)
+        {
+            configuration.ConnectionStringName = "OvsDb";
+            configuration.Input.Maps(v => v.CampaignNameContains).MaxLength(50).Trim();
+            var resultcampaignselect = configuration.CanReturnCollectionOf<sp_campaign_select_result_type>();
+        }
+    }
 }
