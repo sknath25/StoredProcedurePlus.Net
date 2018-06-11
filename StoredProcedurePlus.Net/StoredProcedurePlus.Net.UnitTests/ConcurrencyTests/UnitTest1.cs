@@ -24,7 +24,7 @@ namespace StoredProcedurePlus.Net.UnitTests.ConcurrencyTests
         public string View_Buy_Link { get; set; }
     }
 
-    public class spGetItems : StoredProcedureManager<spGetItemsParams>
+    public class spGetItems : StoredProcedureManager<spGetItems, spGetItemsParams>
     {
         protected override void Setup(ProcedureConfiguration<spGetItemsParams> configuration)
         {
@@ -39,7 +39,7 @@ namespace StoredProcedurePlus.Net.UnitTests.ConcurrencyTests
         public string Category_Name { get; set; }
     }
 
-    public class spGetCategory : StoredProcedureManager<spGetItemsParams>
+    public class spGetCategory : StoredProcedureManager<spGetCategory, spGetItemsParams>
     {
         protected override void Setup(ProcedureConfiguration<spGetItemsParams> configuration)
         {

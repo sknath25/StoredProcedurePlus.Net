@@ -3,7 +3,7 @@ using System;
 
 namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
 {
-    public class MyFirstStoredProcedure : StoredProcedureManager<SchoolType>
+    public class MyFirstStoredProcedure : StoredProcedureManager<MyFirstStoredProcedure, SchoolType>
     {
         protected override void Setup(ProcedureConfiguration<SchoolType> configuration)
         {

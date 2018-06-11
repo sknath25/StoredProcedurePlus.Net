@@ -2,7 +2,7 @@
 
 namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
 {
-    public class SpResourceSummaryDetails: StoredProcedureManager<ResourceSummary>
+    public class SpResourceSummaryDetails: StoredProcedureManager<SpResourceSummaryDetails, ResourceSummary>
     {
         protected override void Setup(ProcedureConfiguration<ResourceSummary> configuration)
         {

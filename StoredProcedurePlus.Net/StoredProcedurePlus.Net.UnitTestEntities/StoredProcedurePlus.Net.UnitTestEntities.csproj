@@ -45,6 +45,7 @@
     <Compile Include="ResourceSummary.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecialCaseTests.cs" />
     <Compile Include="StoredProcedures\MockSp.cs" />
     <Compile Include="StoredProcedures\MyFirstStoredPocedure.cs" />
     <Compile Include="StoredProcedures\SpResourceSummary.cs" />

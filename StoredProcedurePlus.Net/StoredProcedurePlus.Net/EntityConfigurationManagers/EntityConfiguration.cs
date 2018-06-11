@@ -258,7 +258,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         override internal void Prepare(IDataEntityAdapter record)
         {
-            OrdinalProvider = new OrdinalProxy(Configurations, record);
+            if (OrdinalProvider == null)
+            {
+                OrdinalProvider = new OrdinalProxy(Configurations, record);
+            }
         }
 
         override internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record)

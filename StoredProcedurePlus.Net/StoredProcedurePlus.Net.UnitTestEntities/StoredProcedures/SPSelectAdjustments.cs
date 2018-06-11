@@ -22,7 +22,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
         public string CLARITY { get; set; }
     }
 
-    public class SPSelectAdjustments : StoredProcedureManager<SPSelectAdjustmentsParams>
+    public class SPSelectAdjustments : StoredProcedureManager<SPSelectAdjustments, SPSelectAdjustmentsParams>
     {
         protected override void Setup(ProcedureConfiguration<SPSelectAdjustmentsParams> configuration)
         {

@@ -38,7 +38,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
         public string MyMessage { get; set; }
     }
 
-    public class SpHelloWorld : StoredProcedureManager<SpHelloWorldParams>
+    public class SpHelloWorld : StoredProcedureManager<SpHelloWorld, SpHelloWorldParams>
     {
         protected override void Setup(ProcedureConfiguration<SpHelloWorldParams> configuration)
         {
@@ -53,7 +53,7 @@ namespace StoredProcedurePlus.Net.UnitTestEntities.StoredProcedures
         public string MyMessage { get; set; }
     }
 
-    public class SpHelloWorldScalar : StoredProcedureManager<SpHelloWorldParams>
+    public class SpHelloWorldScalar : StoredProcedureManager<SpHelloWorldScalar, SpHelloWorldParams>
     {
         protected override void Setup(ProcedureConfiguration<SpHelloWorldParams> configuration)
         {
@@ -73,7 +73,7 @@ public class SpHelloWorldQueryResult
     public string Species { get; set; }
 }
 
-public class SpHelloWorldQuery : StoredProcedureManager<SpHelloWorldParams>
+public class SpHelloWorldQuery : StoredProcedureManager<SpHelloWorldQuery, SpHelloWorldParams>
 {
     protected override void Setup(ProcedureConfiguration<SpHelloWorldParams> configuration)
     {

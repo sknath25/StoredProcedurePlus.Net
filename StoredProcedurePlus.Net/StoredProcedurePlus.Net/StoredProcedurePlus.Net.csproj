@@ -89,6 +89,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EntityConfigurationManagers\EntityConfiguration.cs" />
     <Compile Include="EntityConfigurationManagers\Core\PremitiveTypeConfiguration.cs" />
+    <Compile Include="StoredProcedureManagers\SppMock.cs" />
+    <Compile Include="StoredProcedureManagers\StoredProcedureManagerWithoutParameter.cs" />
     <Compile Include="StoredProcedureManagers\StoredProcedureManager.cs" />
   </ItemGroup>
   <ItemGroup>
