@@ -12,8 +12,10 @@ namespace StoredProcedurePlus.Net.EntityManagers
 
         readonly Dictionary<int, Tuple<Type,Tuple<string, SqlParameter>>> Parameters;
 
-        protected DbParameterEntityAdapter(List<PropertyConfiguration> values)
+        protected DbParameterEntityAdapter(List<PropertyConfiguration> values, DataEntityAdapterRecordType recordType)
         {
+            RecordType = recordType;
+
             if (values != null)
             {
                 Parameters = new Dictionary<int, Tuple<Type, Tuple<string, SqlParameter>>>();
@@ -79,6 +81,8 @@ namespace StoredProcedurePlus.Net.EntityManagers
         }
 
         public int FieldCount => Parameters.Count;
+
+        public DataEntityAdapterRecordType RecordType { get; }
 
         public string GetName(int ordinal)
         {

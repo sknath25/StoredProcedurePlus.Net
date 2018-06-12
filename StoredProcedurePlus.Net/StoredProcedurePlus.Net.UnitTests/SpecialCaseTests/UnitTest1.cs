@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StoredProcedurePlus.Net.StoredProcedureManagers;
 
@@ -12,14 +13,14 @@ namespace StoredProcedurePlus.Net.UnitTests.SpecialCaseTests
         public string SpResponseMessage { get; set; }
         public string UserSessionToken { get; set; }
         public int? ParentRoleId { get; set; }
-        public string RoleName { get; set; }
+        public string RoleNameUdGandu { get; set; }
         public List<sp_user_role_insert_UserSubscribers_parameters> Subscribers { get; set; }
         public List<sp_user_role_insert_ControllerPersmissions_parameters> ControllerActionPermissions { get; set; }
 
     }
     public class sp_user_role_insert_UserSubscribers_parameters
     {
-        public int? user_role_id { get; set; }
+        public int? user_role_id_pandchoda { get; set; }
         public string user_name { get; set; }
         public int? user_type_id { get; set; }
     }
@@ -35,12 +36,12 @@ namespace StoredProcedurePlus.Net.UnitTests.SpecialCaseTests
         {
             configuration.ConnectionStringName = "OvsDb";
             configuration.Input.Maps(v => v.ParentRoleId);
-            configuration.Input.Maps(v => v.RoleName).MaxLength(150).Trim();
+            configuration.Input.Maps(v => v.RoleNameUdGandu).HasParameterName("RoleName").MaxLength(150).Trim();
             configuration.Input.Maps(v => v.SpResponseCode).Out();
             configuration.Input.Maps(v => v.SpResponseMessage).Out();
 
             var subscribers = configuration.Input.MapAsTable(v => v.Subscribers, "utt_user_role_subscribers");
-            subscribers.Maps(v => v.user_role_id);
+            subscribers.Maps(v => v.user_role_id_pandchoda).HasParameterName("user_role_id");
             subscribers.Maps(v => v.user_name).MaxLength(250).Trim();
             subscribers.Maps(v => v.user_type_id);
 
@@ -57,8 +58,8 @@ namespace StoredProcedurePlus.Net.UnitTests.SpecialCaseTests
     }
     public class sp_user_role_select_result_type
     {
-        public int? UserRoleId { get; set; }
         public string UserRoleName { get; set; }
+        public int? UserRoleIdXXX { get; set; }
         public string ParentRoleName { get; set; }
         public string UsersForRole { get; set; }
         public string ModulesForRole { get; set; }
@@ -70,6 +71,7 @@ namespace StoredProcedurePlus.Net.UnitTests.SpecialCaseTests
         {
             configuration.ConnectionStringName = "OvsDb";
             var resultUserLogselect = configuration.CanReturnCollectionOf<sp_user_role_select_result_type>();
+            resultUserLogselect.Maps(v => v.UserRoleIdXXX).HasParameterName("UserRoleId");
         }
     }
 
@@ -83,12 +85,15 @@ namespace StoredProcedurePlus.Net.UnitTests.SpecialCaseTests
             sp_user_role_select_result_type_parameters p = new sp_user_role_select_result_type_parameters();
             sp_user_role_select sp = new sp_user_role_select();
 
-            
             sp.Execute(p);
+
+            List<sp_user_role_select_result_type> Result = sp.GetResult<sp_user_role_select_result_type>().ToList();
 
             sp = new sp_user_role_select();
 
             sp.Execute(p);
+
+            Result = sp.GetResult<sp_user_role_select_result_type>().ToList();
 
             Assert.IsTrue(true);
         }
@@ -114,15 +119,15 @@ namespace StoredProcedurePlus.Net.UnitTests.SpecialCaseTests
         {
             sp_user_role_insert_parameters p1 = new sp_user_role_insert_parameters();
             p1.ParentRoleId = null;
-            p1.RoleName = id + "-TESTROLE-" + Guid.NewGuid().ToString();
+            p1.RoleNameUdGandu = id + "-TESTROLE-" + Guid.NewGuid().ToString();
             p1.UserSessionToken = "C8A16C76-2706-402D-B673-6C0EB5D64F6A";
             p1.Subscribers = new List<sp_user_role_insert_UserSubscribers_parameters>
             {
-                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id = 1, user_type_id = 1 },
-                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id = 1, user_type_id = 1 },
-                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id = 1, user_type_id = 1 },
-                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id = 1, user_type_id = 1 },
-                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id = 1, user_type_id = 1 }
+                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id_pandchoda = 1, user_type_id = 1 },
+                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id_pandchoda = 1, user_type_id = 1 },
+                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id_pandchoda = 1, user_type_id = 1 },
+                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id_pandchoda = 1, user_type_id = 1 },
+                new sp_user_role_insert_UserSubscribers_parameters() { user_name = id + "-TESTUSER-" + Guid.NewGuid().ToString(), user_role_id_pandchoda = 1, user_type_id = 1 }
             };
             p1.ControllerActionPermissions = new List<sp_user_role_insert_ControllerPersmissions_parameters>()
             {

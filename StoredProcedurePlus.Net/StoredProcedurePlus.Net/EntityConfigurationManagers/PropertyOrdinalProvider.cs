@@ -19,10 +19,18 @@ namespace StoredProcedurePlus.Net.EntityConfigurationManagers
 
             for (int i = 0; i < Parameters.Count; i++)
             {
-                Index.Add(Parameters[i].PropertyName, new Tuple<int, 
-                    PropertyConfiguration>(record.GetOrdinal(
-                        Parameters[i].PropertyName), 
-                    Parameters[i]));
+                if (record.RecordType == DataEntityAdapterRecordType.Database)
+                {
+                    Index.Add(Parameters[i].PropertyName, new Tuple<int, PropertyConfiguration>(
+                        record.GetOrdinal(Parameters[i].ParameterName), Parameters[i])
+                    );
+                }
+                else
+                {
+                    Index.Add(Parameters[i].PropertyName, new Tuple<int, PropertyConfiguration>(
+                        record.GetOrdinal(Parameters[i].PropertyName), Parameters[i])
+                    );
+                }
             }
         }
 

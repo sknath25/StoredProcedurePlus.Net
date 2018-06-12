@@ -8,12 +8,15 @@ namespace StoredProcedurePlus.Net.EntityManagers
     {
         readonly IDataReader Data;
 
-        protected DbDataEntityAdapter(IDataReader data)
+        protected DbDataEntityAdapter(IDataReader data, DataEntityAdapterRecordType recordType)
         {
             Data = data;
+            RecordType = recordType;
         }
 
         public int FieldCount => Data.FieldCount;
+
+        public DataEntityAdapterRecordType RecordType { get; }
 
         public Type GetSourceType(int ordinal)
         {

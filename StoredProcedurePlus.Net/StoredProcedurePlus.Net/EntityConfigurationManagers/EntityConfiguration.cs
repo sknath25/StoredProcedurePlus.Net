@@ -14,10 +14,13 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
     public class ParameterInputEntityConfiguration<TContainerType> : EntityConfiguration<TContainerType> where TContainerType : class
     {
+        public ParameterInputEntityConfiguration() : base(DataEntityAdapterRecordType.Object) { }
     }
 
     public class TvpParameterInputEntityConfiguration<TContainerType> : EntityConfiguration<TContainerType> where TContainerType : class
     {
+        public TvpParameterInputEntityConfiguration() : base(DataEntityAdapterRecordType.Object) { }
+
         internal override void Initialize()
         {
             base.InitializePropertyConfigurations(true);
@@ -31,6 +34,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
     public class OutputEntityConfiguration<TContainerType> : EntityConfiguration<TContainerType>, IHasDefaultConstructor where TContainerType : class, new()
     {
+        public OutputEntityConfiguration() : base(DataEntityAdapterRecordType.Database) { }
+
         object IHasDefaultConstructor.CreateNewDefaultInstance()
         {
             return new TContainerType();
@@ -48,7 +53,8 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         private class DbParameterEntityAdapterProxy : DbParameterEntityAdapter
         {
-            internal DbParameterEntityAdapterProxy(List<PropertyConfiguration> configurations) : base(configurations)
+            internal DbParameterEntityAdapterProxy(List<PropertyConfiguration> configurations, DataEntityAdapterRecordType recordType) 
+                : base(configurations, recordType)
             {
 
             }
@@ -56,7 +62,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         private class DbDataEntityAdapterProxy : DbDataEntityAdapter
         {
-            internal DbDataEntityAdapterProxy(IDataReader record) : base(record)
+            internal DbDataEntityAdapterProxy(IDataReader record, DataEntityAdapterRecordType recordType) : base(record, recordType)
             {
 
             }
@@ -251,10 +257,10 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         internal override IDataEntityAdapter GetAsDbParameters()
         {
-            return new DbParameterEntityAdapterProxy(Configurations);
+            return new DbParameterEntityAdapterProxy(Configurations, RecordType);
         }
 
-        internal EntityConfiguration() { }
+        internal EntityConfiguration(DataEntityAdapterRecordType recordType):base(recordType){ }
 
         override internal void Prepare(IDataEntityAdapter record)
         {
@@ -266,7 +272,7 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 
         override internal DbDataEntityAdapter GetNewDataAdapter(IDataReader record)
         {
-            return new DbDataEntityAdapterProxy(record);
+            return new DbDataEntityAdapterProxy(record, RecordType);
         }
 
         EntityOrdinalConfiguration OrdinalProvider = null;

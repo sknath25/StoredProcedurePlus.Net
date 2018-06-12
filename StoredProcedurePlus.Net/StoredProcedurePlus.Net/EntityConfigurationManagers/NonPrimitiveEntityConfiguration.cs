@@ -6,10 +6,13 @@ namespace StoredProcedurePlus.Net.StoredProcedureManagers
 {
     public abstract class NonPrimitiveEntityConfiguration
     {
-        protected NonPrimitiveEntityConfiguration()
+        protected NonPrimitiveEntityConfiguration(DataEntityAdapterRecordType recordType)
         {
             IncludeUnmappedProperties = true;
+            RecordType = recordType;
         }
+
+        internal DataEntityAdapterRecordType RecordType { get; }
 
         internal virtual Type SourceType { get; set; }
 

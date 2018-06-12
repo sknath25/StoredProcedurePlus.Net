@@ -3,8 +3,15 @@ using System.Data;
 
 namespace StoredProcedurePlus.Net.EntityManagers
 {
+    public enum DataEntityAdapterRecordType
+    {
+        Database,
+        Object
+    }
+
     public interface IDataEntityAdapter
     {
+        DataEntityAdapterRecordType RecordType { get; }
         int FieldCount { get; }
         Type GetSourceType(int ordinal);
         string GetName(int ordinal);
